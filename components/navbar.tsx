@@ -4,13 +4,15 @@ import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 
+const base = process.env.NEXT_PUBLIC_BASE_PATH || '';
+
 export default function Navbar() {
   return (
       <nav className="fixed top-0 w-full bg-background/80 backdrop-blur-sm z-25 border-b border-primary/20">
         <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 font-bold text-foreground">
-            <Image src="/lhb-logo.png" alt="Longhorn Baja Logo" width={40} height={32} className="w-auto h-8" />
+            <Image src={`${base}/lhb-logo.png`} alt="Longhorn Baja Logo" width={40} height={32} className="w-auto h-8" />
             <span className="text-lg">{""}</span>
           </Link>
 
