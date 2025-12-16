@@ -1,6 +1,8 @@
 import { Section } from "@/components/section"
 import SubteamCard from "@/components/subteam-card"
 
+const base = process.env.NEXT_PUBLIC_BASE_PATH || '';
+
 const subteam_list = [
   {
     id: "powertrain",
@@ -9,7 +11,7 @@ const subteam_list = [
     details:
         "The Powertrain Subteam is responsible for designing, selecting, and integrating all components that " +
         "transmit power from the engine to the wheels, ensuring optimal performance, reliability, and efficiency.",
-    image: "/subteams/powertrain.avif",
+    image: `${base}/subteams/powertrain.avif`,
   },
   {
     id: "dynamics",
@@ -18,16 +20,16 @@ const subteam_list = [
     details:
         "The Dynamics Subteam focuses on the development of the vehicle's suspension, steering, and braking " +
         "capabilities, ensuring a safe driving experience for the driver while maximizing control on track.",
-    image: "/subteams/dynamics.avif",
+    image: `${base}/subteams/dynamics.avif`,
   },
   {
     id: "chassis",
     title: "Chassis",
     description: "Vehicle frame design and manufacturing.",
     details:
-        "The Chassis Subteam designs, manufactures, and tests the vehicle’s frame to ensure it is strong, " +
+        "The Chassis Subteam designs, manufactures, and tests the vehicle's frame to ensure it is strong, " +
         "lightweight, and safe.",
-    image: "/subteams/chassis.avif",
+    image: `${base}/subteams/chassis.avif`,
   },
   {
     id: "ergonomics",
@@ -36,7 +38,7 @@ const subteam_list = [
     details:
         "The Ergonomics Subteam enhances the driver's comfort and ease of control to produce optimal performance " +
         "without sacrificing safety precautions or reliability.",
-    image: "/subteams/ergonomics.avif",
+    image: `${base}/subteams/ergonomics.avif`,
   },
   {
     id: "electronics",
@@ -44,7 +46,7 @@ const subteam_list = [
     description: "Telemetry, sensors, and electronics.",
     details: "The Electronics Subteam gathers information about the vehicle through the use of sensors and " +
         "ensures driver safety with brake lights and kill switches.",
-    image: "/subteams/electronics.avif",
+    image: `${base}/subteams/electronics.avif`,
   },
   {
     id: "software",
@@ -52,7 +54,7 @@ const subteam_list = [
     description: "Website, data analysis, and simulation.",
     details: "The Software Subteam visualizes live sensor data and captures vehicle telemetry for simulation " +
         "analysis to enhance overall performance for future competition vehicles.",
-    image: "/subteams/software.avif",
+    image: `${base}/subteams/software.avif`,
   },
 ]
 

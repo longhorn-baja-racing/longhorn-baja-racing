@@ -30,6 +30,8 @@ const sponsorList = [
   },
 ]
 
+const base = process.env.NEXT_PUBLIC_BASE_PATH || '';
+
 export default function Sponsors() {
   return (
       <Section label="OUR PARTNERS" title="Sponsors" anchor="sponsors">
@@ -40,7 +42,7 @@ export default function Sponsors() {
                   className="flex items-center justify-center p-8 bg-card border border-border rounded-lg hover:border-primary transition-colors"
               >
                 <Image
-                    src={sponsor.logo || "/placeholder.svg"}
+                    src={`${base}${sponsor.logo || "/placeholder.svg"}`}
                     alt={sponsor.name}
                     width={200}
                     height={120}

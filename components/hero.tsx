@@ -3,6 +3,8 @@
 import { Button } from "@/components/ui/button"
 import { useState, useEffect } from "react"
 
+const base = process.env.NEXT_PUBLIC_BASE_PATH || '';
+
 export default function Hero() {
   const [scrollY, setScrollY] = useState(0)
 
@@ -19,7 +21,7 @@ export default function Hero() {
       <section
           className="relative w-full h-screen bg-cover bg-center bg-no-repeat flex items-center pt-20 overflow-hidden"
           style={{
-            backgroundImage: "url(/baja-team-photo.jpg)",
+            backgroundImage: `url(${base}/baja-team-photo.jpg)`,
             backgroundPosition: `center ${scrollY * 0.5}px`,
           }}
       >
