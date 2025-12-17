@@ -40,12 +40,25 @@ export default function Hero() {
 
             {/* Buttons */}
             <div className="flex gap-4">
-              <Button className="border-2 border-primary bg-transparent text-white hover:bg-primary hover:text-primary-foreground rounded-lg px-8 py-3 font-bold transition-colors cursor-pointer">
-                Apply
-              </Button>
-              <Button className="border-2 border-primary bg-transparent text-white hover:bg-primary hover:text-primary-foreground rounded-lg px-8 py-3 font-bold transition-colors cursor-pointer">
-                Sponsor
-              </Button>
+              <a
+                  href="https://docs.google.com/forms/d/e/1FAIpQLScnt7iGpsNXqgPrenaE_j7tIgZ8WXwcE2ux5DR1CmHHVevw3w/closedform"
+                  target="_blank"
+                  rel="noopener noreferrer"
+              >
+                <Button className="border-2 border-primary bg-transparent text-white hover:bg-primary hover:text-primary-foreground rounded-lg px-8 py-3 font-bold transition-colors cursor-pointer">
+                  Apply
+                </Button>
+              </a>
+
+              <a
+                  href="https://f8015311-d3fb-43ec-a118-e7f2cf0392b2.filesusr.com/ugd/6ade08_fae26c60d1c04d30b24660b24acb9c35.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+              >
+                <Button className="border-2 border-primary bg-transparent text-white hover:bg-primary hover:text-primary-foreground rounded-lg px-8 py-3 font-bold transition-colors cursor-pointer">
+                  Sponsor
+                </Button>
+              </a>
             </div>
           </div>
         </div>

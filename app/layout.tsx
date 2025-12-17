@@ -15,7 +15,7 @@ const _geistMono = V0_Font_Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: "Longhorn Baja",
+  title: "Longhorn Baja Racing",
   description: "The Baja SAE club for UT Austin",
 }
 

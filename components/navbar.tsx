@@ -35,11 +35,10 @@ export default function Navbar() {
             </Link>
           </div>
 
-          <Button
-              variant="ghost"
-              className="text-foreground hover:bg-primary/10 rounded-lg px-6 py-2 text-sm font-medium border border-primary"
-          >
-            Contact Us
+          <Button asChild variant="outline" className="text-foreground hover:bg-primary/10 rounded-lg px-6 py-2 text-sm font-medium border border-primary">
+            <a href="mailto:longhornbaja@gmail.com" aria-label="Email us">
+              Contact Us
+            </a>
           </Button>
         </div>
       </nav>
