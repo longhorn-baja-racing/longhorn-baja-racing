@@ -10,7 +10,7 @@ export default function Footer() {
             {/* GitHub */}
             <div className="flex items-center gap-6">
               <Link
-                  href="https://github.com/longhorn-baja"
+                  href="https://github.com/longhorn-baja-racing"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-muted-foreground hover:text-foreground transition-colors"
@@ -24,7 +24,7 @@ export default function Footer() {
               {/* Instagram */}
               <div className="w-px h-5 bg-border"></div>
               <Link
-                  href="https://www.instagram.com/longhornbaja/"
+                  href="https://www.instagram.com/longhornbajaracing/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-muted-foreground hover:text-foreground transition-colors"
@@ -38,7 +38,7 @@ export default function Footer() {
               {/* LinkedIn */}
               <div className="w-px h-5 bg-border"></div>
               <Link
-                  href="https://www.linkedin.com/company/longhorn-baja/"
+                  href="https://www.linkedin.com/company/longhorn-baja-racing/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-muted-foreground hover:text-foreground transition-colors"
