@@ -3,12 +3,12 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   /* config options here */
   output: "export",
-  basePath: "/longhorn-baja-racing",
-  assetPrefix: "/longhorn-baja-racing",
+  basePath: "",
+  assetPrefix: "",
   trailingSlash: true,
 
   env: {
-    NEXT_PUBLIC_BASE_PATH: "/longhorn-baja-racing",
+    NEXT_PUBLIC_BASE_PATH: "",
   },
 
   images: {
