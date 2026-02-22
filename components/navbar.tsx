@@ -27,6 +27,9 @@ export default function Navbar() {
             <Link href="#team" className="text-sm text-muted-foreground hover:text-foreground transition">
               Team
             </Link>
+            <Link href="#members" className="text-sm text-muted-foreground hover:text-foreground transition">
+              Members
+            </Link>
             <Link href="#sponsors" className="text-sm text-muted-foreground hover:text-foreground transition">
               Sponsors
             </Link>
