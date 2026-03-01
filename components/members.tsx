@@ -101,11 +101,31 @@ const member_list = [
 export default function Members() {
   return (
       <Section title="Members" label="WHO WE ARE" anchor="members">
+        <div className="text-center max-w-3xl mx-auto mb-10">
+        <p className="text-3xl md:text-2xl font-bold text-orange">
+          Team Leads
+        </p>
+      </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {member_list.map((member) => (
               <MemberCard key={member.id} {...member} />
           ))}
-        </div>
+      </div>
+        <div className="text-center max-w-3x1 mx-auto mb-10 mt-10">
+        <p className="text-3xl md:text-2xl font-bold text-orange">
+          Racing Team Members
+        </p>
+      </div>
+        <div className="text-center max-w-3x1 mx-auto mb-10 mt-10">
+        <p className="text-3xl md:text-2xl font-bold text-orange">
+          Iterative Team Members
+        </p>
+      </div>
+      <div className="text-center max-w-3x1 mx-auto mb-10 mt-10">
+        <p className="text-3xl md:text-2xl font-bold text-orange">
+          Research and Development Team Members
+        </p>
+      </div>
       </Section>
   )
 }
