@@ -30,6 +30,9 @@ export default function Navbar() {
             <Link href="#sponsors" className="text-sm text-muted-foreground hover:text-foreground transition">
               Sponsors
             </Link>
+            <Link href="/internships" className="text-sm text-muted-foreground hover:text-foreground transition">
+              Internships
+            </Link>
             <Link href="#" className="text-sm text-muted-foreground hover:text-foreground transition">
               Apply
             </Link>
