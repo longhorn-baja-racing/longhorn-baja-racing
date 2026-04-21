@@ -63,6 +63,16 @@ const subteam_list = [
     image: `${base}/subteams/software.avif`,
     imageAlt: "Longhorn Baja Racing Software Subteam Image.",
   },
+  {
+    id: "public relations",
+    title: "Public Relations",
+    description: "Communications with external organizations, such as sponsors",
+    details: "The Public Relations subteam works with communications outside the organization, such as" +
+        "other organizations or sponsors",
+    image: `${base}/subteams/software.avif`,
+    imageAlt: "Longhorn Baja Racing Software Subteam Image.",
+  },
+
 ]
 
 export default function Subteams() {
