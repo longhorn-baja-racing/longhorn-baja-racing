@@ -66,12 +66,39 @@ const subteam_list = [
   {
     id: "public relations",
     title: "Public Relations",
-    description: "Communications with external organizations, such as sponsors",
-    details: "The Public Relations subteam works with communications outside the organization, such as" +
-        "other organizations or sponsors",
-    image: `${base}/subteams/software.avif`,
-    imageAlt: "Longhorn Baja Racing Software Subteam Image.",
+    description: "Communications with the public",
+    details: "The Public Relations subteam works with our presence on social media, managing" +
+        "our team's linkedin and instagram profiles.",
+    image: `${base}/subteams/pr.jpeg`,
+    imageAlt: "Longhorn Baja Racing PR Subteam Image.",
   },
+  {
+    id: "business",
+    title: "Business",
+    description: "Internal management",
+    details: "The business subteam manages our car's compliance with the SAE rules, finances," +
+        " and involvement with UT Austin.",
+    image: `${base}/subteams/business.jpeg`,
+    imageAlt: "Longhorn Baja Racing Business Subteam Image.",
+  },
+  {
+    id: "corporate relations",
+    title: "Corporate Relations",
+    description: "Corporate management",
+    details: "The corporate relations subteam manages relations with other companies," +
+        "focusing on outreach and sponsorships",
+    image: `${base}/subteams/cr.jpeg`,
+    imageAlt: "Longhorn Baja Racing CR Subteam Image.",
+  },
+  {
+    id: "logistics",
+    title: "Logistics",
+    description: "Internal management",
+    details: "The logistics subteam manages transportation, storage, and event coordination"
+    image: `${base}/subteams/logistics.jpeg`,
+    imageAlt: "Longhorn Baja Racing Logistics Subteam Image.",
+  },
+  
 
 ]
 
