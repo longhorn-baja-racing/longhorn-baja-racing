@@ -4,21 +4,20 @@ import Section from "@/components/section"
 import Image from "next/image"
 
 const sponsorList = [
-  { name: "Renesas", logo: "renesas.avif", tier: "title" },
-  { name: "Rally Ready", logo: "rallyready.jpg", tier: "gold" },
-  { name: "Walker Department of Mechancial Engineering", logo: "walker_department.svg", tier: "bronze" },
-  { name: "SCCA", logo: "scca.avif", tier: "bronze" },
-  { name: "United Mechanical", logo: "united_mechanical.avif", tier: "bronze" },
-  { name: "Oshcut", logo: "oshcut.png", tier: "bronze" },
-  { name: "Carlstar", logo: "carlstar.png", tier: "bronze" },
-  { name: "J&D Auto", logo: "jdauto.avif", tier: "general" },
-  { name: "Makistry", logo: "makistry_logo.avif", tier: "general" },
-  { name: "Solidworks", logo: "solidworks.avif", tier: "general" },
-  { name: "Ansys", logo: "ansys.avif", tier: "general" },
-  { name: "Umatek", logo: "umatek.avif", tier: "general" },
-  { name: "AFCO", logo: "afco.png", tier: "general" },
-  { name: "LSR", logo: "lsr.avif", tier: "partner org" },
-  { name: "LCC", logo: "lcc.avif", tier: "partner org" }
+  { name: "Renesas", logo: "renesas.avif", tier: "title", url: "https://www.renesas.com/en" },
+  { name: "Rally Ready", logo: "rallyready.jpg", tier: "gold", url: "https://rallyready.com" },
+  { name: "Walker Department of Mechancial Engineering", logo: "walker_department.svg", tier: "bronze", url: "https://www.me.utexas.edu" },
+  { name: "SCCA", logo: "scca.avif", tier: "bronze", url: "https://lonestarscca.org" },
+  { name: "United Mechanical", logo: "united_mechanical.avif", tier: "bronze", url: "https://www.unitedmechanical.com" },
+  { name: "Oshcut", logo: "oshcut.png", tier: "bronze", url: "https://www.oshcut.com" },
+  { name: "Carlstar", logo: "carlstar.png", tier: "bronze", url: "https://www.carlstar.com" },
+  { name: "Makistry", logo: "makistry_logo.avif", tier: "general", url: "https://makistry.com" },
+  { name: "Solidworks", logo: "solidworks.avif", tier: "general", url: "https://my.solidworks.com" },
+  { name: "Ansys", logo: "ansys.avif", tier: "general", url: "https://www.ansys.com" },
+  { name: "Umatek", logo: "umatek.avif", tier: "general", url: "https://www.umatek.com" },
+  { name: "AFCO Racing", logo: "afco.png", tier: "general", url: "https://afcoracing.com" },
+  { name: "LSR", logo: "lsr.avif", tier: "partner org", url: "https://lsracing.com" },
+  { name: "LCC", logo: "lcc.avif", tier: "partner org", url: "https://texaslcc.com" }
 ];
 
 const base = process.env.NEXT_PUBLIC_BASE_PATH || '';
@@ -53,10 +52,9 @@ export default function Sponsors() {
                     ? "text-lg font-bold mb-3 text-center"
                     : "text-sm font-semibold mb-2 text-center"
 
-            return (
+            const card = (
                 <div
-                    key={sponsor.name}
-                    className={`flex flex-col items-center p-8 bg-card border border-border rounded-lg hover:border-primary transition-colors ${outline}`}
+                    className={`flex flex-col items-center p-8 bg-card border border-border rounded-lg hover:border-primary transition-colors ${outline} ${sponsor.url ? "cursor-pointer" : ""}`}
                 >
                   <div className={labelClass}>{tierLabel(sponsor.tier)}</div>
                   <Image
@@ -68,6 +66,14 @@ export default function Sponsors() {
                   />
                   <div className="pt-4 text-sm">{sponsor.name}</div>
                 </div>
+            )
+
+            return sponsor.url ? (
+                <a key={sponsor.name} href={sponsor.url} target="_blank" rel="noopener noreferrer">
+                  {card}
+                </a>
+            ) : (
+                <div key={sponsor.name}>{card}</div>
             )
           })}
         </div>
