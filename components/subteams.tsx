@@ -67,7 +67,7 @@ const subteam_list = [
     id: "public relations",
     title: "Public Relations",
     description: "Communications with the public",
-    details: "The Public Relations subteam works with our presence on social media, managing" +
+    details: "The Public Relations subteam works with our presence on social media, managing " +
         "our team's linkedin and instagram profiles.",
     image: `${base}/subteams/pr.jpeg`,
     imageAlt: "Longhorn Baja Racing PR Subteam Image.",
