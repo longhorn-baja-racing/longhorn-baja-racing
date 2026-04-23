@@ -58,7 +58,7 @@ const subteam_list = [
     id: "software",
     title: "Software",
     description: "Website, data analysis, and simulation.",
-    details: "The Software Subteam visualizes live sensor data and captures vehicle telemetry for simulation " +
+    details: "The Software subteam visualizes live sensor data and captures vehicle telemetry for simulation " +
         "analysis to enhance overall performance for future competition vehicles.",
     image: `${base}/subteams/software.avif`,
     imageAlt: "Longhorn Baja Racing Software Subteam Image.",
@@ -75,8 +75,8 @@ const subteam_list = [
   {
     id: "business",
     title: "Business",
-    description: "Internal management",
-    details: "The business subteam manages our car's compliance with the SAE rules, finances," +
+    description: "Internal Management",
+    details: "The Business subteam manages our car's compliance with the SAE rules, finances," +
         " and involvement with UT Austin.",
     image: `${base}/subteams/business.jpeg`,
     imageAlt: "Longhorn Baja Racing Business Subteam Image.",
@@ -84,8 +84,8 @@ const subteam_list = [
   {
     id: "corporate relations",
     title: "Corporate Relations",
-    description: "Corporate management",
-    details: "The corporate relations subteam manages relations with other companies," +
+    description: "Corporate Management",
+    details: "The Corporate Relations subteam manages relations with other companies," +
         "focusing on outreach and sponsorships.",
     image: `${base}/subteams/cr.jpeg`,
     imageAlt: "Longhorn Baja Racing CR Subteam Image.",
@@ -93,7 +93,7 @@ const subteam_list = [
   {
     id: "logistics",
     title: "Logistics",
-    description: "Internal management",
+    description: "Handling Coordination",
     details: "The logistics subteam manages transportation, storage, and event coordination.",
     image: `${base}/subteams/logistics.jpeg`,
     imageAlt: "Longhorn Baja Racing Logistics Subteam Image.",
