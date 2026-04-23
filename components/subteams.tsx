@@ -86,7 +86,7 @@ const subteam_list = [
     title: "Corporate Relations",
     description: "Corporate management",
     details: "The corporate relations subteam manages relations with other companies," +
-        "focusing on outreach and sponsorships",
+        "focusing on outreach and sponsorships.",
     image: `${base}/subteams/cr.jpeg`,
     imageAlt: "Longhorn Baja Racing CR Subteam Image.",
   },
@@ -94,7 +94,7 @@ const subteam_list = [
     id: "logistics",
     title: "Logistics",
     description: "Internal management",
-    details: "The logistics subteam manages transportation, storage, and event coordination"
+    details: "The logistics subteam manages transportation, storage, and event coordination.",
     image: `${base}/subteams/logistics.jpeg`,
     imageAlt: "Longhorn Baja Racing Logistics Subteam Image.",
   },
