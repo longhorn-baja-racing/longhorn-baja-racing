@@ -1,6 +1,5 @@
 import { Section } from "@/components/section"
 import SubteamCard from "@/components/subteam-card"
-import { imageConfigDefault } from "next/dist/shared/lib/image-config";
 
 const base = process.env.NEXT_PUBLIC_BASE_PATH || '';
 
@@ -62,6 +61,41 @@ const subteam_list = [
         "analysis to enhance overall performance for future competition vehicles.",
     image: `${base}/subteams/software.avif`,
     imageAlt: "Longhorn Baja Racing Software Subteam Image.",
+  },
+  {
+    id: "public-relations",
+    title: "Public Relations",
+    description: "Public communications and social media.",
+    details: "The Public Relations subteam works with our presence on social media, managing " +
+        "our team's LinkedIn and Instagram profiles.",
+    image: `${base}/subteams/pr.jpeg`,
+    imageAlt: "Longhorn Baja Racing PR Subteam Image.",
+  },
+  {
+    id: "business",
+    title: "Business",
+    description: "Rules compliance, finances, and team operations.",
+    details: "The Business subteam manages our car's compliance with the SAE rules, finances," +
+        " and involvement with UT Austin.",
+    image: `${base}/subteams/business.jpeg`,
+    imageAlt: "Longhorn Baja Racing Business Subteam Image.",
+  },
+  {
+    id: "corporate-relations",
+    title: "Corporate Relations",
+    description: "Corporate outreach and sponsorships.",
+    details: "The Corporate Relations subteam manages relationships with other companies, " +
+        "focusing on outreach and sponsorships.",
+    image: `${base}/subteams/cr.jpeg`,
+    imageAlt: "Longhorn Baja Racing CR Subteam Image.",
+  },
+  {
+    id: "logistics",
+    title: "Logistics",
+    description: "Transportation, storage, and event coordination.",
+    details: "The Logistics subteam manages transportation, storage, and event coordination.",
+    image: `${base}/subteams/logistics.jpeg`,
+    imageAlt: "Longhorn Baja Racing Logistics Subteam Image.",
   },
 ]
 
