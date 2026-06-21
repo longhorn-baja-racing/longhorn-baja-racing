@@ -14,10 +14,11 @@ export default function MemberCard({ id, title, description, image }: MemberCard
   return (
     <article
       id={id}
-      className="group relative h-80 overflow-hidden border border-white/10 bg-card transition duration-300 hover:-translate-y-1 hover:border-primary"
+      className="group relative h-80 overflow-hidden border border-white/10 bg-black transition duration-300 hover:-translate-y-1 hover:border-primary"
     >
-      <Image src={image} alt={title} fill className="object-cover transition duration-500 group-hover:scale-105" />
-      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
+      <Image src={image} alt="" fill className="scale-110 object-cover opacity-30 blur-xl" aria-hidden="true" />
+      <Image src={image} alt={title} fill className="object-contain transition duration-500 group-hover:scale-[1.02]" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/10 to-transparent" />
       <div className="absolute inset-x-0 bottom-0 border-t border-white/10 bg-black/75 p-5 backdrop-blur-sm">
         <p className="mb-2 text-[10px] font-black uppercase tracking-[0.24em] text-primary">Team Lead</p>
         <h3 className="text-xl font-black uppercase tracking-[-0.02em] text-white">{title}</h3>

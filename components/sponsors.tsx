@@ -59,12 +59,12 @@ export default function Sponsors() {
 
             const card = (
                 <div
-                    className={`industrial-card group relative flex min-h-64 flex-col items-center justify-between overflow-hidden border p-7 transition duration-300 hover:-translate-y-1 hover:border-primary ${outline} ${sponsor.url ? "cursor-pointer" : ""}`}
+                    className={`industrial-card group relative flex min-h-56 flex-col items-center justify-between overflow-hidden border p-4 transition duration-300 hover:-translate-y-1 hover:border-primary ${outline} ${sponsor.url ? "cursor-pointer" : ""}`}
                 >
                   <div className={`absolute left-0 top-0 px-3 py-2 text-[10px] font-black uppercase tracking-[0.2em] ${labelClass}`}>
                     {tierLabel(sponsor.tier)}
                   </div>
-                  <div className="mt-8 flex min-h-32 w-full items-center justify-center bg-white/[0.96] p-6">
+                  <div className="mt-8 flex min-h-32 w-full items-center justify-center bg-white/[0.96] p-5">
                     <Image
                         src={`${base}/sponsors/${sponsor.logo}`}
                         alt={sponsor.name}
@@ -73,7 +73,7 @@ export default function Sponsors() {
                         className="max-h-20 w-full object-contain transition duration-300 group-hover:scale-105"
                     />
                   </div>
-                  <div className="flex w-full items-center justify-between pt-5">
+                  <div className="flex w-full items-center justify-between pt-4">
                     <span className="text-sm font-bold uppercase tracking-[0.08em] text-white/80">{sponsor.name}</span>
                     <span className="text-xl text-primary" aria-hidden="true">&#8599;</span>
                   </div>

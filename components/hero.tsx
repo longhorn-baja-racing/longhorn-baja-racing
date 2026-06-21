@@ -1,38 +1,20 @@
-"use client"
-
-import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 
 const base = process.env.NEXT_PUBLIC_BASE_PATH || ""
 
 export default function Hero() {
-  const [scrollY, setScrollY] = useState(0)
-
-  useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY)
-
-    window.addEventListener("scroll", handleScroll, { passive: true })
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
-
   return (
     <section
-      className="relative flex min-h-[760px] w-full items-center overflow-hidden bg-cover bg-center bg-no-repeat pt-20"
-      style={{
-        backgroundImage: `url(${base}/baja-team-photo.jpg)`,
-        backgroundPosition: `center ${scrollY * 0.35}px`,
-      }}
+      className="relative flex min-h-screen w-full items-center overflow-hidden bg-black bg-contain bg-center bg-no-repeat pt-20"
+      style={{ backgroundImage: `url(${base}/baja-team-photo.jpg)` }}
     >
-      <div className="absolute inset-0 bg-gradient-to-r from-black via-black/75 to-black/15" />
-      <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-black/30" />
+      <div className="absolute inset-0 bg-gradient-to-r from-black via-black/65 to-black/10" />
+      <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-black/25" />
       <div className="absolute inset-y-0 left-0 w-2 bg-primary" />
 
       <div className="relative z-10 mx-auto w-full max-w-7xl px-6">
         <div className="max-w-3xl">
-          <div className="mb-6 flex items-center gap-4">
-            <span className="h-px w-10 bg-primary" aria-hidden="true" />
-            <p className="text-xs font-black uppercase tracking-[0.3em] text-primary">UT Austin / Baja SAE</p>
-          </div>
+          <p className="mb-6 text-xs font-black uppercase tracking-[0.3em] text-primary">UT Austin / Baja SAE</p>
 
           <h1 className="mb-6 text-6xl font-black uppercase leading-[0.86] tracking-[-0.065em] text-foreground sm:text-7xl md:text-8xl">
             Design.<br />Build. <span className="text-primary">Race.</span>
