@@ -12,7 +12,7 @@ export default function Navbar() {
         <div className="flex w-full items-center justify-between px-4 py-3 lg:px-6">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 font-bold text-foreground">
-            <Image src={`${base}/lbr-logo.png`} alt="Longhorn Baja Logo" width={103} height={40} className="h-8 w-auto" />
+            <Image src={`${base}/lbr-logo.png`} alt="Longhorn Baja Logo" width={64} height={64} className="h-10 w-10" />
             <span className="text-lg">{""}</span>
           </Link>
 
