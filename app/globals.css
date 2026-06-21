@@ -123,3 +123,31 @@
         @apply bg-background text-foreground;
     }
 }
+
+@layer components {
+    .merch-distressed {
+        isolation: isolate;
+        background-color: #242424;
+        background-image:
+            linear-gradient(115deg, transparent 0 42%, rgb(255 255 255 / 0.035) 42% 44%, transparent 44% 100%),
+            repeating-linear-gradient(8deg, transparent 0 12px, rgb(0 0 0 / 0.16) 12px 14px),
+            radial-gradient(circle at 18% 24%, rgb(255 255 255 / 0.08) 0 1px, transparent 2px);
+        background-size: auto, auto, 18px 18px;
+    }
+
+    .merch-distressed::after {
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        content: "";
+        background: linear-gradient(to top, rgb(0 0 0 / 0.52), transparent 55%);
+    }
+
+    .merch-distressed-orange {
+        box-shadow: inset 0 0 90px rgb(191 87 0 / 0.38);
+    }
+
+    .merch-distressed-gray {
+        box-shadow: inset 0 0 90px rgb(148 148 148 / 0.2);
+    }
+}

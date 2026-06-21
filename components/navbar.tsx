@@ -12,7 +12,7 @@ export default function Navbar() {
         <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 font-bold text-foreground">
-            <Image src={`${base}/lbr-logo.png`} alt="Longhorn Baja Logo" width={40} height={32} className="w-auto h-8" />
+            <Image src={`${base}/lbr-logo.png`} alt="Longhorn Baja Logo" width={103} height={40} className="h-8 w-auto" />
             <span className="text-lg">{""}</span>
           </Link>
 
@@ -29,6 +29,9 @@ export default function Navbar() {
             </Link>
             <Link href="#members" className="text-sm text-muted-foreground hover:text-foreground transition">
               Members
+            </Link>
+            <Link href="#merch" className="text-sm text-muted-foreground hover:text-foreground transition">
+              Merch
             </Link>
             <Link href="#sponsors" className="text-sm text-muted-foreground hover:text-foreground transition">
               Sponsors
