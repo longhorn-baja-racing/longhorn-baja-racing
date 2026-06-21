@@ -7,7 +7,7 @@ const lead_list = [
   {
     id: "Yash Tate",
     title: "Yash Tate",
-    description: "Powertrain Lead",
+    description: "Co-Captain and Powertrain Lead",
     details:
         "",
     image: `${base}/members/yashtate.jpg`,
@@ -15,7 +15,7 @@ const lead_list = [
   {
     id: "Retvin Pant",
     title: "Retvin Pant",
-    description: "Dynamics Lead",
+    description: "Co-Captain and Dynamics Lead",
     details:
         "",
     image: `${base}/members/retvinpant.jpg`,
@@ -23,7 +23,7 @@ const lead_list = [
   {
     id: "Jestin Castillo",
     title: "Jestin Castillo",
-    description: "Ergonomics Lead",
+    description: "Co-Vice Captain and Ergonomics Lead",
     details:
         "",
     image: `${base}/members/jestincastillo.jpg`,
@@ -31,7 +31,7 @@ const lead_list = [
   {
     id: "Peter Vlahakis",
     title: "Peter Vlahakis",
-    description: "Chassis Lead",
+    description: "Co-Vice Captain and Chassis Lead",
     details:
         "",
     image: `${base}/members/petervlahakis.jpg`,
@@ -65,9 +65,15 @@ const lead_list = [
     image: `${base}/members/tanushthirungari.jpg`,
   },
   {
+    id: "Ethan",
+    title: "Ethan",
+    description: "R&D Lead",
+    details: "",
+  },
+  {
     id: "Julian Whiteley",
     title: "Julian Whiteley",
-    description: "R&D Lead",
+    description: "Simulation and Validation Lead",
     details: "",
     image: `${base}/members/julianwhiteley.jpg`,
   },
@@ -1309,7 +1315,7 @@ export default function Members() {
             The students responsible for guiding design, fabrication, operations, and competition.
           </p>
         </div>
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {lead_list.map((lead) => (
               <MemberCard key={lead.id} {...lead} />
           ))}

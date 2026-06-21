@@ -3,7 +3,7 @@ import Section from "./section"
 const stats = [
   { value: "01", label: "Vehicle" },
   { value: "100%", label: "Open Team" },
-  { value: "Full", label: "Lifecycle" },
+  { value: "SAE", label: "Competition" },
 ]
 
 export default function About() {
