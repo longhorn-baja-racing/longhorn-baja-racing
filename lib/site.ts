@@ -8,7 +8,7 @@ export const siteConfig = {
   email: "longhornbaja@gmail.com",
   location: "Austin, Texas",
   university: "The University of Texas at Austin",
-  logo: "/lbr-logo.png",
+  logo: "/favicon.png",
   socialImage: "/baja-team-photo.jpg",
   socialLinks: [
     "https://github.com/longhorn-baja-racing",
