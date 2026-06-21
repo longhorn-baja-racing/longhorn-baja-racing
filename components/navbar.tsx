@@ -9,7 +9,7 @@ const base = process.env.NEXT_PUBLIC_BASE_PATH || '';
 export default function Navbar() {
   return (
       <nav className="fixed top-0 z-50 w-full border-b border-white/10 bg-black/75 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3">
+        <div className="flex w-full items-center justify-between px-4 py-3 lg:px-6">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 font-bold text-foreground">
             <Image src={`${base}/lbr-logo.png`} alt="Longhorn Baja Logo" width={103} height={40} className="h-8 w-auto" />

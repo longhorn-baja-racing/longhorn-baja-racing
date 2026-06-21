@@ -5,7 +5,7 @@ const base = process.env.NEXT_PUBLIC_BASE_PATH || ""
 
 export default function Hero() {
   return (
-    <section className="relative flex min-h-screen w-full items-end overflow-hidden bg-black pt-20">
+    <section className="relative flex min-h-screen w-full items-end overflow-hidden bg-black lg:min-h-0 lg:aspect-[3/2]">
       <div className="absolute inset-0">
         <Image
           src={`${base}/baja-team-photo.jpg`}
@@ -13,7 +13,7 @@ export default function Hero() {
           fill
           priority
           sizes="100vw"
-          className="object-contain object-center"
+          className="object-cover object-center lg:object-contain"
         />
       </div>
 
