@@ -5,31 +5,31 @@ const base = process.env.NEXT_PUBLIC_BASE_PATH || ""
 
 export default function Hero() {
   return (
-    <section className="relative flex min-h-screen w-full items-center overflow-hidden bg-black pt-20">
-      <div className="absolute inset-y-0 right-0 w-full lg:w-[68%]">
+    <section className="relative flex min-h-screen w-full items-end overflow-hidden bg-black pt-20">
+      <div className="absolute inset-0">
         <Image
           src={`${base}/baja-team-photo.jpg`}
           alt="Longhorn Baja Racing team"
           fill
           priority
-          sizes="(min-width: 1024px) 68vw, 100vw"
-          className="object-contain object-right"
+          sizes="100vw"
+          className="object-contain object-center"
         />
       </div>
 
-      <div className="absolute inset-y-0 left-0 w-[70%] bg-gradient-to-r from-black via-black/95 to-transparent lg:w-[48%]" />
-      <div className="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-background to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/45 via-[35%] to-transparent to-[68%]" />
+      <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-background to-transparent" />
       <div className="absolute inset-y-0 left-0 w-2 bg-primary" />
 
-      <div className="relative z-10 w-full px-6 lg:px-10 xl:px-16">
+      <div className="relative z-10 w-full px-6 pb-12 lg:px-10 lg:pb-16 xl:px-16">
         <div className="max-w-2xl">
-          <p className="mb-6 text-xs font-black uppercase tracking-[0.3em] text-primary">UT Austin / Baja SAE</p>
+          <p className="mb-4 text-xs font-black uppercase tracking-[0.3em] text-primary">UT Austin / Baja SAE</p>
 
-          <h1 className="mb-6 text-6xl font-black uppercase leading-[0.86] tracking-[-0.065em] text-foreground sm:text-7xl md:text-8xl">
-            Design.<br />Build. <span className="text-primary">Race.</span>
+          <h1 className="mb-5 text-5xl font-black uppercase leading-[0.9] tracking-[-0.055em] text-foreground sm:text-6xl md:text-7xl">
+            Design. Build. <span className="text-primary">Race.</span>
           </h1>
 
-          <p className="mb-9 max-w-lg border-l border-white/25 pl-5 text-lg leading-relaxed text-white/75">
+          <p className="mb-6 max-w-xl border-l border-white/25 pl-5 text-base leading-relaxed text-white/75 md:text-lg">
             Hands-on engineering and off-road racing. Join a team building a single-seat vehicle to compete at Baja SAE.
           </p>
 
