@@ -15,7 +15,7 @@ export default function Footer() {
       <div className="absolute inset-y-0 left-0 w-2 bg-primary" />
       <div className="mx-auto grid max-w-7xl gap-10 px-6 py-14 md:grid-cols-[1fr_auto] md:items-end">
         <div>
-          <Image src={`${base}/lbr-logo.png`} alt="Longhorn Baja Racing" width={180} height={70} className="h-auto w-44" />
+          <Image src={`${base}/lbr-logo.png`} alt="Longhorn Baja Racing" width={160} height={160} className="h-32 w-32" />
           <p className="mt-5 max-w-md text-sm leading-relaxed text-white/55">
             Student-built off-road engineering at The University of Texas at Austin.
           </p>
