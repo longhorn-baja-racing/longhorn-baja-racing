@@ -1,0 +1,31 @@
+# Longhorn Baja Racing
+
+> Official website for The University of Texas at Austin Baja SAE student engineering team.
+
+Longhorn Baja Racing is a student-led organization at The University of Texas at Austin in Austin, Texas. The team designs, builds, tests, and races a single-seat off-road vehicle in Baja SAE collegiate engineering competitions.
+
+## Key Topics
+
+- Baja SAE and collegiate motorsports
+- Off-road vehicle design, manufacturing, testing, and competition
+- Mechanical, automotive, electrical, and software engineering
+- Student leadership, sponsorship, and hands-on engineering education
+
+## Site Sections
+
+- About: https://longhornbajaracing.com/#about
+- Engineering and operations subteams: https://longhornbajaracing.com/#team
+- Team leadership: https://longhornbajaracing.com/#members
+- Merchandise preview: https://longhornbajaracing.com/#merch
+- Sponsors and partners: https://longhornbajaracing.com/#sponsors
+
+## Official Profiles
+
+- Website: https://longhornbajaracing.com/
+- GitHub: https://github.com/longhorn-baja-racing
+- Instagram: https://www.instagram.com/longhornbajaracing/
+- LinkedIn: https://www.linkedin.com/company/longhorn-baja-racing/
+
+## Contact
+
+- Email: longhornbaja@gmail.com
