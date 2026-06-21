@@ -17,11 +17,11 @@ export default function Hero() {
         />
       </div>
 
-      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/45 via-[35%] to-transparent to-[68%]" />
+      <div className="absolute inset-x-0 top-0 h-screen bg-gradient-to-t from-black via-black/45 via-[35%] to-transparent to-[68%]" />
       <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-background to-transparent" />
       <div className="absolute inset-y-0 left-0 w-2 bg-primary" />
 
-      <div className="relative z-10 w-full px-6 pb-12 lg:px-10 lg:pb-16 xl:px-16">
+      <div className="relative z-10 w-full px-6 pb-12 lg:absolute lg:top-[max(7rem,calc(100vh-22rem))] lg:px-10 lg:pb-0 xl:px-16">
         <div className="max-w-2xl">
           <p className="mb-4 text-xs font-black uppercase tracking-[0.3em] text-primary">UT Austin / Baja SAE</p>
 
