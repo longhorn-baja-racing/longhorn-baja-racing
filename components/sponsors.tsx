@@ -36,35 +36,47 @@ function tierLabel(tier: string) {
 export default function Sponsors() {
   return (
       <Section label="OUR PARTNERS" title="Sponsors" anchor="sponsors">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="mb-10 flex flex-col gap-3 border-l-2 border-primary pl-5">
+          <p className="max-w-2xl text-lg leading-relaxed text-white/65">
+            The organizations, shops, and engineering partners that help turn our designs into a competition-ready vehicle.
+          </p>
+        </div>
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {sponsorList.map((sponsor) => {
             const outline =
                 sponsor.tier === "title"
-                    ? "border-2 border-white"
+                    ? "border-primary"
                     : sponsor.tier === "gold"
-                        ? "ring-2 ring-yellow-400"
+                        ? "border-yellow-500/70"
                         : sponsor.tier === "bronze"
-                            ? "ring-2 ring-amber-700"
-                            : ""
+                            ? "border-amber-700/70"
+                            : "border-white/10"
 
             const labelClass =
                 sponsor.tier === "title"
-                    ? "text-lg font-bold mb-3 text-center"
-                    : "text-sm font-semibold mb-2 text-center"
+                    ? "bg-primary text-white"
+                    : "bg-white/10 text-white/65"
 
             const card = (
                 <div
-                    className={`flex flex-col items-center p-8 bg-card border border-border rounded-lg hover:border-primary transition-colors ${outline} ${sponsor.url ? "cursor-pointer" : ""}`}
+                    className={`industrial-card group relative flex min-h-56 flex-col items-center justify-between overflow-hidden border p-4 transition duration-300 hover:-translate-y-1 hover:border-primary ${outline} ${sponsor.url ? "cursor-pointer" : ""}`}
                 >
-                  <div className={labelClass}>{tierLabel(sponsor.tier)}</div>
-                  <Image
-                      src={`${base}/sponsors/${sponsor.logo}`}
-                      alt={sponsor.name}
-                      width={200}
-                      height={120}
-                      className="w-full h-auto max-h-24 object-contain"
-                  />
-                  <div className="pt-4 text-sm">{sponsor.name}</div>
+                  <div className={`absolute left-0 top-0 px-3 py-2 text-[10px] font-black uppercase tracking-[0.2em] ${labelClass}`}>
+                    {tierLabel(sponsor.tier)}
+                  </div>
+                  <div className="mt-8 flex min-h-32 w-full items-center justify-center bg-white/[0.96] p-5">
+                    <Image
+                        src={`${base}/sponsors/${sponsor.logo}`}
+                        alt={sponsor.name}
+                        width={200}
+                        height={120}
+                        className="max-h-20 w-full object-contain transition duration-300 group-hover:scale-105"
+                    />
+                  </div>
+                  <div className="flex w-full items-center justify-between pt-4">
+                    <span className="text-sm font-bold uppercase tracking-[0.08em] text-white/80">{sponsor.name}</span>
+                    <span className="text-xl text-primary" aria-hidden="true">&#8599;</span>
+                  </div>
                 </div>
             )
 

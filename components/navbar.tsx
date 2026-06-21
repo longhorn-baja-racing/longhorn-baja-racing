@@ -8,37 +8,40 @@ const base = process.env.NEXT_PUBLIC_BASE_PATH || '';
 
 export default function Navbar() {
   return (
-      <nav className="fixed top-0 w-full bg-background/80 backdrop-blur-sm z-25 border-b border-primary/20">
-        <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
+      <nav className="fixed top-0 z-50 w-full border-b border-white/10 bg-black/75 backdrop-blur-xl">
+        <div className="flex w-full items-center justify-between px-4 py-3 lg:px-6">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 font-bold text-foreground">
-            <Image src={`${base}/lbr-logo.png`} alt="Longhorn Baja Logo" width={40} height={32} className="w-auto h-8" />
+            <Image src={`${base}/lbr-logo.png`} alt="Longhorn Baja Logo" width={103} height={40} className="h-8 w-auto" />
             <span className="text-lg">{""}</span>
           </Link>
 
           {/* Navigation Links */}
-          <div className="hidden md:flex items-center gap-8">
-            <Link href="#" className="text-sm text-muted-foreground hover:text-foreground transition">
+          <div className="hidden items-center gap-6 md:flex">
+            <Link href="#" className="text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground transition hover:text-primary">
               Home
             </Link>
-            <Link href="#about" className="text-sm text-muted-foreground hover:text-foreground transition">
+            <Link href="#about" className="text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground transition hover:text-primary">
               About
             </Link>
-            <Link href="#team" className="text-sm text-muted-foreground hover:text-foreground transition">
+            <Link href="#team" className="text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground transition hover:text-primary">
               Team
             </Link>
-            <Link href="#members" className="text-sm text-muted-foreground hover:text-foreground transition">
+            <Link href="#members" className="text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground transition hover:text-primary">
               Members
             </Link>
-            <Link href="#sponsors" className="text-sm text-muted-foreground hover:text-foreground transition">
+            <Link href="#merch" className="text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground transition hover:text-primary">
+              Merch
+            </Link>
+            <Link href="#sponsors" className="text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground transition hover:text-primary">
               Sponsors
             </Link>
-            <Link href="#" className="text-sm text-muted-foreground hover:text-foreground transition">
+            <Link href="#" className="text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground transition hover:text-primary">
               Apply
             </Link>
           </div>
 
-          <Button asChild variant="outline" className="text-foreground hover:bg-primary/10 rounded-lg px-6 py-2 text-sm font-medium border border-primary">
+          <Button asChild className="rounded-none border border-primary bg-primary px-5 text-xs font-black uppercase tracking-[0.14em] text-white hover:bg-primary/80">
             <a href="mailto:longhornbaja@gmail.com" aria-label="Email us">
               Contact Us
             </a>

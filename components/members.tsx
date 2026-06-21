@@ -7,7 +7,7 @@ const lead_list = [
   {
     id: "Yash Tate",
     title: "Yash Tate",
-    description: "Powertrain Lead",
+    description: "Co-Captain and Powertrain Lead",
     details:
         "",
     image: `${base}/members/yashtate.jpg`,
@@ -15,7 +15,7 @@ const lead_list = [
   {
     id: "Retvin Pant",
     title: "Retvin Pant",
-    description: "Dynamics Lead",
+    description: "Co-Captain and Dynamics Lead",
     details:
         "",
     image: `${base}/members/retvinpant.jpg`,
@@ -23,7 +23,7 @@ const lead_list = [
   {
     id: "Jestin Castillo",
     title: "Jestin Castillo",
-    description: "Ergonomics Lead",
+    description: "Co-Vice Captain and Ergonomics Lead",
     details:
         "",
     image: `${base}/members/jestincastillo.jpg`,
@@ -31,7 +31,7 @@ const lead_list = [
   {
     id: "Peter Vlahakis",
     title: "Peter Vlahakis",
-    description: "Chassis Lead",
+    description: "Co-Vice Captain and Chassis Lead",
     details:
         "",
     image: `${base}/members/petervlahakis.jpg`,
@@ -65,9 +65,15 @@ const lead_list = [
     image: `${base}/members/tanushthirungari.jpg`,
   },
   {
+    id: "Ethan",
+    title: "Ethan",
+    description: "R&D Lead",
+    details: "",
+  },
+  {
     id: "Julian Whiteley",
     title: "Julian Whiteley",
-    description: "R&D Lead",
+    description: "Simulation and Validation Lead",
     details: "",
     image: `${base}/members/julianwhiteley.jpg`,
   },
@@ -1303,12 +1309,13 @@ const showMembersWithoutImages = false
 export default function Members() {
   return (
       <Section title="Members" label="WHO WE ARE" anchor="members">
-        <div className="text-center max-w-3xl mx-auto mb-10">
-        <p className="text-3xl md:text-2xl font-bold text-orange">
-          Team Leads
-        </p>
-      </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="mb-10 flex flex-col gap-3 border-l-2 border-primary pl-5">
+          <p className="text-xs font-black uppercase tracking-[0.24em] text-primary">Meet the crew</p>
+          <p className="max-w-2xl text-lg leading-relaxed text-white/65">
+            The students responsible for guiding design, fabrication, operations, and competition.
+          </p>
+        </div>
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {lead_list.map((lead) => (
               <MemberCard key={lead.id} {...lead} />
           ))}

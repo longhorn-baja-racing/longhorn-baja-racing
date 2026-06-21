@@ -5,13 +5,15 @@ import "./globals.css"
 import { Inter as V0_Font_Inter, Geist_Mono as V0_Font_Geist_Mono } from "next/font/google"
 
 // Fonts
-const _inter = V0_Font_Inter({
+const inter = V0_Font_Inter({
   subsets: ["latin"],
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  variable: "--font-inter",
 })
-const _geistMono = V0_Font_Geist_Mono({
+const geistMono = V0_Font_Geist_Mono({
   subsets: ["latin"],
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  variable: "--font-geist-mono",
 })
 
 export const metadata: Metadata = {
@@ -26,7 +28,7 @@ export default function RootLayout({
 }>) {
   return (
       <html lang="en">
-        <body className={`font-sans antialiased`}>
+        <body className={`${inter.variable} ${geistMono.variable} font-sans antialiased`}>
         {children}
         </body>
       </html>
