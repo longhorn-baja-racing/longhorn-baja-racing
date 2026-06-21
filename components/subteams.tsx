@@ -102,7 +102,10 @@ const subteam_list = [
 export default function Subteams() {
   return (
       <Section title="Subteams" label="WHAT WE BUILD" anchor="team">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <p className="mb-10 max-w-2xl text-lg leading-relaxed text-white/65">
+          Ten disciplines, one vehicle. Select a card to see how each group turns engineering decisions into race-day performance.
+        </p>
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {subteam_list.map((subteam) => (
               <SubteamCard key={subteam.id} {...subteam} />
           ))}

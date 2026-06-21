@@ -1,9 +1,8 @@
 "use client"
 
 import Image from "next/image"
-import { useState } from "react"
 
-interface SubteamCardProps {
+interface MemberCardProps {
   id: string
   title: string
   description: string
@@ -11,47 +10,20 @@ interface SubteamCardProps {
   image: string
 }
 
-export default function MemberCard({ id, title, description, details, image }: SubteamCardProps) {
-  const [isExpanded, setIsExpanded] = useState(false)
-
-  if (isExpanded) {
-    return (
-        <div
-            id={id}
-            onClick={() => setIsExpanded(false)}
-            className="relative h-64 rounded-2xl border border-border overflow-hidden cursor-pointer hover:border-primary transition-colors"
-            aria-expanded={true}
-        >
-          <Image src={image} alt={title} fill className="object-cover filter blur-sm scale-105"/>
-
-          <div className="absolute inset-0 bg-black/60" />
-          {/* Expanded content */}
-          <div className="p-6 h-full flex flex-col justify-center relative z-10">
-            <h3 className="text-2xl font-bold text-foreground mb-4">{title}</h3>
-            <p className="text-base text-foreground leading-relaxed">{details}</p>
-          </div>
-        </div>
-    )
-  }
-
+export default function MemberCard({ id, title, description, image }: MemberCardProps) {
   return (
-      <div
-          id={id}
-          /*onClick={() => setIsExpanded(true)}*/
-          className="relative h-64 rounded-2xl border border-border overflow-hidden cursor-pointer hover:border-primary transition-colors"
-          aria-expanded={false}
-      >
-        <Image src={image} alt={title} fill className="object-cover" />
-
-        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/40 to-black/80" />
-
-        <div className="absolute inset-0 flex flex-col justify-between p-6">
-          <div />
-          <div className="text-left">
-            <h3 className="text-lg font-semibold text-foreground">{title}</h3>
-            <p className="text-sm text-muted-foreground">{description}</p>
-          </div>
-        </div>
+    <article
+      id={id}
+      className="group relative h-80 overflow-hidden border border-white/10 bg-card transition duration-300 hover:-translate-y-1 hover:border-primary"
+    >
+      <Image src={image} alt={title} fill className="object-cover transition duration-500 group-hover:scale-105" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 border-t border-white/10 bg-black/75 p-5 backdrop-blur-sm">
+        <p className="mb-2 text-[10px] font-black uppercase tracking-[0.24em] text-primary">Team Lead</p>
+        <h3 className="text-xl font-black uppercase tracking-[-0.02em] text-white">{title}</h3>
+        <p className="mt-1 text-sm text-white/60">{description}</p>
       </div>
+      <div className="absolute inset-y-0 left-0 w-1 bg-primary opacity-0 transition group-hover:opacity-100" />
+    </article>
   )
 }

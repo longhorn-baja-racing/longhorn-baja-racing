@@ -1,67 +1,75 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
-import { useState, useEffect } from "react"
 
-const base = process.env.NEXT_PUBLIC_BASE_PATH || '';
+const base = process.env.NEXT_PUBLIC_BASE_PATH || ""
 
 export default function Hero() {
   const [scrollY, setScrollY] = useState(0)
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrollY(window.scrollY)
-    }
+    const handleScroll = () => setScrollY(window.scrollY)
 
-    window.addEventListener("scroll", handleScroll)
+    window.addEventListener("scroll", handleScroll, { passive: true })
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
   return (
-      <section
-          className="relative w-full h-screen bg-cover bg-center bg-no-repeat flex items-center pt-20 overflow-hidden"
-          style={{
-            backgroundImage: `url(${base}/baja-team-photo.jpg)`,
-            backgroundPosition: `center ${scrollY * 0.5}px`,
-          }}
-      >
-        <div className="absolute inset-0 bg-background/50"></div>
+    <section
+      className="relative flex min-h-[760px] w-full items-center overflow-hidden bg-cover bg-center bg-no-repeat pt-20"
+      style={{
+        backgroundImage: `url(${base}/baja-team-photo.jpg)`,
+        backgroundPosition: `center ${scrollY * 0.35}px`,
+      }}
+    >
+      <div className="absolute inset-0 bg-gradient-to-r from-black via-black/75 to-black/15" />
+      <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-black/30" />
+      <div className="absolute inset-y-0 left-0 w-2 bg-primary" />
 
-        {/* Content */}
-        <div className="relative z-10 max-w-7xl mx-auto px-6 w-full">
-          <div className="max-w-2xl">
-            <p className="text-primary text-sm font-black tracking-widest mb-4">UT AUSTIN • BAJA SAE</p>
+      <div className="relative z-10 mx-auto w-full max-w-7xl px-6">
+        <div className="max-w-3xl">
+          <div className="mb-6 flex items-center gap-4">
+            <span className="h-px w-10 bg-primary" aria-hidden="true" />
+            <p className="text-xs font-black uppercase tracking-[0.3em] text-primary">UT Austin / Baja SAE</p>
+          </div>
 
-            <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-6 leading-tight">Design. Build. Race.</h1>
+          <h1 className="mb-6 text-6xl font-black uppercase leading-[0.86] tracking-[-0.065em] text-foreground sm:text-7xl md:text-8xl">
+            Design.<br />Build. <span className="text-primary">Race.</span>
+          </h1>
 
-            <p className="text-lg text-foreground mb-8 max-w-xl leading-relaxed">
-              Hands-on engineering and off-road racing. Join a team building a single-seat vehicle to compete at Baja SAE.
-            </p>
+          <p className="mb-9 max-w-xl border-l border-white/25 pl-5 text-lg leading-relaxed text-white/75">
+            Hands-on engineering and off-road racing. Join a team building a single-seat vehicle to compete at Baja SAE.
+          </p>
 
-            {/* Buttons */}
-            <div className="flex gap-4">
-              <a
-                  href="https://docs.google.com/forms/d/e/1FAIpQLScnt7iGpsNXqgPrenaE_j7tIgZ8WXwcE2ux5DR1CmHHVevw3w/closedform"
-                  target="_blank"
-                  rel="noopener noreferrer"
-              >
-                <Button className="border-2 border-primary bg-transparent text-white hover:bg-primary hover:text-primary-foreground rounded-lg px-8 py-3 font-bold transition-colors cursor-pointer">
-                  Apply
-                </Button>
-              </a>
+          <div className="flex flex-wrap gap-4">
+            <a
+              href="https://docs.google.com/forms/d/e/1FAIpQLScnt7iGpsNXqgPrenaE_j7tIgZ8WXwcE2ux5DR1CmHHVevw3w/closedform"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Button className="h-12 cursor-pointer rounded-none border border-primary bg-primary px-8 text-xs font-black uppercase tracking-[0.2em] text-white transition-colors hover:bg-primary/80">
+                Join the Team
+              </Button>
+            </a>
 
-              <a
-                  href="https://f8015311-d3fb-43ec-a118-e7f2cf0392b2.filesusr.com/ugd/6ade08_fae26c60d1c04d30b24660b24acb9c35.pdf"
-                  target="_blank"
-                  rel="noopener noreferrer"
-              >
-                <Button className="border-2 border-primary bg-transparent text-white hover:bg-primary hover:text-primary-foreground rounded-lg px-8 py-3 font-bold transition-colors cursor-pointer">
-                  Sponsor
-                </Button>
-              </a>
-            </div>
+            <a
+              href="https://f8015311-d3fb-43ec-a118-e7f2cf0392b2.filesusr.com/ugd/6ade08_fae26c60d1c04d30b24660b24acb9c35.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Button className="h-12 cursor-pointer rounded-none border border-white/30 bg-black/25 px-8 text-xs font-black uppercase tracking-[0.2em] text-white transition-colors hover:border-primary hover:bg-primary/10">
+                Become a Sponsor
+              </Button>
+            </a>
           </div>
         </div>
-      </section>
+      </div>
+
+      <div className="absolute bottom-8 right-6 hidden text-right md:block">
+        <p className="text-6xl font-black uppercase tracking-[-0.08em] text-white/10">Baja SAE</p>
+        <p className="text-xs font-bold uppercase tracking-[0.3em] text-white/35">Built in Austin, Texas</p>
+      </div>
+    </section>
   )
 }

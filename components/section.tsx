@@ -9,12 +9,13 @@ interface SectionProps {
 
 export default function Section({ label, title, anchor, children }: SectionProps) {
   return (
-      <section className="bg-background py-20 px-6" id={anchor}>
+      <section className="site-section px-6 py-20 md:py-28" id={anchor}>
         <div className="max-w-7xl mx-auto">
-          <div className="mb-12">
+          <div className="mb-12 flex items-end gap-5 md:mb-16">
+            <span className="hidden h-px w-12 bg-primary md:block" aria-hidden="true" />
             <div className="w-fit">
-              <h2 className="text-3xl md:text-4xl font-bold text-white">{title}</h2>
-              {label && <p className="text-xs font-semibold text-primary mt-2 uppercase tracking-wide">{label}</p>}
+              {label && <p className="mb-3 text-xs font-black uppercase tracking-[0.28em] text-primary">{label}</p>}
+              <h2 className="text-4xl font-black uppercase tracking-[-0.04em] text-white md:text-5xl">{title}</h2>
             </div>
           </div>
           {children}
