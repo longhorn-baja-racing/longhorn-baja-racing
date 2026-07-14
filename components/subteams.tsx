@@ -50,9 +50,6 @@ const subteam_list = [
     description: "Telemetry, sensors, and electronics.",
     details: "The Electronics Subteam gathers information about the vehicle through the use of sensors and " +
         "ensures driver safety with brake lights and kill switches.",
-    image: `${base}/subteams/chassis.avif`,
-    imageAlt: "Longhorn Baja Racing vehicle hardware used for sensors, wiring, and safety electronics.",
-    imagePosition: "center 55%",
     visual: "electronics" as const,
   },
   {
@@ -61,9 +58,6 @@ const subteam_list = [
     description: "Website, data analysis, and simulation.",
     details: "The Software Subteam visualizes live sensor data and captures vehicle telemetry for simulation " +
         "analysis to enhance overall performance for future competition vehicles.",
-    image: `${base}/subteams/dynamics.avif`,
-    imageAlt: "Longhorn Baja Racing vehicle used for telemetry, simulation, and data analysis.",
-    imagePosition: "center 50%",
     visual: "software" as const,
   },
   {
@@ -72,9 +66,6 @@ const subteam_list = [
     description: "Public communications and social media.",
     details: "The Public Relations subteam works with our presence on social media, managing " +
         "our team's LinkedIn and Instagram profiles.",
-    image: `${base}/baja-team-photo.jpg`,
-    imageAlt: "Longhorn Baja Racing team representing the organization publicly.",
-    imagePosition: "center 42%",
     visual: "public-relations" as const,
   },
   {
@@ -83,9 +74,6 @@ const subteam_list = [
     description: "Rules compliance, finances, and team operations.",
     details: "The Business subteam manages our car's compliance with the SAE rules, finances," +
         " and involvement with UT Austin.",
-    image: `${base}/baja-team-photo.jpg`,
-    imageAlt: "Longhorn Baja Racing team supported by rules, budgeting, and operations.",
-    imagePosition: "45% 45%",
     visual: "business" as const,
   },
   {
@@ -94,9 +82,6 @@ const subteam_list = [
     description: "Corporate outreach and sponsorships.",
     details: "The Corporate Relations subteam manages relationships with other companies, " +
         "focusing on outreach and sponsorships.",
-    image: `${base}/baja-team-photo.jpg`,
-    imageAlt: "Longhorn Baja Racing team and vehicle supported by corporate partners.",
-    imagePosition: "58% 44%",
     visual: "corporate-relations" as const,
   },
   {
@@ -104,9 +89,6 @@ const subteam_list = [
     title: "Logistics",
     description: "Transportation, storage, and event coordination.",
     details: "The Logistics subteam manages transportation, storage, and event coordination.",
-    image: `${base}/baja-team-photo.jpg`,
-    imageAlt: "Longhorn Baja Racing vehicle and team prepared for transportation and competition events.",
-    imagePosition: "70% 48%",
     visual: "logistics" as const,
   },
 ]
