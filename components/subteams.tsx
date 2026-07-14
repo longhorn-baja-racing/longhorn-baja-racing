@@ -68,8 +68,8 @@ const subteam_list = [
     description: "Public communications and social media.",
     details: "The Public Relations subteam works with our presence on social media, managing " +
         "our team's LinkedIn and Instagram profiles.",
-    image: `${base}/subteams/pr.jpeg`,
-    imageAlt: "Longhorn Baja Racing PR Subteam Image.",
+    image: `${base}/subteams/public-relations.avif`,
+    imageAlt: "Media equipment representing the Longhorn Baja Racing Public Relations Subteam.",
   },
   {
     id: "business",
@@ -77,8 +77,8 @@ const subteam_list = [
     description: "Rules compliance, finances, and team operations.",
     details: "The Business subteam manages our car's compliance with the SAE rules, finances," +
         " and involvement with UT Austin.",
-    image: `${base}/subteams/business.jpeg`,
-    imageAlt: "Longhorn Baja Racing Business Subteam Image.",
+    image: `${base}/subteams/business.avif`,
+    imageAlt: "Planning tools representing the Longhorn Baja Racing Business Subteam.",
   },
   {
     id: "corporate-relations",
@@ -86,16 +86,16 @@ const subteam_list = [
     description: "Corporate outreach and sponsorships.",
     details: "The Corporate Relations subteam manages relationships with other companies, " +
         "focusing on outreach and sponsorships.",
-    image: `${base}/subteams/cr.jpeg`,
-    imageAlt: "Longhorn Baja Racing CR Subteam Image.",
+    image: `${base}/subteams/corporate-relations.avif`,
+    imageAlt: "Sponsorship presentation materials representing the Longhorn Baja Racing Corporate Relations Subteam.",
   },
   {
     id: "logistics",
     title: "Logistics",
     description: "Transportation, storage, and event coordination.",
     details: "The Logistics subteam manages transportation, storage, and event coordination.",
-    image: `${base}/subteams/logistics.jpeg`,
-    imageAlt: "Longhorn Baja Racing Logistics Subteam Image.",
+    image: `${base}/subteams/logistics.avif`,
+    imageAlt: "A Baja vehicle and race trailer representing the Longhorn Baja Racing Logistics Subteam.",
   },
 ]
 
