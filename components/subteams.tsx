@@ -51,7 +51,7 @@ const subteam_list = [
     details: "The Electronics Subteam gathers information about the vehicle through the use of sensors and " +
         "ensures driver safety with brake lights and kill switches.",
     image: `${base}/subteams/electronics.avif`,
-    imageAlt: "Longhorn Baja Racing Electronics Subteam Image.",
+    imageAlt: "Electronics schematic over the Longhorn Baja vehicle CAD.",
   },
   {
     id: "software",
@@ -60,7 +60,7 @@ const subteam_list = [
     details: "The Software Subteam visualizes live sensor data and captures vehicle telemetry for simulation " +
         "analysis to enhance overall performance for future competition vehicles.",
     image: `${base}/subteams/software.avif`,
-    imageAlt: "Longhorn Baja Racing Software Subteam Image.",
+    imageAlt: "Telemetry dashboard connected to the Longhorn Baja vehicle CAD.",
   },
   {
     id: "public-relations",
@@ -69,7 +69,7 @@ const subteam_list = [
     details: "The Public Relations subteam works with our presence on social media, managing " +
         "our team's LinkedIn and Instagram profiles.",
     image: `${base}/subteams/public-relations.avif`,
-    imageAlt: "Media equipment representing the Longhorn Baja Racing Public Relations Subteam.",
+    imageAlt: "Longhorn racing team photography with an editorial media frame.",
   },
   {
     id: "business",
@@ -78,7 +78,7 @@ const subteam_list = [
     details: "The Business subteam manages our car's compliance with the SAE rules, finances," +
         " and involvement with UT Austin.",
     image: `${base}/subteams/business.avif`,
-    imageAlt: "Planning tools representing the Longhorn Baja Racing Business Subteam.",
+    imageAlt: "Compliance and budget planning beside the Longhorn Baja vehicle CAD.",
   },
   {
     id: "corporate-relations",
@@ -87,7 +87,7 @@ const subteam_list = [
     details: "The Corporate Relations subteam manages relationships with other companies, " +
         "focusing on outreach and sponsorships.",
     image: `${base}/subteams/corporate-relations.avif`,
-    imageAlt: "Sponsorship presentation materials representing the Longhorn Baja Racing Corporate Relations Subteam.",
+    imageAlt: "Longhorn Baja sponsors connected to the team's vehicle CAD.",
   },
   {
     id: "logistics",
@@ -95,7 +95,7 @@ const subteam_list = [
     description: "Transportation, storage, and event coordination.",
     details: "The Logistics subteam manages transportation, storage, and event coordination.",
     image: `${base}/subteams/logistics.avif`,
-    imageAlt: "A Baja vehicle and race trailer representing the Longhorn Baja Racing Logistics Subteam.",
+    imageAlt: "Transport trailer, route, and the Longhorn Baja vehicle CAD.",
   },
 ]
 
