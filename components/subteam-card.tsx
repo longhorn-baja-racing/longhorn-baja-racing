@@ -1,6 +1,6 @@
 "use client"
 
-import SubteamDiagram, { type SubteamDiagramKind } from "@/components/subteam-diagram"
+import SubteamSymbol, { type SubteamSymbolKind } from "@/components/subteam-symbol"
 import { useState } from "react"
 
 interface SubteamCardProps {
@@ -8,7 +8,7 @@ interface SubteamCardProps {
   title: string
   description: string
   details: string
-  visual: SubteamDiagramKind
+  visual: SubteamSymbolKind
 }
 
 export default function SubteamCard({ id, title, description, details, visual }: SubteamCardProps) {
@@ -22,10 +22,15 @@ export default function SubteamCard({ id, title, description, details, visual }:
       className="group relative h-72 overflow-hidden border border-white/10 bg-card text-left transition duration-300 hover:-translate-y-1 hover:border-primary focus-visible:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
       aria-expanded={isExpanded}
     >
-      <div className={`absolute inset-0 transition duration-500 ${isExpanded ? "scale-105 blur-sm" : "group-hover:scale-105"}`}>
-        <SubteamDiagram kind={visual} title={title} />
+      <div className="absolute inset-0 bg-[#141719]" />
+      <div className={`absolute inset-x-0 top-14 flex h-36 items-center justify-center transition duration-500 ${isExpanded ? "scale-95 opacity-10 blur-sm" : "group-hover:scale-105"}`}>
+        <SubteamSymbol
+          kind={visual}
+          title={title}
+          className="h-28 w-28 text-white/70 transition-colors duration-300 group-hover:text-white/90"
+        />
       </div>
-      <div className={`absolute inset-0 transition duration-300 ${isExpanded ? "bg-black/80" : "bg-gradient-to-t from-black via-black/35 to-transparent"}`} />
+      <div className={`absolute inset-0 transition duration-300 ${isExpanded ? "bg-black/85" : "bg-gradient-to-t from-black/80 via-transparent to-transparent"}`} />
       <div className="absolute inset-y-0 left-0 w-1 bg-primary transition-all duration-300 group-hover:w-2" />
 
       <div className="absolute inset-0 flex flex-col justify-between p-6">
