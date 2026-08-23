@@ -6,9 +6,9 @@ import Image from "next/image"
 const sponsorList = [
   { name: "Renesas", logo: "renesas.avif", tier: "title", url: "https://www.renesas.com/en" },
   { name: "Rally Ready", logo: "rallyready.jpg", tier: "gold", url: "https://rallyready.com" },
+  { name: "United Mechanical", logo: "united_mechanical.avif", tier: "bronze", url: "https://www.unitedmechanical.com" },
   { name: "Walker Department of Mechancial Engineering", logo: "walker_department.svg", tier: "bronze", url: "https://www.me.utexas.edu" },
   { name: "SCCA", logo: "scca.avif", tier: "bronze", url: "https://lonestarscca.org" },
-  { name: "United Mechanical", logo: "united_mechanical.avif", tier: "bronze", url: "https://www.unitedmechanical.com" },
   { name: "Oshcut", logo: "oshcut.png", tier: "bronze", url: "https://www.oshcut.com" },
   { name: "Carlstar", logo: "carlstar.png", tier: "bronze", url: "https://www.carlstar.com" },
   { name: "Makistry", logo: "makistry_logo.avif", tier: "general", url: "https://makistry.com" },
@@ -16,7 +16,7 @@ const sponsorList = [
   { name: "Ansys", logo: "ansys.avif", tier: "general", url: "https://www.ansys.com" },
   { name: "Umatek", logo: "umatek.avif", tier: "general", url: "https://www.umatek.com" },
   { name: "AFCO Racing", logo: "afco.png", tier: "general", url: "https://afcoracing.com" },
-  { name: "LSR", logo: "lsr.avif", tier: "partner org", url: "https://lsracing.com" },
+  { name: "Longhorn Sim Racing", logo: "lsr.png", tier: "partner org", url: "https://www.longhornsimracing.org", invertLogo: true },
   { name: "LCC", logo: "lcc.avif", tier: "partner org", url: "https://texaslcc.com" }
 ];
 
@@ -64,13 +64,13 @@ export default function Sponsors() {
                   <div className={`absolute left-0 top-0 px-3 py-2 text-[10px] font-black uppercase tracking-[0.2em] ${labelClass}`}>
                     {tierLabel(sponsor.tier)}
                   </div>
-                  <div className="mt-8 flex min-h-32 w-full items-center justify-center bg-white/[0.96] p-5">
+                  <div className="relative mt-8 h-32 w-full bg-white/[0.96]">
                     <Image
                         src={`${base}/sponsors/${sponsor.logo}`}
                         alt={sponsor.name}
-                        width={200}
-                        height={120}
-                        className="max-h-20 w-full object-contain transition duration-300 group-hover:scale-105"
+                        fill
+                        sizes="(min-width: 1024px) 29vw, (min-width: 768px) 45vw, 90vw"
+                        className={`object-contain p-5 transition duration-300 group-hover:scale-105 ${sponsor.invertLogo ? "brightness-0" : ""}`}
                     />
                   </div>
                   <div className="flex w-full items-center justify-between pt-4">
