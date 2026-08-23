@@ -20,122 +20,147 @@ function Diagram({ kind }: { kind: SubteamDiagramKind }) {
     case "powertrain":
       return (
         <>
-          <circle cx="202" cy="186" r="70" />
-          <circle cx="202" cy="186" r="18" className="accent-fill" />
-          <circle cx="390" cy="186" r="48" />
-          <circle cx="390" cy="186" r="12" className="accent-fill" />
-          <path d="M202 116C278 116 326 126 390 138M202 256C278 256 326 246 390 234" />
-          <circle cx="500" cy="270" r="42" />
-          <path d="M390 234 468 249M390 138l98 91" className="accent" />
-          <path d="M542 270h56M500 228v84" className="detail" />
+          <path d="M82 196h34l22-40h96l28 40h26v104H82Z" />
+          <path d="M110 156v-26h76M234 170l28-34h34" className="detail" />
+          <circle cx="170" cy="246" r="31" className="accent" />
+          <circle cx="170" cy="246" r="9" />
+          <circle cx="368" cy="246" r="43" className="accent" />
+          <circle cx="368" cy="246" r="12" />
+          <circle cx="510" cy="246" r="73" />
+          <circle cx="510" cy="246" r="28" />
+          <path d="M201 246h124M411 225l71-8M411 267l71 8" />
+          <path d="m296 228 30 18-30 18" className="accent" />
+          <text x="113" y="123" className="label">ENGINE</text>
         </>
       )
     case "dynamics":
       return (
         <>
-          <path d="M96 318h448" className="detail" />
-          <circle cx="424" cy="230" r="78" />
-          <circle cx="424" cy="230" r="28" className="accent" />
-          <path d="m160 154 218 50M160 296l218-42M160 154v142" />
-          <path d="m248 128 18 18-18 18 18 18-18 18 18 18-18 18 18 18-18 18 18 18" className="accent" />
-          <path d="M248 128h-36M266 290h-54M424 152v156" className="detail" />
+          <path d="M82 326h476" className="detail" />
+          <path d="M112 132h218M136 132v168" />
+          <circle cx="448" cy="242" r="82" />
+          <circle cx="448" cy="242" r="35" className="accent" />
+          <circle cx="448" cy="242" r="10" />
+          <path d="m136 176 270 43M136 300l270-37" />
+          <path d="m248 150 18 16-18 16 18 16-18 16 18 16-18 16 18 16-18 16 18 16" className="accent" />
+          <path d="M248 150h-26M266 294h-44" />
+          <path d="M414 208c-25 7-31 50-8 65" className="accent" />
+          <text x="184" y="118" className="label">SPRING</text>
         </>
       )
     case "chassis":
       return (
         <>
-          <path d="M104 302 160 124h190l112 178H104Z" />
-          <path d="M160 124 274 302M350 124 268 302M104 302l104-72h210l44 72" />
-          <path d="M208 230 248 82h86l84 148M248 82l102 42M334 82l-174 42" className="accent" />
-          <path d="M92 324h408M462 302l80 22" className="detail" />
+          <circle cx="142" cy="294" r="54" className="detail" />
+          <circle cx="500" cy="294" r="54" className="detail" />
+          <path d="M112 292h60l70-55h205l54 55h40" />
+          <path d="M174 292 220 138h176l72 154M220 138l118 99M396 138l-58 99M242 237h205" />
+          <path d="M260 138 286 84h76l34 54M286 84l110 54" className="accent" />
+          <path d="M174 292h294M92 350h468" className="detail" />
+          <text x="260" y="68" className="label">ROLL CAGE</text>
         </>
       )
     case "ergonomics":
       return (
         <>
-          <path d="M204 112c-24 48-18 92 18 132l-38 62h176l-28-66c-20-46-18-86 8-128Z" />
-          <path d="m218 134 98 114M326 134 228 248" className="accent" />
-          <circle cx="442" cy="154" r="48" />
-          <circle cx="442" cy="154" r="8" className="accent-fill" />
-          <path d="M442 106v96M394 154h96M408 302h64M414 270h22v32M456 254h22v48" />
-          <path d="M360 222 414 188" className="detail" />
+          <path d="M170 112v178c0 25 20 44 44 44h145" />
+          <path d="M170 256h126l42 78" className="detail" />
+          <circle cx="276" cy="118" r="34" />
+          <path d="M274 154c-28 36-32 76-10 111l64 20M270 184l82 36M264 265l82 48" />
+          <circle cx="384" cy="206" r="39" />
+          <circle cx="384" cy="206" r="8" className="accent-fill" />
+          <path d="M350 220h-40M270 172l64 98M332 170l-62 100" className="accent" />
+          <path d="M418 334h104M438 300h24v34M494 282h24v52" />
+          <text x="103" y="104" className="label">SEAT</text>
         </>
       )
     case "electronics":
       return (
         <>
-          <rect x="224" y="104" width="192" height="190" rx="10" />
-          <rect x="274" y="150" width="92" height="74" rx="4" className="accent" />
-          <path d="M224 140h-68l-36-36M224 188h-92M224 246h-68l-36 38M416 140h68l36-36M416 188h92M416 246h68l36 38" />
-          <circle cx="108" cy="92" r="15" className="accent-fill" />
-          <circle cx="116" cy="188" r="15" />
-          <circle cx="108" cy="296" r="15" className="accent-fill" />
-          <circle cx="532" cy="92" r="15" />
-          <circle cx="524" cy="188" r="15" className="accent-fill" />
-          <circle cx="532" cy="296" r="15" />
-          <path d="M260 104V76M308 104V76M356 104V76M404 104V76M260 294v28M308 294v28M356 294v28M404 294v28" className="detail" />
+          <rect x="244" y="124" width="152" height="150" rx="10" className="accent" />
+          <text x="282" y="210" className="label label-large">ECU</text>
+          <rect x="72" y="90" width="120" height="72" rx="8" />
+          <text x="88" y="135" className="label">SENSOR</text>
+          <rect x="448" y="90" width="120" height="72" rx="8" />
+          <text x="466" y="135" className="label">DISPLAY</text>
+          <rect x="72" y="280" width="120" height="64" rx="8" />
+          <text x="98" y="321" className="label">KILL</text>
+          <rect x="448" y="280" width="120" height="64" rx="8" />
+          <text x="468" y="321" className="label">LIGHTS</text>
+          <path d="M192 126h52M396 126h52M192 312h24l28-58M396 254l28 58h24" />
+          <circle cx="218" cy="126" r="7" className="accent-fill" />
+          <circle cx="422" cy="126" r="7" className="accent-fill" />
+          <circle cx="226" cy="286" r="7" className="accent-fill" />
+          <circle cx="414" cy="286" r="7" className="accent-fill" />
         </>
       )
     case "software":
       return (
         <>
-          <rect x="106" y="82" width="350" height="220" rx="10" />
-          <path d="M136 184h42l22-48 38 102 34-70 32 16h120" className="accent" />
-          <path d="M136 122h110M136 268h78M280 268h144M282 122h142" className="detail" />
-          <path d="M282 302v38M210 340h144" />
-          <rect x="492" y="136" width="70" height="116" rx="8" />
-          <circle cx="527" cy="168" r="10" className="accent-fill" />
-          <circle cx="527" cy="220" r="10" />
-          <path d="M456 194h36" className="accent" />
+          <rect x="82" y="90" width="390" height="224" rx="10" />
+          <text x="112" y="132" className="label">LIVE TELEMETRY</text>
+          <path d="M112 226h46l28-60 42 106 42-82 38 36h130" className="accent" />
+          <path d="M112 282h326M112 158h326" className="detail" />
+          <path d="M224 314v32M158 346h198" />
+          <rect x="504" y="154" width="74" height="112" rx="8" />
+          <text x="518" y="218" className="label">DATA</text>
+          <path d="M472 210h32" className="accent" />
+          <path d="M526 154v-30M556 154v-30" className="detail" />
         </>
       )
     case "public-relations":
       return (
         <>
-          <path d="M118 160h244v142H118z" />
-          <path d="m176 160 28-52h88l28 52" />
-          <circle cx="240" cy="230" r="48" className="accent" />
-          <circle cx="240" cy="230" r="18" />
-          <path d="M362 198 450 154v154l-88-44Z" />
-          <path d="M474 178c34 28 34 76 0 104M506 146c58 48 58 120 0 168" className="accent" />
-          <path d="M98 326h438" className="detail" />
+          <path d="M72 170h248v146H72z" />
+          <path d="m126 170 28-46h86l28 46" />
+          <circle cx="196" cy="242" r="48" className="accent" />
+          <circle cx="196" cy="242" r="17" />
+          <rect x="380" y="82" width="142" height="244" rx="18" />
+          <circle cx="451" cy="126" r="8" className="accent-fill" />
+          <rect x="408" y="158" width="86" height="66" rx="5" className="detail" />
+          <path d="M408 250h86M408 278h58" className="detail" />
+          <path d="M540 150c28 22 28 58 0 80M568 122c50 42 50 94 0 136" className="accent" />
         </>
       )
     case "business":
       return (
         <>
-          <path d="M132 100h250v232H132z" />
-          <path d="M212 100V76h90v24" className="accent" />
-          <path d="m168 156 14 14 28-32M168 224l14 14 28-32M168 290l14 14 28-32" className="accent" />
-          <path d="M238 156h102M238 224h102M238 290h102" />
-          <rect x="430" y="132" width="94" height="172" rx="6" />
-          <path d="M450 158h54M450 202h12M477 202h12M504 202h1M450 234h12M477 234h12M504 234h1M450 266h12M477 266h12M504 266h1" className="detail" />
+          <path d="M82 104h286v232H82z" />
+          <path d="M176 104V78h98v26" className="accent" />
+          <path d="m120 160 14 14 28-32M120 222l14 14 28-32M120 284l14 14 28-32" className="accent" />
+          <path d="M188 160h132M188 222h104M188 284h82" />
+          <rect x="420" y="120" width="136" height="184" rx="8" />
+          <rect x="448" y="150" width="80" height="42" rx="4" className="detail" />
+          <text x="464" y="182" className="label label-large">$</text>
+          <path d="M448 226h18M486 226h18M524 226h4M448 260h18M486 260h18M524 260h4" className="detail" />
         </>
       )
     case "corporate-relations":
       return (
         <>
-          <path d="M116 92h248v240H116z" />
-          <path d="M310 92v58h54" />
-          <path d="M154 154h112M154 198h172M154 242h138M154 286h86" className="detail" />
-          <circle cx="474" cy="198" r="54" />
-          <circle cx="526" cy="250" r="54" className="accent" />
-          <path d="M364 250h78M488 144l-42-42M564 288l34 34" />
+          <rect x="72" y="128" width="180" height="156" rx="10" />
+          <rect x="388" y="128" width="180" height="156" rx="10" />
+          <text x="122" y="214" className="label label-large">TEAM</text>
+          <text x="410" y="214" className="label">SPONSOR</text>
+          <path d="M252 206h72M316 184l22 22-22 22" className="accent" />
+          <path d="M388 246h-72M324 224l-22 22 22 22" className="accent" />
+          <path d="M124 128V98h76v30M440 128V98h76v30" className="detail" />
+          <circle cx="320" cy="206" r="58" className="detail" />
+          <path d="M298 206h44" />
         </>
       )
     case "logistics":
       return (
         <>
-          <rect x="96" y="174" width="250" height="142" rx="8" />
-          <path d="M96 220h250M170 174v142M272 174v142" />
-          <path d="M168 174v-40h106v40" className="accent" />
-          <circle cx="142" cy="334" r="18" />
-          <circle cx="302" cy="334" r="18" />
-          <path d="M402 292c0-104 60-164 140-164" className="detail" />
-          <circle cx="402" cy="292" r="14" className="accent-fill" />
-          <circle cx="468" cy="196" r="14" />
-          <circle cx="542" cy="128" r="14" className="accent-fill" />
-          <path d="m510 124 32-28 32 28" className="accent" />
+          <path d="M72 176h308v126H72z" />
+          <path d="M380 218h92l58 54v30H380z" />
+          <path d="M472 218v54h58M90 156h74v78H90zM176 126h82v108h-82zM270 166h82v68h-82z" />
+          <path d="M176 126v108M90 196h74M270 200h82" className="detail" />
+          <circle cx="150" cy="316" r="28" />
+          <circle cx="442" cy="316" r="28" />
+          <path d="M72 344h480" className="detail" />
+          <path d="M402 122h104M478 98l28 24-28 24" className="accent" />
+          <text x="404" y="98" className="label">TO EVENT</text>
         </>
       )
   }
@@ -162,7 +187,7 @@ export default function SubteamDiagram({ kind, title }: SubteamDiagramProps) {
         strokeWidth="7"
         strokeLinecap="round"
         strokeLinejoin="round"
-        className="[&_.accent-fill]:fill-primary [&_.accent-fill]:stroke-none [&_.accent]:stroke-primary [&_.detail]:stroke-white/35"
+        className="[&_.accent-fill]:fill-primary [&_.accent-fill]:stroke-none [&_.accent]:stroke-primary [&_.detail]:stroke-white/35 [&_.label]:fill-white/60 [&_.label]:stroke-none [&_.label]:font-mono [&_.label]:text-[18px] [&_.label]:font-bold [&_.label-large]:text-[28px]"
       >
         <Diagram kind={kind} />
       </g>
