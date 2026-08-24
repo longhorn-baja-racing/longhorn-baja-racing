@@ -35,7 +35,7 @@ export default function Hero() {
 
           <div className="flex flex-wrap gap-4">
             <a
-              href="https://docs.google.com/forms/d/1_Vv76rYo_gKwcd6d5a6FxvZH4BN1ne3CgM9kOmJYIig/edit?usp=drivesdk"
+              href="https://docs.google.com/forms/d/e/1FAIpQLSdrG7jBfGopgbjPINuEyZia1LtU8JFHEpY_tmed9kqVui2SqQ/viewform?usp=preview"
               target="_blank"
               rel="noopener noreferrer"
             >
