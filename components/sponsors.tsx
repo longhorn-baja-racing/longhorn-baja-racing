@@ -16,7 +16,7 @@ const sponsorList = [
   { name: "Ansys", logo: "ansys.avif", tier: "general", url: "https://www.ansys.com" },
   { name: "Umatek", logo: "umatek.avif", tier: "general", url: "https://www.umatek.com" },
   { name: "AFCO Racing", logo: "afco.png", tier: "general", url: "https://afcoracing.com" },
-  { name: "LSR", logo: "lsr.avif", tier: "partner org", url: "https://lsracing.com" },
+  { name: "Longhorn Sim Racing", logo: "https://www.longhornsimracing.org/brand/logos/white_logo2.png", tier: "partner org", url: "https://www.longhornsimracing.org" },
   { name: "LCC", logo: "lcc.avif", tier: "partner org", url: "https://texaslcc.com" }
 ];
 
@@ -57,6 +57,10 @@ export default function Sponsors() {
                     ? "bg-primary text-white"
                     : "bg-white/10 text-white/65"
 
+            const logoSrc = sponsor.logo.startsWith("http")
+                ? sponsor.logo
+                : `${base}/sponsors/${sponsor.logo}`
+
             const card = (
                 <div
                     className={`industrial-card group relative flex min-h-56 flex-col items-center justify-between overflow-hidden border p-4 transition duration-300 hover:-translate-y-1 hover:border-primary ${outline} ${sponsor.url ? "cursor-pointer" : ""}`}
@@ -66,11 +70,11 @@ export default function Sponsors() {
                   </div>
                   <div className="mt-8 flex min-h-32 w-full items-center justify-center bg-white/[0.96] p-5">
                     <Image
-                        src={`${base}/sponsors/${sponsor.logo}`}
+                        src={logoSrc}
                         alt={sponsor.name}
                         width={200}
                         height={120}
-                        className="max-h-20 w-full object-contain transition duration-300 group-hover:scale-105"
+                        className={`max-h-20 w-full object-contain transition duration-300 group-hover:scale-105 ${sponsor.name === "Longhorn Sim Racing" ? "invert" : ""}`}
                     />
                   </div>
                   <div className="flex w-full items-center justify-between pt-4">
