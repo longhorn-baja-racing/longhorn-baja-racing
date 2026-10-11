@@ -109,7 +109,7 @@ const lead_list = [
   {
     id: "Abigail Mears",
     title: "Abigail Mears",
-    description: "Logistics Lead",
+    description: "Vice Captain and Logistics Lead",
     details: "",
   },
 ]
