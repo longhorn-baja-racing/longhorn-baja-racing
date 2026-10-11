@@ -43,13 +43,6 @@ const lead_list = [
     details: "",
   },
   {
-    id: "Boen Kelly",
-    title: "Boen Kelly",
-    description: "Manufacturing Lead",
-    details: "",
-    image: `${base}/members/boenkelly.jpg`,
-  },
-  {
     id: "Lily Neideffer",
     title: "Lily Neideffer",
     description: "Manufacturing Lead",
@@ -61,13 +54,6 @@ const lead_list = [
     description: "Software Lead",
     details: "",
     image: `${base}/members/alexgrinmanrivera.jpg`,
-  },
-  {
-    id: "Ayan Arfi",
-    title: "Ayan Arfi",
-    description: "Electronics Co-Lead and Business Lead",
-    details: "",
-    image: `${base}/members/ayanarfi.jpg`,
   },
   {
     id: "Arnav Vajirkar",
@@ -108,13 +94,6 @@ const lead_list = [
     details: "",
   },
   {
-    id: "Aara Chawathe",
-    title: "Aara Chawathe",
-    description: "Corporate Relations Lead",
-    details: "",
-    image: `${base}/members/aarachawathe.jpg`,
-  },
-  {
     id: "Shreesh Joshi",
     title: "Shreesh Joshi",
     description: "Corporate Relations Lead",
@@ -130,7 +109,7 @@ const lead_list = [
   {
     id: "Abigail Mears",
     title: "Abigail Mears",
-    description: "Logistics Lead",
+    description: "Vice Captain and Logistics Lead",
     details: "",
   },
 ]
