@@ -31,10 +31,16 @@ const lead_list = [
   {
     id: "Peter Vlahakis",
     title: "Peter Vlahakis",
-    description: "Co-Vice Captain and Chassis Lead",
+    description: "Co-Vice Captain, Chassis and Manufacturing Lead",
     details:
         "",
     image: `${base}/members/petervlahakis.jpg`,
+  },
+  {
+    id: "Pradyota Phaneesh",
+    title: "Pradyota Phaneesh",
+    description: "Chassis Lead",
+    details: "",
   },
   {
     id: "Boen Kelly",
@@ -42,6 +48,12 @@ const lead_list = [
     description: "Manufacturing Lead",
     details: "",
     image: `${base}/members/boenkelly.jpg`,
+  },
+  {
+    id: "Lily Neideffer",
+    title: "Lily Neideffer",
+    description: "Manufacturing Lead",
+    details: "",
   },
   {
     id: "Alex Grinman Rivera",
@@ -58,11 +70,29 @@ const lead_list = [
     image: `${base}/members/ayanarfi.jpg`,
   },
   {
+    id: "Arnav Vajirkar",
+    title: "Arnav Vajirkar",
+    description: "Business and Marketing Lead",
+    details: "",
+  },
+  {
     id: "Tanush Thirunagari",
     title: "Tanush Thirunagari",
     description: "Electronics Co-Lead",
     details: "",
     image: `${base}/members/tanushthirungari.jpg`,
+  },
+  {
+    id: "Maanas Rastogi",
+    title: "Maanas Rastogi",
+    description: "Electronics Lead",
+    details: "",
+  },
+  {
+    id: "Youssef Anbar",
+    title: "Youssef Anbar",
+    description: "Electronics Lead",
+    details: "",
   },
   {
     id: "Julian Whiteley",
@@ -72,6 +102,12 @@ const lead_list = [
     image: `${base}/members/julianwhiteley.jpg`,
   },
   {
+    id: "Ava Schrader",
+    title: "Ava Schrader",
+    description: "Simulation and Validation Lead",
+    details: "",
+  },
+  {
     id: "Aara Chawathe",
     title: "Aara Chawathe",
     description: "Corporate Relations Lead",
@@ -79,11 +115,23 @@ const lead_list = [
     image: `${base}/members/aarachawathe.jpg`,
   },
   {
+    id: "Shreesh Joshi",
+    title: "Shreesh Joshi",
+    description: "Corporate Relations Lead",
+    details: "",
+  },
+  {
     id: "Shreya Lokhande",
     title: "Shreya Lokhande",
     description: "Public Relations Lead",
     details: "",
     image: `${base}/members/shreyalokhande.jpg`,
+  },
+  {
+    id: "Abigail Mears",
+    title: "Abigail Mears",
+    description: "Logistics Lead",
+    details: "",
   },
 ]
 
