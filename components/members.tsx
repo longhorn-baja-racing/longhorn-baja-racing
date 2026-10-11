@@ -65,12 +65,6 @@ const lead_list = [
     image: `${base}/members/tanushthirungari.jpg`,
   },
   {
-    id: "Ethan",
-    title: "Ethan",
-    description: "R&D Lead",
-    details: "",
-  },
-  {
     id: "Julian Whiteley",
     title: "Julian Whiteley",
     description: "Simulation and Validation Lead",
