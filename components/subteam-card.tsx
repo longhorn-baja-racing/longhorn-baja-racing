@@ -38,7 +38,7 @@ export default function SubteamCard({ id, title, description, details, image, im
           <span className="bg-primary px-3 py-1 text-[10px] font-black uppercase tracking-[0.22em] text-white">
             Subteam
           </span>
-          <span className="font-mono text-xs text-white/45">{isExpanded ? "CLOSE" : "EXPLORE +"}</span>
+          <span className="bg-black/80 px-2 py-1 font-mono text-xs text-white/85">{isExpanded ? "CLOSE" : "EXPLORE +"}</span>
         </div>
 
         <div className="relative">

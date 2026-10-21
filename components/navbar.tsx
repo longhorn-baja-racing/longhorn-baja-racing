@@ -32,7 +32,7 @@ export default function Navbar() {
   }, [pathname, router])
 
   return (
-    <header className="site-header">
+    <header className="site-header" onKeyDown={(event) => { if (event.key === "Escape") { setOpen(false); document.querySelector<HTMLButtonElement>(".menu-toggle")?.focus() } }}>
       <div className="mx-auto flex min-h-20 max-w-7xl items-center justify-between gap-5 px-6">
         <Link href="/" onClick={() => setOpen(false)} className="flex shrink-0 items-center gap-3" aria-label="Longhorn Baja Racing home">
           <Image src={`${base}/lbr-logo.png`} alt="" width={48} height={48} className="h-12 w-12" />
@@ -41,7 +41,7 @@ export default function Navbar() {
         <button type="button" className="menu-toggle" aria-expanded={open} aria-controls="site-navigation" onClick={() => setOpen(!open)}>
           {open ? "Close −" : "Menu +"}
         </button>
-        <nav id="site-navigation" aria-label="Main navigation" className={`site-nav ${open ? "is-open" : ""}`} onKeyDown={(event) => { if (event.key === "Escape") { setOpen(false); document.querySelector<HTMLButtonElement>(".menu-toggle")?.focus() } }}>
+        <nav id="site-navigation" aria-label="Main navigation" className={`site-nav ${open ? "is-open" : ""}`}>
           {links.map(({ href, label }) => (
             <Link key={href} href={href} prefetch={false} aria-current={pathname.replace(/\/$/, "") === href.replace(/\/$/, "") ? "page" : undefined} onClick={() => setOpen(false)}>
               {label}

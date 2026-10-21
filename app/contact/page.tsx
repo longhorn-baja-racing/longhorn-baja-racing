@@ -24,7 +24,7 @@ export default function ContactPage() {
           <p className="eyebrow">Get in touch</p>
           <h2 className="mt-5 text-4xl">Let’s talk</h2>
           <p className="my-6 leading-7 text-white/65">Questions about the team, sponsorships, or working together? Reach out to Longhorn Baja Racing.</p>
-          <a href={`mailto:${siteConfig.email}`} className="break-all text-sm font-semibold text-primary underline underline-offset-8">{siteConfig.email}</a>
+          <a href={`mailto:${siteConfig.email}`} className="break-all text-sm font-semibold text-primary-text underline underline-offset-8">{siteConfig.email}</a>
           <a href={siteConfig.sponsorUrl} target="_blank" rel="noopener noreferrer" className="mt-7 block text-sm text-white/75 underline underline-offset-4">View sponsorship information ↗</a>
         </article>
       </div>

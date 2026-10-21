@@ -23,10 +23,10 @@ export default function Home() {
           <div className="grid gap-5 md:grid-cols-3">
             {destinations.map((item) => (
               <Link key={item.href} href={item.href} prefetch={false} className="home-card group">
-                <span className="font-mono text-xs text-primary">{item.number}</span>
+                <span className="font-mono text-xs text-primary-text">{item.number}</span>
                 <h3 className="mt-7 text-3xl">{item.title}</h3>
                 <p className="mt-3 text-sm leading-7 text-white/65">{item.text}</p>
-                <span className="mt-7 block text-xs font-semibold text-white/85 group-hover:text-primary">{item.link} <span aria-hidden="true">↗</span></span>
+                <span className="mt-7 block text-xs font-semibold text-white/85 group-hover:text-primary-text">{item.link} <span aria-hidden="true">↗</span></span>
               </Link>
             ))}
           </div>
