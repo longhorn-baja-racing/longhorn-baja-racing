@@ -15,7 +15,7 @@ export default function Footer() {
       <div className="absolute inset-y-0 left-0 w-2 bg-primary" />
       <div className="mx-auto grid max-w-7xl gap-10 px-6 py-14 md:grid-cols-[1fr_auto] md:items-end">
         <div>
-          <Image src={`${base}/lbr-logo.png`} alt="Longhorn Baja Racing" width={160} height={160} className="h-32 w-32" />
+          <Image src={`${base}/lbr-logo.png`} alt="Longhorn Baja Racing" width={64} height={64} className="h-16 w-16" />
           <p className="mt-5 max-w-md text-sm leading-relaxed text-white/55">
             Student-built off-road engineering at The University of Texas at Austin.
           </p>
@@ -25,6 +25,11 @@ export default function Footer() {
         </div>
 
         <div className="md:text-right">
+          <div className="mb-6 flex flex-wrap gap-5 text-sm text-white/75 md:justify-end">
+            <Link href="/calendar/" prefetch={false} className="hover:text-white">Team calendar</Link>
+            <Link href="/sponsors/" prefetch={false} className="hover:text-white">Our sponsors</Link>
+            <Link href="/contact/" prefetch={false} className="hover:text-white">Join / Contact</Link>
+          </div>
           <div className="flex flex-wrap gap-5 md:justify-end">
             {socialLinks.map((link) => (
               <Link
