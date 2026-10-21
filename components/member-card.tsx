@@ -23,13 +23,13 @@ export default function MemberCard({ id, title, description, image }: MemberCard
         ) : (
           <div className="merch-distressed merch-distressed-gray flex h-full items-center justify-center">
             <span className="text-8xl font-black uppercase text-white/15" aria-hidden="true">{title.charAt(0)}</span>
-            <span className="absolute bottom-5 text-xs font-black uppercase tracking-[0.25em] text-white/40">Photo Coming Soon</span>
+            <span className="absolute bottom-5 text-xs font-black uppercase tracking-[0.25em] text-white/65">Photo Coming Soon</span>
           </div>
         )}
       </div>
 
       <div className="relative border-t border-white/10 bg-black/75 p-5">
-        <p className="mb-2 text-[10px] font-black uppercase tracking-[0.24em] text-primary">Team Lead</p>
+        <p className="mb-2 text-[10px] font-black uppercase tracking-[0.24em] text-primary-text">Team Lead</p>
         <h2 className="text-2xl uppercase text-white">{title}</h2>
         <p className="mt-1 text-sm leading-relaxed text-white/60">{description}</p>
         <div className="absolute inset-y-0 left-0 w-1 bg-primary opacity-0 transition group-hover:opacity-100" />

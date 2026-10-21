@@ -77,7 +77,7 @@ export default function Sponsors() {
                   </div>
                   <div className="flex w-full items-center justify-between pt-4">
                     <span className="text-sm font-bold uppercase tracking-[0.08em] text-white/80">{sponsor.name}</span>
-                    {sponsor.url && <span className="text-xl text-primary" aria-hidden="true">&#8599;</span>}
+                    {sponsor.url && <span className="text-xl text-primary-text" aria-hidden="true">&#8599;</span>}
                   </div>
                 </div>
             )

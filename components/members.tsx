@@ -1331,7 +1331,7 @@ export default function Members() {
   return (
       <Section title="Members" label="WHO WE ARE" anchor="members">
         <div className="mb-10 flex flex-col gap-3 border-l-2 border-primary pl-5">
-          <p className="text-xs font-black uppercase tracking-[0.24em] text-primary">Meet the crew</p>
+          <p className="text-xs font-black uppercase tracking-[0.24em] text-primary-text">Meet the crew</p>
           <p className="max-w-2xl text-lg leading-relaxed text-white/65">
             The students responsible for guiding design, fabrication, operations, and competition.
           </p>

@@ -19,7 +19,7 @@ export default function Footer() {
           <p className="mt-5 max-w-md text-sm leading-relaxed text-white/55">
             Student-built off-road engineering at The University of Texas at Austin.
           </p>
-          <a href="mailto:longhornbaja@gmail.com" className="mt-5 inline-block text-sm font-bold text-primary transition hover:text-white">
+          <a href="mailto:longhornbaja@gmail.com" className="mt-5 inline-block text-sm font-bold text-primary-text transition hover:text-white">
             longhornbaja@gmail.com
           </a>
         </div>
@@ -37,13 +37,13 @@ export default function Footer() {
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xs font-black uppercase tracking-[0.18em] text-white/55 transition hover:text-primary"
+                className="text-xs font-black uppercase tracking-[0.18em] text-white/55 transition hover:text-primary-text"
               >
                 {link.label}
               </Link>
             ))}
           </div>
-          <p className="mt-7 text-xs uppercase tracking-[0.14em] text-white/30">
+          <p className="mt-7 text-xs uppercase tracking-[0.14em] text-white/60">
             &copy; {new Date().getFullYear()} Longhorn Baja Racing
           </p>
         </div>
