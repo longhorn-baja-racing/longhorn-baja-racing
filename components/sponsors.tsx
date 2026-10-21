@@ -1,5 +1,3 @@
-"use client"
-
 import Section from "@/components/section"
 import Image from "next/image"
 

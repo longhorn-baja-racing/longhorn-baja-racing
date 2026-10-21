@@ -1,21 +1,25 @@
 import type React from "react"
 import type { Metadata } from "next"
 import { siteConfig } from "@/lib/site"
+import Navbar from "@/components/navbar"
+import Footer from "@/components/footer"
 
 import "./globals.css"
-import { Inter as V0_Font_Inter, Geist_Mono as V0_Font_Geist_Mono } from "next/font/google"
+import { Bebas_Neue, Montserrat, IBM_Plex_Mono } from "next/font/google"
 
 // Fonts
-const inter = V0_Font_Inter({
+const montserrat = Montserrat({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800", "900"],
-  variable: "--font-inter",
+  variable: "--font-montserrat",
+  display: "swap",
 })
-const geistMono = V0_Font_Geist_Mono({
+const mono = IBM_Plex_Mono({
   subsets: ["latin"],
-  weight: ["400", "700"],
-  variable: "--font-geist-mono",
+  weight: ["400", "500"],
+  variable: "--font-plex-mono",
+  display: "swap",
 })
+const display = Bebas_Neue({ subsets: ["latin"], weight: "400", variable: "--font-bebas", display: "swap" })
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -116,14 +120,17 @@ export default function RootLayout({
 }>) {
   return (
       <html lang="en">
-        <body className={`${inter.variable} ${geistMono.variable} font-sans antialiased`}>
+        <body className={`${montserrat.variable} ${mono.variable} ${display.variable} font-sans antialiased`}>
+        <a href="#main-content" className="skip-link">Skip to content</a>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(organizationJsonLd).replace(/</g, "\\u003c"),
           }}
         />
-        {children}
+        <Navbar />
+        <main id="main-content" tabIndex={-1} className="min-h-[65vh] outline-none">{children}</main>
+        <Footer />
         </body>
       </html>
   )

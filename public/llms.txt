@@ -11,13 +11,15 @@ Longhorn Baja Racing is a student-led organization at The University of Texas at
 - Mechanical, automotive, electrical, and software engineering
 - Student leadership, sponsorship, and hands-on engineering education
 
-## Site Sections
+## Pages
 
-- About: https://longhornbajaracing.com/#about
-- Engineering and operations subteams: https://longhornbajaracing.com/#team
-- Team leadership: https://longhornbajaracing.com/#members
-- Merchandise preview: https://longhornbajaracing.com/#merch
-- Sponsors and partners: https://longhornbajaracing.com/#sponsors
+- About: https://longhornbajaracing.com/about/
+- Engineering and operations subteams: https://longhornbajaracing.com/subteams/
+- Team leadership: https://longhornbajaracing.com/members/
+- Team calendar: https://longhornbajaracing.com/calendar/
+- Merchandise preview: https://longhornbajaracing.com/merch/
+- Sponsors and partners: https://longhornbajaracing.com/sponsors/
+- Join and contact: https://longhornbajaracing.com/contact/
 
 ## Official Profiles
 

@@ -13,8 +13,8 @@ export default function Section({ label, title, anchor, children }: SectionProps
         <div className="max-w-7xl mx-auto">
           <div className="mb-12 md:mb-16">
             <div className="w-fit">
-              {label && <p className="mb-3 text-xs font-black uppercase tracking-[0.28em] text-primary">{label}</p>}
-              <h2 className="text-4xl font-black uppercase tracking-[-0.04em] text-white md:text-5xl">{title}</h2>
+              {label && <p className="eyebrow mb-4">{label}</p>}
+              <h1 className="text-6xl uppercase text-white md:text-8xl">{title}</h1>
             </div>
           </div>
           {children}

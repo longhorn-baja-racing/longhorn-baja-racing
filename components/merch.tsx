@@ -45,7 +45,7 @@ export default function Merch() {
             <div className="flex items-center justify-between gap-4 border-t border-white/10 px-5 py-4">
               <div>
                 <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">{product.type}</p>
-                <h3 className="mt-1 text-lg font-bold text-foreground">{product.name}</h3>
+                <h2 className="mt-1 text-2xl text-foreground">{product.name}</h2>
               </div>
               <span className="text-2xl text-muted-foreground transition group-hover:translate-x-1 group-hover:text-primary" aria-hidden="true">&#8594;</span>
             </div>

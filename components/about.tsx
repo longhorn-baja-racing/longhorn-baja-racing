@@ -9,9 +9,11 @@ export default function About() {
   return (
     <Section title="About Us" label="WHO WE ARE" anchor="about">
       <div className="grid gap-10 lg:grid-cols-[1.45fr_0.55fr] lg:items-start">
-        <p className="text-lg leading-relaxed text-white/75 md:text-xl">
-          Longhorn Baja Racing at The University of Texas at Austin is a hands on, student led engineering team where members design, build, test, and race an off road vehicle for the SAE Baja competition series. Students gain real world experience by working through the full engineering lifecycle from concept development and CAD to fabrication, testing, and competition while learning directly from experienced teammates and mentors. The team thrives on iteration, problem solving, and getting dirty in the shop, constantly pushing to improve performance, reliability, and durability. By competing under real industry constraints like cost, safety regulations, and standardized rules, Longhorn Baja prepares students with practical skills, technical confidence, and teamwork experience that translate directly to careers in automotive and mechanical engineering.
-        </p>
+        <div className="space-y-6 text-lg leading-relaxed text-white/75">
+          <p>Longhorn Baja Racing at The University of Texas at Austin is a hands on, student led engineering team where members design, build, test, and race an off road vehicle for the SAE Baja competition series.</p>
+          <p>Students gain real world experience by working through the full engineering lifecycle from concept development and CAD to fabrication, testing, and competition while learning directly from experienced teammates and mentors. The team thrives on iteration, problem solving, and getting dirty in the shop, constantly pushing to improve performance, reliability, and durability.</p>
+          <p>By competing under real industry constraints like cost, safety regulations, and standardized rules, Longhorn Baja prepares students with practical skills, technical confidence, and teamwork experience that translate directly to careers in automotive and mechanical engineering.</p>
+        </div>
 
         <div className="grid grid-cols-2 gap-px overflow-hidden border border-white/10 bg-white/10 lg:grid-cols-1">
           {stats.map((stat) => (
