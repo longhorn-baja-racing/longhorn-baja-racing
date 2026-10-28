@@ -104,5 +104,5 @@ test("application and sponsorship links stay usable", async ({ page }) => {
   await page.goto("/contact/")
   await expect(page.getByRole("link", { name: "Apply to Longhorn Baja ↗" })).toHaveAttribute("href", /^https:\/\/docs.google.com\/forms\//)
   await expect(page.getByRole("main").getByRole("link", { name: "longhornbaja@gmail.com", exact: true })).toHaveAttribute("href", "mailto:longhornbaja@gmail.com")
-  await expect(page.getByRole("link", { name: "View sponsorship information ↗" })).toHaveAttribute("href", /^https:\/\/.+\.pdf$/)
+  await expect(page.getByRole("link", { name: "View sponsorship information ↗" })).toHaveAttribute("href", "https://drive.google.com/file/d/1RUknYrIfWhk4B-6uqn1mqxKWQ1dn5JYZ/view?usp=sharing")
 })
