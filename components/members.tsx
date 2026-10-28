@@ -41,6 +41,7 @@ const lead_list = [
     title: "Pradyota Phaneesh",
     description: "Chassis Lead",
     details: "",
+    image: `${base}/members/prad.jpg`,
   },
   {
     id: "Lily Neideffer",
@@ -79,6 +80,7 @@ const lead_list = [
     title: "Youssef Anbar",
     description: "Electronics Lead",
     details: "",
+    image: `${base}/members/youssef.png`,
   },
   {
     id: "Julian Whiteley",
