@@ -8,18 +8,15 @@ export default function Hero() {
   return (
     <section className="relative flex min-h-[620px] w-full items-end overflow-hidden bg-black md:min-h-[700px] lg:min-h-[min(780px,90svh)]">
       <div className="absolute inset-0">
-        <picture>
-        <source srcSet={`${base}/baja-team-photo-mobile.webp 960w, ${base}/baja-team-photo.webp 1920w`} sizes="100vw" type="image/webp" />
         <Image
-          src={`${base}/baja-team-photo.webp`}
-          alt="Longhorn Baja Racing team"
+          src={`${base}/baja-action.jpg`}
+          alt="Longhorn Baja Racing vehicle airborne over a dirt jump at competition"
           fill
           loading="eager"
           fetchPriority="high"
           sizes="100vw"
-          className="object-cover object-center lg:object-top"
+          className="object-cover object-[50%_65%]"
         />
-        </picture>
       </div>
 
       <div className="absolute inset-0 bg-gradient-to-t from-black via-black/45 to-black/10" />
