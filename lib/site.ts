@@ -7,7 +7,7 @@ export const siteConfig = {
   url: "https://longhornbajaracing.com",
   email: "longhornbaja@gmail.com",
   applyUrl: "https://docs.google.com/forms/d/e/1FAIpQLSdrG7jBfGopgbjPINuEyZia1LtU8JFHEpY_tmed9kqVui2SqQ/viewform?usp=preview",
-  sponsorUrl: "https://f8015311-d3fb-43ec-a118-e7f2cf0392b2.filesusr.com/ugd/6ade08_fae26c60d1c04d30b24660b24acb9c35.pdf",
+  sponsorUrl: "https://drive.google.com/file/d/1RUknYrIfWhk4B-6uqn1mqxKWQ1dn5JYZ/view?usp=sharing",
   calendarUrl: "https://calendar.google.com/calendar/u/0?cid=bG9uZ2hvcm5iYWphQGdtYWlsLmNvbQ",
   location: "Austin, Texas",
   university: "The University of Texas at Austin",
