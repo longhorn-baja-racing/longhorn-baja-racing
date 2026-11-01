@@ -12,7 +12,7 @@ export const products = [
     "id": 1213054,
     "name": "That Didn't Happen In CAD Shirt",
     "slug": "peter-meerkat-shirt-copy",
-    "type": "Hat"
+    "type": "Shirt"
   },
   {
     "id": 1213031,
@@ -105,4 +105,5 @@ export const products = [
     "type": "Shirt"
   }
 ] as const
+
 
