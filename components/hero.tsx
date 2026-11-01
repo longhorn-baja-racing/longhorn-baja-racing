@@ -26,6 +26,9 @@ export default function Hero() {
       <div className="relative z-10 mx-auto w-full max-w-7xl px-6 pb-12 pt-48 md:pb-16">
         <div className="max-w-3xl">
           <p className="eyebrow mb-4">UT Austin / Baja SAE</p>
+          <p className="mb-5 inline-block border-l-2 border-[#d9ad72]/60 bg-black/40 px-3 py-2 font-mono text-xs text-[#ead4b5]">
+            Built together. Grateful for every mile.
+          </p>
 
           <h1 className="mb-5 text-7xl uppercase text-foreground sm:text-8xl md:text-9xl">
             Design. Build. <span className="text-primary">Race.</span>
