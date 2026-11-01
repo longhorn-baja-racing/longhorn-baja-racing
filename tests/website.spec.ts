@@ -82,7 +82,7 @@ test("merch cards show the catalog and link to individual Printful products", as
   await expect(cards).toHaveCount(17)
   const urls = new Set<string>()
   for (const card of await cards.all()) {
-    await expect(card.getByRole("img")).toHaveAttribute("src", /\/merch\/\d+\.webp$/)
+    await expect(card.getByRole("img")).toHaveAttribute("src", /\/merch\/\d+(?:-back)?\.webp$/)
     const link = card.getByRole("link", { name: /^Shop / })
     const href = (await link.getAttribute("href"))!
     expect(href).toMatch(/^https:\/\/longhornbajaracing\.printful\.me\/product\/[a-z0-9-]+$/)
@@ -92,6 +92,13 @@ test("merch cards show the catalog and link to individual Printful products", as
     await expect(link).toBeFocused()
   }
   expect(urls.size).toBe(17)
+  const priceLabels = await cards.getByText(/^From \$/).allTextContents()
+  const prices = priceLabels.map(label => Number(label.replace("From $", "")))
+  expect(prices).toHaveLength(17)
+  expect(prices).toEqual([...prices].sort((a, b) => b - a))
+  await expect(cards.first()).toContainText("Unisex X-Ray Hoodie")
+  await expect(cards.last()).toContainText("That Didn't Happen In CAD Sticker")
+  await expect(page.getByRole("img", { name: /Maanas.*printed back view/ })).toBeAttached()
   await expect(page.getByRole("link", { name: /Shop That Didn't Happen In CAD Shirt/ })).toHaveAttribute("href", "https://longhornbajaracing.printful.me/product/peter-meerkat-shirt-copy")
   await expect(page.getByRole("link", { name: "Visit the full store ↗" })).toHaveAttribute("href", "https://longhornbajaracing.printful.me/")
   await expect(page.getByRole("main")).not.toContainText("coming soon")
