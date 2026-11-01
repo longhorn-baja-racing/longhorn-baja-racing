@@ -4,6 +4,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { usePathname, useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
+import AutumnFrame from "@/components/autumn-frame"
 
 const base = process.env.NEXT_PUBLIC_BASE_PATH || ""
 const links = [
@@ -49,6 +50,7 @@ export default function Navbar() {
           ))}
         </nav>
       </div>
+      <AutumnFrame />
     </header>
   )
 }

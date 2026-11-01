@@ -1,6 +1,5 @@
 import Image from "next/image"
 import Link from "next/link"
-import AutumnDecor from "@/components/autumn-decor"
 
 const base = process.env.NEXT_PUBLIC_BASE_PATH || ""
 
@@ -14,9 +13,6 @@ export default function Footer() {
   return (
     <footer className="relative overflow-hidden border-t border-primary/40 bg-[#080808]">
       <div className="absolute inset-y-0 left-0 w-2 bg-primary" />
-      <div className="autumn-border mx-auto flex max-w-7xl justify-center px-6 py-2">
-        <AutumnDecor className="w-36 opacity-65" />
-      </div>
       <div className="mx-auto grid max-w-7xl gap-10 px-6 py-14 md:grid-cols-[1fr_auto] md:items-end">
         <div>
           <Image src={`${base}/lbr-logo.png`} alt="Longhorn Baja Racing" width={64} height={64} className="h-16 w-16" />

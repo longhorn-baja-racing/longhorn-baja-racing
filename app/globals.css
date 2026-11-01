@@ -148,7 +148,9 @@ h1, h2, h3, h4, .brand-name {
 .home-card:hover { border-color: var(--primary); background: #1a1714; }
 .action-link { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: .9rem 1.2rem; border: 1px solid var(--primary); background: var(--primary); color: white; font-size: .75rem; font-weight: 600; line-height: 1.6; transition: background .2s; }
 .action-link:hover { background: #9d4700; }
-.calendar-frame { overflow: hidden; border: 1px solid rgb(255 255 255 / .2); background: white; color-scheme: light; }
+.calendar-frame { overflow: hidden; border: 1px solid rgb(217 173 114 / .25); background: #1a1a1a; color-scheme: light; }
+/* Google owns the iframe contents; recolor its rendered surface without altering the embed or controls. */
+.calendar-frame iframe { filter: invert(.9) hue-rotate(180deg) saturate(.8); }
 .merch-distressed { isolation: isolate; background: #242424; background-image: repeating-linear-gradient(8deg, transparent 0 12px, rgb(0 0 0 / .16) 12px 14px); }
 .merch-distressed-orange { box-shadow: inset 0 0 90px rgb(191 87 0 / .38); }
 .merch-distressed-gray { box-shadow: inset 0 0 90px rgb(148 148 148 / .2); }
@@ -174,7 +176,149 @@ h1, h2, h3, h4, .brand-name {
     .brand-name { font-size: 1.3rem; }
     .brand-name > span { max-width: 150px; font-size: 8px; }
 }
+/* Fall palette and heritage typography; all routing and controls stay intact. */
+:root { --foreground: #fff0d4; --background: #100c09; }
+h1, h2, h3, h4, .brand-name { font-family: var(--font-autumn), Georgia, serif; font-weight: 900; letter-spacing: -.035em; }
+.site-header {
+    background: radial-gradient(ellipse at 30% 0, #8e3617, transparent 70%), linear-gradient(110deg, #51200f, #70270d 55%, #38180e);
+    border-color: #b77a32;
+    box-shadow: 0 3px 20px #0006, inset 0 -1px #dfaa4b55;
+}
+.site-header > div { min-height: 90px; padding-inline: max(3.5rem, 4vw); max-width: 1600px; }
+.brand-name { font-size: 1.65rem; text-transform: uppercase; }
+.brand-name > span { color: #f0c581; letter-spacing: .12em; }
+.site-nav a, .menu-toggle { font-family: var(--font-autumn), Georgia, serif; font-weight: 700; color: #ffe9c5; }
+.site-nav a:hover { color: #ffd483; }
+.site-nav a[aria-current="page"] { color: #ffc66c; border-bottom-color: transparent; }
+.site-nav a:last-child { color: #ffc06e; }
+.autumn-hero { min-height: calc(100svh - 90px); }
+.autumn-hero > .relative { padding-bottom: 65px; padding-inline: max(3.5rem, 5vw); max-width: 1600px; }
+.autumn-hero h1 { font-size: clamp(3.2rem, 6vw, 7rem); line-height: .98; max-width: 1000px; text-shadow: 0 3px 12px #0005; }
+@media (min-width: 640px) {
+    .autumn-hero > .relative > div { max-width: 1000px; }
+    .autumn-hero h1 > span { display: block; }
+}
+.autumn-hero [data-slot="button"], .action-link { font-family: var(--font-autumn), Georgia, serif; font-weight: 800; }
+.site-section { background-color: #140e0b; }
+.home-card, .industrial-card { background-color: #20160f; border-color: #ad784433; }
+.autumn-frame { position: absolute; inset: 0; z-index: 20; pointer-events: none; overflow: hidden; user-select: none; container-type: size; }
+.autumn-garland { position: absolute; overflow: visible; filter: drop-shadow(0 2px 2px #160900aa); }
+.autumn-garland--top, .autumn-garland--bottom { width: 100%; height: 48px; left: 0; }
+.autumn-garland--top { top: 65px; }
+.autumn-garland--bottom { bottom: -8px; transform: rotate(180deg); }
+.autumn-garland--left, .autumn-garland--right { width: calc(100dvh - 65px); height: 54px; top: 65px; transform-origin: 0 0; }
+.autumn-garland--left { left: 44px; transform: rotate(90deg); }
+.autumn-garland--right { left: calc(100% + 10px); transform: rotate(90deg); }
+.autumn-sprig { transform-box: fill-box; transform-origin: center; animation: autumn-sway 5s ease-in-out infinite alternate; }
+@keyframes autumn-sway { from { transform: rotate(-5deg) translateY(-1px); } to { transform: rotate(5deg) translateY(1px); } }
+@media (max-width: 1199px) { .site-nav { background: #48200f; } }
+@media (max-width: 640px) {
+    .site-header > div { padding-inline: 20px; gap: 8px; }
+    .brand-name { font-size: 1.1rem; }
+    .brand-name > span { font-size: 7px; max-width: 170px; }
+    .site-header img { width: 32px; height: 32px; }
+    .autumn-hero > .relative { padding-inline: 32px; padding-bottom: 60px; }
+    .autumn-garland--left, .autumn-garland--right { height: 25px; }
+    .autumn-garland--left { left: 20px; }
+    .autumn-garland--right { left: calc(100% + 5px); }
+    .autumn-garland--top, .autumn-garland--bottom { height: 28px; }
+    .autumn-garland--top { top: 76px; }
+}
 @media (prefers-reduced-motion: reduce) {
+    .autumn-sprig { animation: none; }
     html { scroll-behavior: auto; }
     *, *::before, *::after { transition-duration: 0s !important; animation-duration: 0s !important; }
 }
+
+/* Botanical frame: dimensional foliage with independent wind movement. */
+.site-header {
+    background-color: #481609;
+    background-image: repeating-radial-gradient(ellipse at 25% 10%, #c17b2520 0 1px, transparent 2px 12px), radial-gradient(ellipse at 40% -50%, #893615, transparent 75%), linear-gradient(100deg, #42190c, #692109 50%, #351208);
+}
+.site-header > div { position: relative; z-index: 2; }
+.autumn-garland { filter: drop-shadow(0 3px 3px #160900bb); }
+.autumn-garland--top, .autumn-garland--bottom { height: 76px; width: calc(100% + 40px); left: -20px; }
+.autumn-garland--top { top: 48px; }
+.autumn-garland--bottom { bottom: -20px; }
+.autumn-garland--left, .autumn-garland--right { width: calc(100cqh + 20px); height: 82px; top: -10px; }
+.autumn-garland--left { left: 54px; }
+.autumn-garland--right { left: calc(100% + 26px); }
+.autumn-vine { position: absolute; inset: 0 -20px; background-image: var(--garland-image); background-repeat: repeat-x; background-size: 590px 77px; background-position: center; transform-origin: center; animation: botanical-wind 3.8s ease-in-out infinite alternate; will-change: transform; }
+.autumn-vine--back { opacity: .65; background-size: 450px 60px; background-position: 180px center; filter: brightness(.7); animation-delay: -2s; animation-duration: 4.7s; }
+.autumn-garland--left .autumn-vine { animation-delay: -1.1s; }
+.autumn-garland--right .autumn-vine { animation-delay: -2.7s; }
+.autumn-garland--bottom .autumn-vine { animation-delay: -.8s; }
+@keyframes botanical-wind { 0% { transform: translate3d(-8px, -5px, 0) rotate(-.6deg); } 50% { transform: translate3d(2px, 3px, 0) rotate(.2deg); } 100% { transform: translate3d(9px, 7px, 0) rotate(.6deg); } }
+.autumn-drifting-leaf { position: absolute; top: -60px; width: 19px; height: 27px; background: linear-gradient(135deg, #e6a43a, #b54212 65%, #6e260d); clip-path: polygon(50% 0, 60% 25%, 84% 12%, 78% 39%, 100% 42%, 80% 63%, 90% 78%, 57% 85%, 49% 100%, 44% 84%, 12% 80%, 22% 60%, 0 40%, 28% 39%, 17% 15%, 42% 26%); animation: autumn-drift 14s linear infinite; opacity: 0; }
+@keyframes autumn-drift { 0% { transform: translate3d(0, -40px, 0) rotate(0); opacity: 0; } 8% { opacity: .85; } 45% { transform: translate3d(65px, 44dvh, 0) rotate(190deg); } 90% { opacity: .8; } 100% { transform: translate3d(-35px, 105dvh, 0) rotate(430deg); opacity: 0; } }
+.autumn-hero h1 { font-size: clamp(3.2rem, 7.6vw, 8.7rem); transform: scaleX(.78); transform-origin: left center; width: 128%; max-width: 1280px; letter-spacing: -.045em; line-height: .95; }
+@media (min-width: 640px) { .autumn-hero > .relative { padding-bottom: 52px; } }
+@media (max-width: 640px) {
+    .autumn-garland--top, .autumn-garland--bottom { height: 38px; }
+    .autumn-garland--top { top: 70px; }
+    .autumn-garland--bottom { bottom: -8px; }
+    .autumn-garland--left, .autumn-garland--right { height: 37px; }
+    .autumn-garland--left { left: 23px; }
+    .autumn-garland--right { left: calc(100% + 14px); }
+    .autumn-vine { background-size: 290px 38px; }
+    .autumn-vine--back { background-size: 240px 30px; }
+    .autumn-hero h1 { font-size: 3.3rem; }
+    .autumn-drifting-leaf { width: 12px; height: 18px; }
+}
+@media (prefers-reduced-motion: reduce) { .autumn-vine { animation: none; will-change: auto; } .autumn-drifting-leaf { display: none; } }
+.site-header { background-image: radial-gradient(ellipse at 35% -30%, #86331580, transparent 70%), linear-gradient(100deg, #42190c, #692109 50%, #351208); }
+.autumn-garland--top { top: -12px; height: 44px; }
+.autumn-garland--top .autumn-vine--back { display: none; }
+.autumn-garland--top .autumn-vine--front { background-size: 650px 48px; }
+@media (max-width: 640px) { .autumn-garland--top { top: -8px; height: 30px; } .autumn-garland--top .autumn-vine--front { background-size: 340px 32px; } }
+
+/* Garland belongs to the branded header, including while it sticks on scroll. */
+.site-header > .autumn-frame {
+    position: absolute;
+    top: calc(100% - 18px);
+    left: 0;
+    right: 0;
+    bottom: auto;
+    height: 260px;
+    min-height: 0;
+    max-width: none;
+    padding: 0;
+    z-index: 1;
+}
+.site-header .autumn-garland--top { top: 0; }
+.site-header .autumn-drifting-leaf { top: 12px; width: 12px; height: 17px; }
+@keyframes autumn-drift {
+    0% { transform: translate3d(0, 0, 0) rotate(0); opacity: 0; }
+    12% { opacity: .45; }
+    55% { transform: translate3d(25px, 125px, 0) rotate(130deg); opacity: .35; }
+    100% { transform: translate3d(-15px, 245px, 0) rotate(270deg); opacity: 0; }
+}
+@media (max-width: 640px) {
+    .site-header > .autumn-frame { top: calc(100% - 12px); }
+    .site-header .autumn-drifting-leaf { width: 9px; height: 13px; }
+}
+
+/* Only the vine receives clicks; falling leaves leave page controls accessible. */
+.site-header > .autumn-frame { height: min(580px, 75svh); }
+.autumn-vine-trigger { pointer-events: auto; cursor: pointer; border: 0; padding: 0; background: transparent; touch-action: manipulation; }
+.autumn-vine-trigger:hover .autumn-vine { filter: brightness(1.15) drop-shadow(0 2px 4px #e5a13b55); }
+.autumn-vine-trigger:focus-visible { outline: 2px solid #ffc66c; outline-offset: -4px; }
+.autumn-vine-trigger:active .autumn-vine { filter: brightness(1.3); }
+.site-header .autumn-drifting-leaf { width: 21px; height: 29px; filter: drop-shadow(1px 2px 2px #0008); pointer-events: none; }
+@keyframes autumn-drift {
+    0% { transform: translate3d(0, 0, 0) rotate(0); opacity: 0; }
+    8% { opacity: .9; }
+    50% { transform: translate3d(45px, 240px, 0) rotate(160deg); opacity: .85; }
+    85% { opacity: .7; }
+    100% { transform: translate3d(-25px, 560px, 0) rotate(340deg); opacity: 0; }
+}
+.site-header .autumn-burst-leaf { animation-name: autumn-burst; animation-iteration-count: 1; animation-timing-function: ease-in; animation-fill-mode: both; }
+@keyframes autumn-burst {
+    0% { transform: translate3d(0, 0, 0) rotate(-20deg); opacity: 0; }
+    6% { opacity: 1; }
+    45% { transform: translate3d(calc(var(--leaf-drift) * .6), 170px, 0) rotate(150deg); opacity: .95; }
+    85% { opacity: .7; }
+    100% { transform: translate3d(var(--leaf-drift), 560px, 0) rotate(420deg); opacity: 0; }
+}
+@media (max-width: 640px) { .site-header .autumn-drifting-leaf { width: 16px; height: 23px; } }
+@media (prefers-reduced-motion: reduce) { .autumn-burst-leaf { display: none; } }
