@@ -1,6 +1,6 @@
 import Image from "next/image"
 import Link from "next/link"
-import { Leaf } from "lucide-react"
+import AutumnDecor from "@/components/autumn-decor"
 
 const base = process.env.NEXT_PUBLIC_BASE_PATH || ""
 
@@ -14,14 +14,8 @@ export default function Footer() {
   return (
     <footer className="relative overflow-hidden border-t border-primary/40 bg-[#080808]">
       <div className="absolute inset-y-0 left-0 w-2 bg-primary" />
-      <div className="thanksgiving-note mx-auto flex max-w-7xl items-start gap-4 px-6 py-7">
-        <Leaf aria-hidden="true" className="mt-1 h-5 w-5 shrink-0 text-[#d9ad72]" strokeWidth={1.5} />
-        <div>
-          <p className="eyebrow mb-2">A season of thanks</p>
-          <p className="text-sm leading-6 text-[#e8d9c8]">
-            This Thanksgiving, we&apos;re grateful for the teammates, families, alumni, and sponsors who keep Longhorn Baja moving forward.
-          </p>
-        </div>
+      <div className="autumn-border mx-auto flex max-w-7xl justify-center px-6 py-2">
+        <AutumnDecor className="w-36 opacity-65" />
       </div>
       <div className="mx-auto grid max-w-7xl gap-10 px-6 py-14 md:grid-cols-[1fr_auto] md:items-end">
         <div>
