@@ -76,10 +76,25 @@ test("subteams expand and collapse by keyboard", async ({ page }) => {
   await expect(card).toHaveAttribute("aria-expanded", "false")
 })
 
-test("merch selection announces availability", async ({ page }) => {
+test("merch cards show the catalog and link to individual Printful products", async ({ page }) => {
   await page.goto("/merch/")
-  await page.getByRole("button", { name: "Evergreen Hoodie, coming soon", exact: true }).click()
-  await expect(page.locator('[aria-live="polite"]')).toContainText("Evergreen Hoodie is coming soon")
+  const cards = page.getByRole("article")
+  await expect(cards).toHaveCount(17)
+  const urls = new Set<string>()
+  for (const card of await cards.all()) {
+    await expect(card.getByRole("img")).toHaveAttribute("src", /\/merch\/\d+\.webp$/)
+    const link = card.getByRole("link", { name: /^Shop / })
+    const href = (await link.getAttribute("href"))!
+    expect(href).toMatch(/^https:\/\/longhornbajaracing\.printful\.me\/product\/[a-z0-9-]+$/)
+    urls.add(href)
+    await expect(link).toHaveAttribute("rel", "noopener noreferrer")
+    await link.focus()
+    await expect(link).toBeFocused()
+  }
+  expect(urls.size).toBe(17)
+  await expect(page.getByRole("link", { name: /Shop That Didn't Happen In CAD Shirt/ })).toHaveAttribute("href", "https://longhornbajaracing.printful.me/product/peter-meerkat-shirt-copy")
+  await expect(page.getByRole("link", { name: "Visit the full store ↗" })).toHaveAttribute("href", "https://longhornbajaracing.printful.me/")
+  await expect(page.getByRole("main")).not.toContainText("coming soon")
 })
 
 test("calendar uses the correct account and Austin time", async ({ page }) => {
@@ -106,3 +121,4 @@ test("application and sponsorship links stay usable", async ({ page }) => {
   await expect(page.getByRole("main").getByRole("link", { name: "longhornbaja@gmail.com", exact: true })).toHaveAttribute("href", "mailto:longhornbaja@gmail.com")
   await expect(page.getByRole("link", { name: "View sponsorship information ↗" })).toHaveAttribute("href", "https://drive.google.com/file/d/1RUknYrIfWhk4B-6uqn1mqxKWQ1dn5JYZ/view?usp=sharing")
 })
+
