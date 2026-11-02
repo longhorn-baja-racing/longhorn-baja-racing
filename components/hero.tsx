@@ -1,13 +1,12 @@
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { siteConfig } from "@/lib/site"
-import AutumnDecor from "@/components/autumn-decor"
 
 const base = process.env.NEXT_PUBLIC_BASE_PATH || ""
 
 export default function Hero() {
   return (
-    <section className="relative flex min-h-[620px] w-full items-end overflow-hidden bg-black md:min-h-[700px] lg:min-h-[min(780px,90svh)]">
+    <section className="autumn-hero relative flex min-h-[620px] w-full items-end overflow-hidden bg-black md:min-h-[700px] lg:min-h-[min(780px,90svh)]">
       <div className="absolute inset-0">
         <Image
           src={`${base}/baja-action.jpg`}
@@ -59,7 +58,6 @@ export default function Hero() {
           </div>
         </div>
       </div>
-      <AutumnDecor className="absolute bottom-5 right-6 hidden w-48 opacity-60 lg:block" />
     </section>
   )
 }

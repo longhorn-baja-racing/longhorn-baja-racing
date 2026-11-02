@@ -5,7 +5,9 @@ import Navbar from "@/components/navbar"
 import Footer from "@/components/footer"
 
 import "./globals.css"
-import { Bebas_Neue, Montserrat, IBM_Plex_Mono } from "next/font/google"
+import { Bebas_Neue, Bitter, Montserrat, IBM_Plex_Mono } from "next/font/google"
+
+const autumn = Bitter({ subsets: ["latin"], variable: "--font-autumn", display: "swap" })
 
 // Fonts
 const montserrat = Montserrat({
@@ -120,7 +122,9 @@ export default function RootLayout({
 }>) {
   return (
       <html lang="en">
-        <body className={`${montserrat.variable} ${mono.variable} ${display.variable} font-sans antialiased`}>
+        {/* Browser extensions such as Grammarly add body attributes before hydration.
+            Limit suppression to this element; descendants still report mismatches. */}
+        <body suppressHydrationWarning className={`${montserrat.variable} ${mono.variable} ${display.variable} ${autumn.variable} font-sans antialiased`}>
         <a href="#main-content" className="skip-link">Skip to content</a>
         <script
           type="application/ld+json"
