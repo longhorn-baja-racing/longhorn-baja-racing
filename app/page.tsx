@@ -1,5 +1,6 @@
 import Link from "next/link"
 import Hero from "@/components/hero"
+import UpcomingEvents from "@/components/upcoming-events"
 
 const destinations = [
   { number: "01", title: "The engineering", text: "Ten disciplines working together to take one vehicle from concept to competition.", href: "/subteams/", link: "Explore our subteams" },
@@ -30,6 +31,13 @@ export default function Home() {
               </Link>
             ))}
           </div>
+        </div>
+      </section>
+      <section className="site-section px-6 py-16 md:py-20" aria-labelledby="home-events">
+        <div className="mx-auto max-w-7xl">
+          <p className="eyebrow mb-4">On the calendar</p>
+          <h2 id="home-events" className="mb-10 text-5xl md:text-6xl">Upcoming events</h2>
+          <UpcomingEvents limit={3} showCalendarLink />
         </div>
       </section>
     </>
