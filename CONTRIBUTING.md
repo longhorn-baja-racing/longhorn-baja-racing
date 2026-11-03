@@ -2,7 +2,7 @@
 
 Every pull request, main push, merge queue run, manual run, and weekly schedule runs:
 
-- A clean locked dependency install, ESLint with zero warnings, and TypeScript.
+- A clean locked dependency install, ESLint with zero warnings, TypeScript, and hub encryption unit tests.
 - A high/critical production dependency audit and the production static build.
 - Export checks for all eight pages, titles, canonical URLs, local assets/links, calendar settings, and image size budgets.
 - Chromium, Firefox, WebKit, and phone browser tests: page rendering, image loading, mobile navigation, keyboard interactions, subteam cards, merch product links, legacy links, calendar configuration, application links, and serious/critical accessibility violations.
@@ -13,6 +13,7 @@ Run locally with Node 22:
 npm ci
 npm run lint
 npm run typecheck
+npm run test:hub
 npm audit --omit=dev --audit-level=high
 npm run build
 npm run test:export

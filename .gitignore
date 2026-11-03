@@ -42,3 +42,6 @@ next-env.d.ts
 
 /playwright-report/
 /test-results/
+
+# hub inputs: plaintext resource links and access codes (never commit)
+/hub/*.local.json
