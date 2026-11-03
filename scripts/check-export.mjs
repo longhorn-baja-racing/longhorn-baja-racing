@@ -3,7 +3,7 @@ import { existsSync, readFileSync, statSync } from "node:fs"
 import { join } from "node:path"
 
 // Run after npm run build; checks the actual GitHub Pages export.
-const routes = ["", "about", "subteams", "members", "calendar", "merch", "sponsors", "contact"]
+const routes = ["", "about", "subteams", "members", "calendar", "merch", "sponsors", "contact", "hub"]
 const titles = new Set()
 for (const route of routes) {
   const html = readFileSync(join("out", route, "index.html"), "utf8")
@@ -30,5 +30,5 @@ assert.match(calendar, /mode=AGENDA/)
 assert.match(calendar, /loading="lazy"/)
 assert.ok(statSync("public/baja-team-photo-mobile.webp").size < 150000)
 assert.ok(statSync("public/baja-team-photo.webp").size < 500000)
-console.log("Passed: 8 exported pages, headings, metadata, local links/assets, calendar, image budgets.")
+console.log("Passed: 9 exported pages, headings, metadata, local links/assets, calendar, image budgets.")
 

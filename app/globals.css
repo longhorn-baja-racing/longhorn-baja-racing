@@ -148,6 +148,13 @@ h1, h2, h3, h4, .brand-name {
 .home-card:hover { border-color: var(--primary); background: #1a1714; }
 .action-link { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: .9rem 1.2rem; border: 1px solid var(--primary); background: var(--primary); color: white; font-size: .75rem; font-weight: 600; line-height: 1.6; transition: background .2s; }
 .action-link:hover { background: #9d4700; }
+.hub-panel { border: 1px solid rgb(255 255 255 / .12); background: #151515; }
+.hub-input { min-height: 48px; border: 1px solid rgb(255 255 255 / .25); background: #0b0b0b; padding: .7rem .9rem; color: white; font-family: var(--font-plex-mono), monospace; }
+.hub-input:focus-visible { outline-offset: 2px; border-color: var(--primary); }
+.hub-input-toggle { min-height: 48px; border: 1px solid rgb(255 255 255 / .25); border-left: 0; padding: 0 1rem; font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .14em; color: rgb(255 255 255 / .8); }
+.hub-input-toggle:hover { color: white; background: rgb(255 255 255 / .06); }
+.hub-action { min-height: 44px; border: 1px solid rgb(255 255 255 / .2); padding: .6rem 1rem; font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .14em; color: rgb(255 255 255 / .85); transition: border-color .2s, color .2s; }
+.hub-action:hover { border-color: var(--primary); color: white; }
 .calendar-frame { overflow: hidden; border: 1px solid rgb(217 173 114 / .25); background: #1a1a1a; color-scheme: light; }
 /* Google owns the iframe contents; recolor its rendered surface without altering the embed or controls. */
 .calendar-frame iframe { filter: invert(.9) hue-rotate(180deg) saturate(.8); }
@@ -200,7 +207,7 @@ h1, h2, h3, h4, .brand-name { font-family: var(--font-autumn), Georgia, serif; f
 }
 .autumn-hero [data-slot="button"], .action-link { font-family: var(--font-autumn), Georgia, serif; font-weight: 800; }
 .site-section { background-color: #140e0b; }
-.home-card, .industrial-card { background-color: #20160f; border-color: #ad784433; }
+.home-card, .industrial-card, .hub-panel { background-color: #20160f; border-color: #ad784433; }
 .autumn-frame { position: absolute; inset: 0; z-index: 20; pointer-events: none; overflow: hidden; user-select: none; container-type: size; }
 .autumn-garland { position: absolute; overflow: visible; filter: drop-shadow(0 2px 2px #160900aa); }
 .autumn-garland--top, .autumn-garland--bottom { width: 100%; height: 48px; left: 0; }

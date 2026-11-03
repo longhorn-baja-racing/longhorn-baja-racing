@@ -153,13 +153,27 @@ Changing it re-salts every role.
 
 ## Sessions
 
-`unlockBundle()` in `lib/hub/crypto.ts` returns the payload, a
-non-extractable `CryptoKey`, and the salt of the payload it opened. The `/hub`
-screen (#57) is expected to store only the key and salt (never the code or the
-decrypted links) in IndexedDB for about 30 days, and to reopen a freshly
-downloaded bundle with `reopenBundle()`. **Log out** and **Switch team** must
-delete that stored state. Storage keys should carry a version prefix so that
-changing the payload or bundle `version` invalidates old sessions.
+The `/hub` page (linked as "Team hub" in the site footer) downloads
+`public/hub/bundle.json` and asks for one access code. If no bundle is
+published yet, it says the hub is not set up.
+
+- **Unlocking:** `unlockBundle()` in `lib/hub/crypto.ts` tries the code against
+  every payload and returns the payload, a non-extractable `CryptoKey`, and the
+  salt of the payload it opened. A wrong code shows one generic error.
+- **Remember this device (on by default):** `lib/hub/session.ts` stores only the
+  key, the salt, and an expiry 30 days out in IndexedDB (database `lbr-hub`).
+  The code and the decrypted links are never stored. On the next visit the page
+  reopens the freshly downloaded bundle with `reopenBundle()`. Members should
+  turn this off on shared or public computers.
+- **Log out** and **Switch team** delete the stored key and the leads subteam
+  choice, then return to the code screen.
+- **Expiry and rotation:** an expired session, or a session whose role was
+  re-salted by a code rotation or `--fresh-salts`, falls back to the code
+  screen. Editing links without rotating keeps sessions working.
+- **Format changes:** bump `SESSION_VERSION` in `lib/hub/session.ts` to
+  invalidate every saved session.
+- Anyone using an unlocked browser profile can open the hub until logout or
+  expiry. The key cannot be copied out of the browser, but it can be used there.
 
 ## Release checklist
 
