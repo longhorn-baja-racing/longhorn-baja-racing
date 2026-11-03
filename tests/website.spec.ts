@@ -35,8 +35,14 @@ for (const [path, heading] of pages) {
     const response = await page.goto(path)
     expect(response?.status()).toBe(200)
     await expect(page.getByRole("main").getByRole("heading", { level: 1 })).toHaveText(heading)
-    // Exercise lazy images throughout the page, not just above the fold.
+    // Exercise lazy images throughout the page, not just above the fold. Each
+    // file is checked once: decorative copies (such as the blurred backdrop on
+    // member cards) share the src of the image they sit behind.
+    const checked = new Set<string>()
     for (const image of await page.locator("img").all()) {
+      const src = await image.getAttribute("src")
+      if (src && checked.has(src)) continue
+      if (src) checked.add(src)
       await image.scrollIntoViewIfNeeded()
       await expect(image).toHaveJSProperty("complete", true)
       expect(await image.evaluate(image => (image as HTMLImageElement).naturalWidth)).toBeGreaterThan(0)

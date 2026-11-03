@@ -322,3 +322,8 @@ h1, h2, h3, h4, .brand-name { font-family: var(--font-autumn), Georgia, serif; f
 }
 @media (max-width: 640px) { .site-header .autumn-drifting-leaf { width: 16px; height: 23px; } }
 @media (prefers-reduced-motion: reduce) { .autumn-burst-leaf { display: none; } }
+
+/* Keep the animated, drop-shadowed autumn decorations on their own compositing
+   layers, so animation and scrolling do not repaint their filters every frame
+   (very slow in software rendering, such as WebKit in CI). */
+.autumn-drifting-leaf, .autumn-garland { will-change: transform; }
