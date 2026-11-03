@@ -17,7 +17,7 @@ export default function MemberCard({ id, title, description, image }: MemberCard
       <div className="relative aspect-[3/4] overflow-hidden bg-black">
         {image ? (
           <>
-            <Image src={image} alt="" fill sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 25vw" className="scale-110 object-cover opacity-30 blur-xl" aria-hidden="true" />
+            <Image src={image} alt="" fill sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 25vw" className="scale-110 object-cover opacity-30 blur-xl will-change-transform" aria-hidden="true" />
             <Image src={image} alt={title} fill sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 25vw" className="object-contain transition duration-500 group-hover:scale-[1.02]" />
           </>
         ) : (
