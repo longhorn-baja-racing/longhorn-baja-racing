@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useState, type CSSProperties, type MouseEvent } from "react"
+import { useEffect, useRef, useState, type CSSProperties, type MouseEvent } from "react"
 
 const base = process.env.NEXT_PUBLIC_BASE_PATH || ""
 type Leaf = { id: number; x: number; drift: number; delay: number; duration: number; size: number }
@@ -8,6 +8,12 @@ type Leaf = { id: number; x: number; drift: number; delay: number; duration: num
 export default function AutumnFrame() {
   const [leaves, setLeaves] = useState<Leaf[]>([])
   const nextId = useRef(0)
+  const timers = useRef(new Set<number>())
+
+  useEffect(() => {
+    const pending = timers.current
+    return () => pending.forEach(timer => window.clearTimeout(timer))
+  }, [])
 
   function shakeVine(event: MouseEvent<HTMLButtonElement>) {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return
@@ -19,6 +25,16 @@ export default function AutumnFrame() {
       duration: 3.5 + Math.random() * 2, size: 16 + Math.random() * 12,
     }))
     setLeaves(previous => [...previous, ...burst].slice(-60))
+
+    // animationend can arrive late or not at all (busy or background tabs), so
+    // also remove the burst once its longest animation has finished.
+    const ids = new Set(burst.map(leaf => leaf.id))
+    const lifetime = Math.max(...burst.map(leaf => leaf.delay + leaf.duration)) * 1000 + 250
+    const timer = window.setTimeout(() => {
+      timers.current.delete(timer)
+      setLeaves(previous => previous.filter(item => !ids.has(item.id)))
+    }, lifetime)
+    timers.current.add(timer)
   }
 
   return (
