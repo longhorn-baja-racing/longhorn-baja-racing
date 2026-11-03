@@ -42,3 +42,6 @@ next-env.d.ts
 
 /playwright-report/
 /test-results/
+
+# generated at build time by scripts/fetch-calendar.ts
+/public/data/calendar.json

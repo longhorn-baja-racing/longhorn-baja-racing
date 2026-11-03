@@ -148,9 +148,9 @@ h1, h2, h3, h4, .brand-name {
 .home-card:hover { border-color: var(--primary); background: #1a1714; }
 .action-link { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: .9rem 1.2rem; border: 1px solid var(--primary); background: var(--primary); color: white; font-size: .75rem; font-weight: 600; line-height: 1.6; transition: background .2s; }
 .action-link:hover { background: #9d4700; }
-.calendar-frame { overflow: hidden; border: 1px solid rgb(217 173 114 / .25); background: #1a1a1a; color-scheme: light; }
-/* Google owns the iframe contents; recolor its rendered surface without altering the embed or controls. */
-.calendar-frame iframe { filter: invert(.9) hue-rotate(180deg) saturate(.8); }
+.event-card { border: 1px solid rgb(255 255 255 / .12); background: #151515; }
+.event-date { display: flex; width: 4.5rem; flex-shrink: 0; flex-direction: column; align-items: center; justify-content: center; gap: .35rem; border-right: 2px solid var(--primary); padding-right: 1.25rem; font-family: var(--font-bebas), sans-serif; }
+@media (max-width: 480px) { .event-date { width: 3.5rem; padding-right: .9rem; } }
 .merch-distressed { isolation: isolate; background: #242424; background-image: repeating-linear-gradient(8deg, transparent 0 12px, rgb(0 0 0 / .16) 12px 14px); }
 .merch-distressed-orange { box-shadow: inset 0 0 90px rgb(191 87 0 / .38); }
 .merch-distressed-gray { box-shadow: inset 0 0 90px rgb(148 148 148 / .2); }
@@ -200,7 +200,7 @@ h1, h2, h3, h4, .brand-name { font-family: var(--font-autumn), Georgia, serif; f
 }
 .autumn-hero [data-slot="button"], .action-link { font-family: var(--font-autumn), Georgia, serif; font-weight: 800; }
 .site-section { background-color: #140e0b; }
-.home-card, .industrial-card { background-color: #20160f; border-color: #ad784433; }
+.home-card, .industrial-card, .event-card { background-color: #20160f; border-color: #ad784433; }
 .autumn-frame { position: absolute; inset: 0; z-index: 20; pointer-events: none; overflow: hidden; user-select: none; container-type: size; }
 .autumn-garland { position: absolute; overflow: visible; filter: drop-shadow(0 2px 2px #160900aa); }
 .autumn-garland--top, .autumn-garland--bottom { width: 100%; height: 48px; left: 0; }
