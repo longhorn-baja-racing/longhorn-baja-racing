@@ -12,12 +12,27 @@
 import { normalizeCode, parseHubPayload, type HubPayload } from "./schema.ts"
 
 export const BUNDLE_VERSION = 1
+/**
+ * Thrown when a code or saved key is correct (the payload authenticated) but
+ * its contents no longer validate, for example because a subteam id changed in
+ * lib/subteams.ts and the bundle was not rebuilt. Callers should report that
+ * the hub needs rebuilding, not that the code is wrong, and keep the session.
+ */
+export class HubBundleOutdatedError extends Error {
+  constructor() {
+    super("The hub bundle is out of date and needs to be rebuilt")
+    this.name = "HubBundleOutdatedError"
+  }
+}
+
 export const DEFAULT_ITERATIONS = 600_000
 export const MIN_ITERATIONS = 100_000
 const MAX_ITERATIONS = 10_000_000
 const MAX_PAYLOADS = 32
 const SALT_BYTES = 16
 const IV_BYTES = 12
+/** Plaintexts are padded to a multiple of this, and to a common length per bundle. */
+const PAD_BLOCK = 1024
 /** Bound into every ciphertext, so payloads cannot be moved between formats. */
 const ADDITIONAL_DATA = new TextEncoder().encode(`lbr-hub:v${BUNDLE_VERSION}`)
 
@@ -76,24 +91,46 @@ export async function deriveKey(code: string, salt: Uint8Array<ArrayBuffer>, ite
   )
 }
 
-export async function encryptWithKey(key: CryptoKey, salt: Uint8Array<ArrayBuffer>, payload: HubPayload): Promise<EncryptedPayload> {
+function encodePayload(payload: HubPayload): string {
+  return JSON.stringify(payload)
+}
+
+/** Length every plaintext in a bundle is padded to, so sizes do not reveal roles. */
+function paddedLength(lengths: readonly number[]): number {
+  return Math.ceil(Math.max(1, ...lengths) / PAD_BLOCK) * PAD_BLOCK
+}
+
+/**
+ * Encrypts a payload. Trailing spaces pad it to `padTo` bytes; JSON.parse
+ * ignores them, so older readers need no change.
+ */
+export async function encryptWithKey(key: CryptoKey, salt: Uint8Array<ArrayBuffer>, payload: HubPayload, padTo = 0): Promise<EncryptedPayload> {
   const iv = randomBytes(IV_BYTES)
-  const plaintext = new TextEncoder().encode(JSON.stringify(payload))
+  const json = encodePayload(payload)
+  const plaintext = new TextEncoder().encode(json + " ".repeat(Math.max(0, padTo - new TextEncoder().encode(json).length)))
   const data = new Uint8Array(await subtle().encrypt({ name: "AES-GCM", iv, additionalData: ADDITIONAL_DATA }, key, plaintext))
   return { salt: toBase64(salt), iv: toBase64(iv), data: toBase64(data) }
 }
 
-/** Returns the payload, or null when the key does not open it or the contents are invalid. */
+/**
+ * Returns the payload, or null when the key does not open it. Throws
+ * HubBundleOutdatedError when the key opens it but the contents are invalid.
+ */
 export async function decryptWithKey(key: CryptoKey, encrypted: EncryptedPayload): Promise<HubPayload | null> {
+  let plaintext: ArrayBuffer
   try {
-    const plaintext = await subtle().decrypt(
+    plaintext = await subtle().decrypt(
       { name: "AES-GCM", iv: fromBase64(encrypted.iv), additionalData: ADDITIONAL_DATA },
       key,
       fromBase64(encrypted.data),
     )
-    return parseHubPayload(JSON.parse(new TextDecoder().decode(plaintext)))
   } catch {
     return null
+  }
+  try {
+    return parseHubPayload(JSON.parse(new TextDecoder().decode(plaintext)))
+  } catch {
+    throw new HubBundleOutdatedError()
   }
 }
 
@@ -133,21 +170,34 @@ export function parseHubBundle(value: unknown): HubBundle {
  * Tries the code against every payload (bounded by MAX_PAYLOADS, derivations
  * run concurrently) and returns the one that decrypts and validates, or null.
  * The caller should show one generic error for null and never log the code.
+ * Throws HubBundleOutdatedError if the code is correct but its payload no
+ * longer validates.
  */
 export async function unlockBundle(bundle: HubBundle, code: string): Promise<UnlockResult | null> {
   if (normalizeCode(code) === "") return null
+  let outdated = false
   const attempts = bundle.payloads.map(async (encrypted) => {
     const key = await deriveKey(code, fromBase64(encrypted.salt), bundle.kdf.iterations)
-    const payload = await decryptWithKey(key, encrypted)
-    return payload ? { payload, key, salt: encrypted.salt } : null
+    try {
+      const payload = await decryptWithKey(key, encrypted)
+      return payload ? { payload, key, salt: encrypted.salt } : null
+    } catch (error) {
+      if (!(error instanceof HubBundleOutdatedError)) throw error
+      outdated = true
+      return null
+    }
   })
   const results = await Promise.all(attempts)
-  return results.find((result) => result !== null) ?? null
+  const found = results.find((result) => result !== null)
+  if (found) return found
+  if (outdated) throw new HubBundleOutdatedError()
+  return null
 }
 
 /**
  * Re-opens a bundle with a key saved from an earlier unlock. Returns null if
- * that role's payload was re-salted (its code was rotated) or removed.
+ * that role's payload was re-salted (its code was rotated) or removed. Throws
+ * HubBundleOutdatedError if the key still opens it but the contents are invalid.
  */
 export async function reopenBundle(bundle: HubBundle, key: CryptoKey, salt: string): Promise<HubPayload | null> {
   const encrypted = bundle.payloads.find((entry) => entry.salt === salt)
@@ -174,12 +224,13 @@ export type BundleEntry = {
 export async function createBundle(entries: readonly BundleEntry[], iterations = DEFAULT_ITERATIONS): Promise<HubBundle> {
   if (iterations < MIN_ITERATIONS || iterations > MAX_ITERATIONS) throw new Error("iterations out of range")
   if (entries.length === 0 || entries.length > MAX_PAYLOADS) throw new Error("bad number of payloads")
+  const padTo = paddedLength(entries.map((entry) => new TextEncoder().encode(encodePayload(entry.payload)).length))
   const payloads = await Promise.all(
     entries.map(async (entry) => {
       const salt = entry.salt ? fromBase64(entry.salt) : randomBytes(SALT_BYTES)
       if (salt.length !== SALT_BYTES) throw new Error("bad salt length")
       const key = await deriveKey(entry.code, salt, iterations)
-      return encryptWithKey(key, salt, entry.payload)
+      return encryptWithKey(key, salt, entry.payload, padTo)
     }),
   )
   const salts = new Set(payloads.map((payload) => payload.salt))

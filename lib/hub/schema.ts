@@ -139,11 +139,19 @@ function parseResourceList(value: unknown, path: string): Resource[] {
   return resources
 }
 
-function parseSubteamResources(value: unknown, path: string): SubteamResources {
+/**
+ * With `dropUnknown`, entries for subteam ids that are not in lib/subteams.ts
+ * are skipped instead of rejected. Decrypted payloads use this, so renaming or
+ * removing a subteam does not lock the leads out of an older bundle.
+ */
+function parseSubteamResources(value: unknown, path: string, dropUnknown = false): SubteamResources {
   if (!isRecord(value)) throw new HubSchemaError(path, "must be an object keyed by subteam id")
   const result: SubteamResources = {}
   for (const [key, list] of Object.entries(value)) {
-    if (!isSubteamId(key)) throw new HubSchemaError(`${path}.${key}`, `unknown subteam id (expected one of ${subteamIds.join(", ")})`)
+    if (!isSubteamId(key)) {
+      if (dropUnknown) continue
+      throw new HubSchemaError(`${path}.${key}`, `unknown subteam id (expected one of ${subteamIds.join(", ")})`)
+    }
     result[key] = parseResourceList(list, `${path}.${key}`)
   }
   return result
@@ -181,11 +189,12 @@ export function parseHubPayload(value: unknown): HubPayload {
     version: PAYLOAD_VERSION,
     role,
     general: parseResourceList(value.general, "payload.general"),
-    subteams: parseSubteamResources(value.subteams ?? {}, "payload.subteams"),
+    subteams: parseSubteamResources(value.subteams ?? {}, "payload.subteams", true),
   }
   if (value.leads !== undefined) payload.leads = parseResourceList(value.leads, "payload.leads")
 
-  const subteamKeys = Object.keys(payload.subteams)
+  // Scope checks use the raw keys, so an unknown id is still out of scope.
+  const subteamKeys = isRecord(value.subteams) ? Object.keys(value.subteams) : []
   if (role.kind !== "leads" && payload.leads !== undefined) throw new HubSchemaError("payload.leads", "only allowed in the leads payload")
   if (role.kind === "leads" && payload.leads === undefined) throw new HubSchemaError("payload.leads", "required in the leads payload")
   if (role.kind === "general" && subteamKeys.length > 0) throw new HubSchemaError("payload.subteams", "must be empty for the general role")
@@ -229,7 +238,15 @@ export function codeForRole(codes: HubCodes, role: HubRole): string {
   return codes[role.kind]
 }
 
-export function parseHubCodes(value: unknown): HubCodes {
+/** The format `npm run hub -- codes` generates: 4 groups of 5, about 99 bits. */
+export const GENERATED_CODE_PATTERN = /^(?:[a-hjkmnp-z2-9]{5}-){3}[a-hjkmnp-z2-9]{5}$/
+
+export type ParseCodesOptions = {
+  /** Accept hand-picked codes instead of only generated ones. */
+  allowCustom?: boolean
+}
+
+export function parseHubCodes(value: unknown, options: ParseCodesOptions = {}): HubCodes {
   if (!isRecord(value)) throw new HubSchemaError("codes", "must be an object")
   rejectUnknownKeys(value, ["general", "leads", "subteams"], "codes")
   if (!isRecord(value.subteams)) throw new HubSchemaError("codes.subteams", "must be an object keyed by subteam id")
@@ -249,6 +266,9 @@ export function parseHubCodes(value: unknown): HubCodes {
     const code = normalizeCode(codeForRole(codes, role))
     if (code.length < MIN_CODE_LENGTH) throw new HubSchemaError(`codes ${key}`, `must be at least ${MIN_CODE_LENGTH} characters`)
     if (/^[a-z ]+$/i.test(code)) throw new HubSchemaError(`codes ${key}`, "must not be letters only; mix in digits or symbols")
+    if (!options.allowCustom && !GENERATED_CODE_PATTERN.test(code)) {
+      throw new HubSchemaError(`codes ${key}`, "is not a generated code; rotate it with \"codes --rotate\", or pass --allow-custom-codes")
+    }
     const duplicate = seen.get(code)
     if (duplicate) throw new HubSchemaError(`codes ${key}`, `same code as ${duplicate}`)
     seen.set(code, key)
