@@ -2,7 +2,23 @@ import { test as base, expect } from "@playwright/test"
 import AxeBuilder from "@axe-core/playwright"
 
 // External services are outside this repo's control. Keep CI deterministic while
-// checking the real embed URL and local UI, assets, and JavaScript below.
+// checking local UI, assets, and JavaScript below.
+
+// Calendar data is generated at build time from Google; tests use fixed far-future events.
+const calendarFixture = {
+  status: "ok",
+  generatedAt: "2099-01-01T00:00:00.000Z",
+  timeZone: "America/Chicago",
+  events: [
+    { id: "past@2000", title: "Old meeting", allDay: false, start: "2000-01-01T18:00:00.000Z", end: "2000-01-01T19:00:00.000Z" },
+    { id: "meeting@2099", title: "General meeting", allDay: false, start: "2099-01-15T00:00:00.000Z", end: "2099-01-15T01:30:00.000Z", location: "ETC 2.136", description: "Bring a laptop." },
+    { id: "broken", title: "Broken event", allDay: false, start: "not a date", end: "also not a date" },
+    { id: "comp@2099", title: "Spring competition", allDay: true, start: "2099-02-01", end: "2099-02-04" },
+    { id: "workday@2099", title: "Shop workday", allDay: false, start: "2099-02-08T16:00:00.000Z", end: "2099-02-09T00:00:00.000Z", location: "ETC Fishbowl" },
+    { id: "social@2099", title: "Team social", allDay: false, start: "2099-03-01T00:00:00.000Z", end: "2099-03-01T02:00:00.000Z" },
+  ],
+}
+
 const test = base.extend({
   page: async ({ page }, runTest) => {
     const errors: string[] = []
@@ -13,6 +29,7 @@ const test = base.extend({
         errors.push(response.status() + " " + response.url())
     })
     await page.route("https://calendar.google.com/**", route => route.fulfill({ contentType: "text/html", body: "<html lang='en'><title>Calendar test fixture</title><body>Team calendar</body></html>" }))
+    await page.route("**/data/calendar.json", route => route.fulfill({ json: calendarFixture }))
     await page.route("https://www.longhornsimracing.org/**", route => route.fulfill({ contentType: "image/svg+xml", body: "<svg xmlns='http://www.w3.org/2000/svg' width='200' height='100'><rect width='200' height='100' fill='black'/></svg>" }))
     await runTest(page)
     expect(errors, "No browser exceptions, console errors, or broken local requests").toEqual([])
@@ -104,16 +121,84 @@ test("merch cards show the catalog and link to individual Printful products", as
   await expect(page.getByRole("main")).not.toContainText("coming soon")
 })
 
-test("calendar uses the correct account and Austin time", async ({ page }) => {
+test("calendar lists upcoming events in Austin time without an iframe", async ({ page }) => {
   await page.goto("/calendar/")
-  const frame = page.locator('iframe[title="Longhorn Baja Racing team events"]')
-  const url = new URL((await frame.getAttribute("src"))!)
-  expect(url.origin).toBe("https://calendar.google.com")
-  expect(url.searchParams.get("src")).toBe("longhornbaja@gmail.com")
+  await expect(page.locator("iframe")).toHaveCount(0)
+  const main = page.getByRole("main")
+  await expect(main.getByRole("heading", { level: 2, name: "January 2099" })).toBeVisible()
+  await expect(main.getByRole("heading", { level: 2, name: "February 2099" })).toBeVisible()
+
+  const meeting = main.getByRole("listitem").filter({ hasText: "General meeting" })
+  await expect(meeting).toContainText("Wednesday, January 14")
+  await expect(meeting).toContainText(/6:00\sPM - 7:30\sPM CST/)
+  await expect(meeting).toContainText("ETC 2.136")
+  await expect(meeting).toContainText("Bring a laptop.")
+
+  const competition = main.getByRole("listitem").filter({ hasText: "Spring competition" })
+  await expect(competition).toContainText("Feb 1 - Feb 3")
+  await expect(competition).toContainText("All day")
+
+  await expect(main.getByRole("listitem").filter({ hasText: "Shop workday" })).toContainText(/10:00\sAM - 6:00\sPM CST/)
+  await expect(main).not.toContainText("Old meeting")
+  await expect(main).not.toContainText("Broken event")
+
+  const add = meeting.getByRole("link", { name: /Add General meeting .* to Google Calendar/ })
+  const url = new URL((await add.getAttribute("href"))!)
+  expect(url.origin + url.pathname).toBe("https://calendar.google.com/calendar/render")
+  expect(url.searchParams.get("action")).toBe("TEMPLATE")
+  expect(url.searchParams.get("text")).toBe("General meeting")
+  expect(url.searchParams.get("dates")).toBe("20990115T000000Z/20990115T013000Z")
   expect(url.searchParams.get("ctz")).toBe("America/Chicago")
-  expect(url.searchParams.get("mode")).toBe("AGENDA")
-  await expect(page.getByRole("link", { name: "Open / add in Google Calendar ↗" })).toHaveAttribute("href", /cid=bG9uZ2hvcm5iYWphQGdtYWlsLmNvbQ/)
+  await expect(competition.getByRole("link", { name: /Add Spring competition/ })).toHaveAttribute("href", /dates=20990201%2F20990204/)
+
+  await expect(page.getByRole("link", { name: "Open / add in Google Calendar \u2197" })).toHaveAttribute("href", /cid=bG9uZ2hvcm5iYWphQGdtYWlsLmNvbQ/)
 })
+
+test("homepage previews the next three events", async ({ page }) => {
+  await page.goto("/")
+  const events = page.getByRole("region", { name: "Upcoming events" })
+  await expect(events.getByRole("listitem")).toHaveCount(3)
+  await expect(events.getByRole("listitem").first()).toContainText("General meeting")
+  await events.getByRole("link", { name: "View full calendar" }).click()
+  await expect(page).toHaveURL(/\/calendar\/$/)
+})
+
+test("calendar orders evening events before the next day's all-day events", async ({ page }) => {
+  // 7 PM CST on Nov 30 is already Dec 1 in UTC, while the all-day event is on Dec 1.
+  const events = [
+    { id: "allday@2099", title: "Inspection day", allDay: true, start: "2099-12-01", end: "2099-12-02" },
+    { id: "evening@2099", title: "Late design review", allDay: false, start: "2099-12-01T01:00:00.000Z", end: "2099-12-01T02:00:00.000Z" },
+  ]
+  await page.route("**/data/calendar.json", route => route.fulfill({ json: { ...calendarFixture, events } }))
+  await page.goto("/calendar/")
+  const main = page.getByRole("main")
+  await expect(main.getByRole("listitem")).toHaveCount(2)
+  await expect(main.getByRole("heading", { level: 2, name: /2099$/ })).toHaveText(["November 2099", "December 2099"])
+  await expect(main.getByRole("listitem").first()).toContainText("Late design review")
+})
+
+test("calendar points to Google when its data is out of date", async ({ page }) => {
+  await page.route("**/data/calendar.json", route => route.fulfill({ json: { ...calendarFixture, generatedAt: "2000-01-01T00:00:00.000Z" } }))
+  await page.goto("/calendar/")
+  const main = page.getByRole("main")
+  await expect(main.getByRole("listitem").filter({ hasText: "General meeting" })).toBeVisible()
+  await expect(main).toContainText("has not been updated recently")
+})
+
+const calendarStates: [string, (route: import("@playwright/test").Route) => Promise<void>, RegExp][] = [
+  ["no upcoming events", route => route.fulfill({ json: { ...calendarFixture, events: [calendarFixture.events[0]] } }), /No upcoming events are scheduled/],
+  ["feed unavailable at build time", route => route.fulfill({ json: { ...calendarFixture, status: "unavailable", events: [] } }), /could not be loaded/],
+  ["malformed calendar data", route => route.fulfill({ contentType: "application/json", body: "{ not json" }), /could not be loaded/],
+]
+for (const [name, handler, message] of calendarStates) {
+  test("calendar handles " + name, async ({ page }) => {
+    await page.route("**/data/calendar.json", handler)
+    await page.goto("/calendar/")
+    const status = page.getByRole("main").getByRole("status")
+    await expect(status).toContainText(message)
+    await expect(status.getByRole("link", { name: "open the team calendar in Google Calendar" })).toHaveAttribute("href", /cid=/)
+  })
+}
 
 for (const [hash, path] of Object.entries({ about: "about", team: "subteams", members: "members", merch: "merch", sponsors: "sponsors" })) {
   test("old #" + hash + " links redirect", async ({ page }) => {
