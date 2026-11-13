@@ -5,8 +5,21 @@ updates:
     schedule:
       interval: weekly
     groups:
-      dependencies:
+      # Minor and patch updates arrive as one PR. Major updates are left
+      # ungrouped so each one gets its own PR and a breaking change in one
+      # package does not block every other update.
+      minor-and-patch:
         patterns: ["*"]
+        update-types: ["minor", "patch"]
+    ignore:
+      # @types/node tracks the Node version CI and Pages build with (22).
+      # Bump it together with the Node version, not on its own.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+      # typescript-eslint (used by eslint-config-next) does not support
+      # TypeScript 7 yet. Remove this once it does.
+      - dependency-name: typescript
+        update-types: ["version-update:semver-major"]
     open-pull-requests-limit: 5
   - package-ecosystem: github-actions
     directory: /
