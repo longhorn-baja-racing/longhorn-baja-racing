@@ -174,12 +174,16 @@ published yet, it says the hub is not set up.
 
 - **Unlocking:** `unlockBundle()` in `lib/hub/crypto.ts` tries the code against
   every payload and returns the payload, a non-extractable `CryptoKey`, and the
-  salt of the payload it opened. A wrong code shows one generic error.
+  salt of the payload it opened. A wrong code shows one generic error. A
+  correct code whose payload no longer validates (for example after a subteam
+  rename without a rebuild) asks the member to have a lead rebuild the hub, and
+  a saved session is kept so it works again after the rebuild.
 - **Remember this device (on by default):** `lib/hub/session.ts` stores only the
   key, the salt, and an expiry 30 days out in IndexedDB (database `lbr-hub`).
   The code and the decrypted links are never stored. On the next visit the page
   reopens the freshly downloaded bundle with `reopenBundle()`. Members should
   turn this off on shared or public computers.
+  The leads subteam choice is saved in `localStorage` only when this is on.
 - **Log out** and **Switch team** delete the stored key and the leads subteam
   choice, then return to the code screen.
 - **Expiry and rotation:** an expired session, or a session whose role was

@@ -1,3 +1,4 @@
+import { existsSync } from "node:fs"
 import { test as base, expect, type Page } from "@playwright/test"
 import AxeBuilder from "@axe-core/playwright"
 import { createBundle, MIN_ITERATIONS, type HubBundle } from "../lib/hub/crypto.ts"
@@ -67,7 +68,38 @@ test("a wrong code shows a generic error and no resources", async ({ hubPage: pa
   await unlock(page, "definitely-not-a-code-99")
   await expect(page.getByRole("main").getByRole("alert")).toHaveText("That code did not work. Check it and try again.", { timeout: 15_000 })
   await expect(page.getByLabel("Access code")).toHaveAttribute("aria-invalid", "true")
+  // Focus returns to the field, so keyboard users can retype right away.
+  await expect(page.getByLabel("Access code")).toBeFocused()
   await expect(page.getByRole("main")).not.toContainText("Team shared drive")
+})
+
+base("the real export serves the hub bundle state", async ({ page }) => {
+  // No route mocking: exercises out/hub/bundle.json (or its absence) as deployed.
+  await page.goto("/hub/")
+  if (existsSync("public/hub/bundle.json")) {
+    await expect(page.getByLabel("Access code")).toBeVisible()
+  } else {
+    await expect(page.getByRole("main").getByRole("status")).toContainText("not set up yet")
+  }
+})
+
+test("a correct code for a renamed subteam asks for a rebuild", async ({ hubPage: page }) => {
+  // A bundle built before a subteam id changed: the code is right, the payload is outdated.
+  const stale = await createBundle(
+    [
+      { code: codes.general, payload: buildRolePayload(source, { kind: "general" }) },
+      {
+        code: codes.subteams.software,
+        payload: { version: 1, role: { kind: "subteam", subteam: "aero" }, general: source.general, subteams: {} } as never,
+      },
+    ],
+    MIN_ITERATIONS,
+  )
+  await page.route("**/hub/bundle.json", (route) => route.fulfill({ json: stale }))
+  await page.goto("/hub/")
+  await unlock(page, codes.subteams.software)
+  await expect(page.getByRole("main").getByRole("alert")).toContainText("ask a lead to rebuild the hub", { ignoreCase: true, timeout: 15_000 })
+  await expect(page.getByLabel("Access code")).toBeFocused()
 })
 
 test("show and hide toggles the code field", async ({ hubPage: page }) => {
@@ -158,6 +190,8 @@ test("not remembering the device locks again on reload", async ({ hubPage: page 
   await page.goto("/hub/")
   await unlock(page, codes.general, false)
   await expect(page.getByRole("heading", { name: "Team resources", level: 2 })).toBeVisible({ timeout: 15_000 })
+  // Focus moves to the dashboard heading instead of being lost on the body.
+  await expect(page.getByRole("heading", { name: "Team resources", level: 2 })).toBeFocused()
   await page.reload()
   await expect(page.getByLabel("Access code")).toBeVisible()
 })

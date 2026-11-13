@@ -1,6 +1,6 @@
 "use client"
 
-import { useId, useState } from "react"
+import { useEffect, useId, useRef, useState } from "react"
 import Link from "next/link"
 import { resourceCategories, sortResources, type HubPayload, type Resource } from "@/lib/hub/schema"
 import { loadLeadsSubteam, saveLeadsSubteam } from "@/lib/hub/session"
@@ -9,6 +9,10 @@ import { siteConfig } from "@/lib/site"
 
 interface HubDashboardProps {
   payload: HubPayload
+  /** Whether this device keeps the session; if not, nothing else is stored either. */
+  remembered: boolean
+  /** Move focus to the heading, after unlocking with the form. */
+  focusHeading: boolean
   onLogOut: () => void
   onSwitchTeam: () => void
 }
@@ -23,8 +27,12 @@ const publicApplication: Resource = {
   order: -1,
 }
 
-export default function HubDashboard({ payload, onLogOut, onSwitchTeam }: HubDashboardProps) {
+export default function HubDashboard({ payload, remembered, focusHeading, onLogOut, onSwitchTeam }: HubDashboardProps) {
   const { role } = payload
+  const headingRef = useRef<HTMLHeadingElement>(null)
+  useEffect(() => {
+    if (focusHeading) headingRef.current?.focus()
+  }, [focusHeading])
   const heading =
     role.kind === "leads" ? "Leads dashboard" : role.kind === "subteam" ? `Welcome, ${getSubteam(role.subteam).title}` : "Team resources"
   const scope =
@@ -39,7 +47,7 @@ export default function HubDashboard({ payload, onLogOut, onSwitchTeam }: HubDas
       <div className="mb-10 flex flex-col justify-between gap-6 border-b border-white/10 pb-8 md:flex-row md:items-end">
         <div>
           <p className="eyebrow mb-3">{scope}</p>
-          <h2 className="text-5xl text-white md:text-6xl">{heading}</h2>
+          <h2 ref={headingRef} tabIndex={-1} className="text-5xl text-white outline-none md:text-6xl">{heading}</h2>
         </div>
         <nav aria-label="Hub actions" className="flex flex-wrap gap-3">
           <Link href="/calendar/" prefetch={false} className="hub-action">Calendar</Link>
@@ -65,19 +73,21 @@ export default function HubDashboard({ payload, onLogOut, onSwitchTeam }: HubDas
         />
       )}
 
-      {role.kind === "leads" && <SubteamBrowser payload={payload} />}
+      {role.kind === "leads" && <SubteamBrowser payload={payload} remembered={remembered} />}
     </div>
   )
 }
 
-function SubteamBrowser({ payload }: { payload: HubPayload }) {
+function SubteamBrowser({ payload, remembered }: { payload: HubPayload; remembered: boolean }) {
   // The dashboard only renders on the client after unlocking, so storage is available here.
-  const [selected, setSelected] = useState<SubteamId>(() => {
-    const saved = loadLeadsSubteam()
-    return isSubteamId(saved) ? saved : subteams[0].id
+  const [selected, setSelected] = useState<SubteamId | undefined>(() => {
+    const saved = remembered ? loadLeadsSubteam() : null
+    // Only offer active subteams, even if an inactive one was saved earlier.
+    return subteams.find((item) => item.id === saved)?.id ?? subteams[0]?.id
   })
   const selectId = useId()
 
+  if (selected === undefined) return null
   const subteam = getSubteam(selected)
   return (
     <section aria-labelledby={`${selectId}-heading`} className="mb-12">
@@ -93,7 +103,7 @@ function SubteamBrowser({ payload }: { payload: HubPayload }) {
             onChange={(event) => {
               if (!isSubteamId(event.target.value)) return
               setSelected(event.target.value)
-              saveLeadsSubteam(event.target.value)
+              if (remembered) saveLeadsSubteam(event.target.value)
             }}
             className="hub-input w-full sm:w-64"
           >
