@@ -17,12 +17,17 @@ authentication.
 - Each code is stretched with PBKDF2-SHA256 (600,000 iterations by default)
   and decrypts its payload with AES-256-GCM. A wrong code fails the
   authentication check; there is no password hash to compare against.
-- What protects the links is therefore the **strength of the codes**. Use the
-  generated codes (about 99 bits). Never use guessable codes such as
-  `dynamics2026`. The build refuses codes under 16 characters, letters-only
-  codes, and duplicate codes.
+- What protects the links is therefore the **strength of the codes**. The
+  build only accepts codes in the generated format (about 99 bits) and refuses
+  duplicates. Hand-picked codes need `--allow-custom-codes` and should still
+  never be guessable like `dynamics2026` or `baja-racing-2026`.
+- Every payload is padded to the same size, so file sizes do not reveal which
+  payload belongs to the leads or how many links a role has.
 - A device that unlocked the hub may keep access until the member logs out or
-  the session expires (about 30 days), or until that role's code is rotated.
+  the session expires (about 30 days). Both are enforced by the browser only:
+  anyone who kept a code or a saved key can still decrypt every future bundle
+  for that role. **Rotating the role's code is the only way to revoke
+  access.**
 - **Google Drive and Box sharing permissions remain the real security
   boundary.** Never loosen folder permissions just so a hub link works.
 - Never put applicant PII, interview notes with personal data, passwords,
@@ -140,10 +145,20 @@ To force everyone to log in again without changing codes, run
    set `active: false`. Keep existing ids stable; they are anchors on
    `/subteams/` and keys in the hub files.
 2. For a new subteam, run `npm run hub -- codes --rotate <new-id>` to create
-   its code. For a renamed id, move its entry in `hub/codes.local.json` and
+   its code. Any `--rotate` run also adds codes for subteam ids missing from
+   `hub/codes.local.json` and drops ids that no longer exist. For a renamed
+   id, move its entry in `hub/codes.local.json` and
    `hub/resources.local.json` to the new key.
 3. `npm run hub -- check`, then `build`. TypeScript and the validator flag
    any place still using an unknown id.
+4. Commit the rebuilt `public/hub/bundle.json` in the **same PR** as the
+   `lib/subteams.ts` change. `npm run test:hub` fails in CI when the bundle's
+   payload count no longer matches the subteam list, so a change that adds or
+   removes a subteam needs someone who holds the codes.
+
+If the bundle is not rebuilt after a rename, the leads payload still opens
+(the unknown subteam is skipped), but the renamed subteam's code shows
+"needs to be rebuilt" instead of opening the hub.
 
 ### Change the iteration count
 
@@ -178,6 +193,8 @@ published yet, it says the hub is not set up.
 ## Release checklist
 
 - [ ] `npm run hub -- check` passes.
+- [ ] `grep -rF` the built `out/` directory for a few protected URLs and for
+      one access code: neither may appear.
 - [ ] Every new or changed link opened from an account with the intended access.
 - [ ] No applicant data, personal data, or secrets in any resource.
 - [ ] `npm run hub -- build` succeeded and only `public/hub/bundle.json` is staged

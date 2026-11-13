@@ -16,7 +16,16 @@ import {
   type HubCodes,
   type HubSource,
 } from "./schema.ts"
-import { createBundle, MIN_ITERATIONS, parseHubBundle, reopenBundle, toBase64, fromBase64, unlockBundle } from "./crypto.ts"
+import {
+  createBundle,
+  HubBundleOutdatedError,
+  MIN_ITERATIONS,
+  parseHubBundle,
+  reopenBundle,
+  toBase64,
+  fromBase64,
+  unlockBundle,
+} from "./crypto.ts"
 
 const link = (id: string, category = "Drive") => ({ id, label: `Label ${id}`, category, url: `https://example.com/${id}` })
 
@@ -83,11 +92,29 @@ test("sortResources orders by order then label", () => {
 })
 
 test("codes must be long, mixed, and unique", () => {
-  assert.doesNotThrow(() => parseHubCodes(codes))
-  assert.throws(() => parseHubCodes({ ...codes, general: "short-1" }), /at least 16/)
-  assert.throws(() => parseHubCodes({ ...codes, general: "onlylettersherexx" }), /letters only/)
-  assert.throws(() => parseHubCodes({ ...codes, leads: codes.general }), /same code/)
-  assert.throws(() => parseHubCodes({ ...codes, subteams: { ...codes.subteams, powertrain: undefined } }), /powertrain/)
+  const custom = { allowCustom: true }
+  assert.doesNotThrow(() => parseHubCodes(codes, custom))
+  assert.throws(() => parseHubCodes({ ...codes, general: "short-1" }, custom), /at least 16/)
+  assert.throws(() => parseHubCodes({ ...codes, general: "onlylettersherexx" }, custom), /letters only/)
+  assert.throws(() => parseHubCodes({ ...codes, leads: codes.general }, custom), /same code/)
+  assert.throws(() => parseHubCodes({ ...codes, subteams: { ...codes.subteams, powertrain: undefined } }, custom), /powertrain/)
+})
+
+test("only generated codes are accepted unless custom codes are allowed", () => {
+  // Hand-picked codes like this pass the length and mix rules but are guessable.
+  assert.throws(() => parseHubCodes(codes), /not a generated code/)
+  const generated = (seed: number) => {
+    const alphabet = "abcdefghjkmnpqrstuvwxyz23456789"
+    const symbols = Array.from({ length: 20 }, (_, i) => alphabet[(seed * 7 + i * 13) % alphabet.length])
+    return symbols.join("").replace(/(.{5})(?=.)/g, "$1-")
+  }
+  const valid: HubCodes = {
+    general: generated(1),
+    leads: generated(2),
+    subteams: Object.fromEntries(subteamIds.map((id, index) => [id, generated(index + 3)])) as HubCodes["subteams"],
+  }
+  assert.doesNotThrow(() => parseHubCodes(valid))
+  assert.throws(() => parseHubCodes({ ...valid, general: "baja-racing-2026-team" }), /not a generated code/)
 })
 
 test("each code unlocks exactly its own role", async () => {
@@ -151,6 +178,46 @@ test("bundle parsing rejects weak or malformed bundles", async () => {
   assert.throws(() => parseHubBundle({ ...bundle, version: 9 }), /version/)
   assert.throws(() => parseHubBundle({ ...bundle, payloads: [] }), /payload list/)
   assert.throws(() => parseHubBundle({ ...bundle, payloads: [{ ...bundle.payloads[0], iv: "AAAA" }] }), /malformed/)
+})
+
+test("payload sizes do not reveal the role", async () => {
+  const bundle = await createBundle(
+    allRoles().map((role) => ({ code: codeForRole(codes, role), payload: buildRolePayload(source, role) })),
+    MIN_ITERATIONS,
+  )
+  const lengths = new Set(bundle.payloads.map((payload) => fromBase64(payload.data).length))
+  assert.equal(lengths.size, 1)
+  // Padding is whitespace, so the padded payload still parses.
+  assert.equal((await unlockBundle(bundle, codes.leads))?.payload.leads?.length, 1)
+})
+
+test("a renamed subteam does not lock out correct codes", async () => {
+  // Simulates a bundle built before a subteam id was renamed to something
+  // lib/subteams.ts no longer knows ("aero").
+  const leads = buildRolePayload(source, { kind: "leads" })
+  const staleLeads = { ...leads, subteams: { ...leads.subteams, aero: [link("aero-drive")] } }
+  const staleSubteam = { version: 1, role: { kind: "subteam", subteam: "aero" }, general: source.general, subteams: { aero: [link("aero-drive")] } }
+  const bundle = await createBundle(
+    [
+      { code: codes.general, payload: buildRolePayload(source, { kind: "general" }) },
+      { code: codes.leads, payload: staleLeads as never },
+      { code: codes.subteams.powertrain, payload: staleSubteam as never },
+    ],
+    MIN_ITERATIONS,
+  )
+
+  // Leads still open the hub; the unknown subteam is skipped.
+  const unlocked = await unlockBundle(bundle, codes.leads)
+  assert.ok(unlocked)
+  assert.deepEqual(Object.keys(unlocked.payload.subteams).sort(), ["dynamics", "powertrain"])
+
+  // The removed subteam's correct code reports an outdated bundle, not a wrong code.
+  await assert.rejects(unlockBundle(bundle, codes.subteams.powertrain), HubBundleOutdatedError)
+  assert.equal(await unlockBundle(bundle, "wrong-code-123456789"), null)
+
+  // An out-of-scope known subteam is still rejected.
+  const general = buildRolePayload(source, { kind: "general" })
+  assert.throws(() => parseHubPayload({ ...general, subteams: { aero: [] } }), /must be empty/)
 })
 
 test("committed bundle, if present, is well formed", () => {

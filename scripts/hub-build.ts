@@ -1,8 +1,8 @@
 // Hub bundle tool. Run with Node 22+ (TypeScript runs directly):
 //
 //   node scripts/hub-build.ts codes [--rotate all|general,leads,powertrain,...]
-//   node scripts/hub-build.ts check
-//   node scripts/hub-build.ts build [--iterations N] [--fresh-salts]
+//   node scripts/hub-build.ts check [--allow-custom-codes]
+//   node scripts/hub-build.ts build [--iterations N] [--fresh-salts] [--allow-custom-codes]
 //
 // Inputs are local only (ignored by git): hub/resources.local.json and
 // hub/codes.local.json. Output: public/hub/bundle.json, which is public and
@@ -45,6 +45,7 @@ const { positionals, values } = parseArgs({
     iterations: { type: "string", default: String(DEFAULT_ITERATIONS) },
     rotate: { type: "string" },
     "fresh-salts": { type: "boolean", default: false },
+    "allow-custom-codes": { type: "boolean", default: false },
   },
 })
 
@@ -52,7 +53,13 @@ const command = positionals[0]
 
 async function readJson(path: string, what: string): Promise<unknown> {
   if (!existsSync(path)) throw new Error(`${what} not found at ${path}. See docs/HUB.md.`)
-  return JSON.parse(await readFile(path, "utf8"))
+  const text = await readFile(path, "utf8")
+  try {
+    return JSON.parse(text)
+  } catch {
+    // The JSON.parse message quotes part of the input, which may be a code.
+    throw new Error(`${what} at ${path} is not valid JSON.`)
+  }
 }
 
 async function writeFileAtomic(path: string, contents: string, mode?: number) {
@@ -100,19 +107,39 @@ async function codesCommand() {
   if (!exists) throw new Error(`${path} does not exist yet. Run "codes" without --rotate first.`)
   if (!values.rotate) throw new Error(`${path} already exists. Use --rotate <roles> or --rotate all to replace codes.`)
 
-  const codes = parseHubCodes(await readJson(path, "Codes file"))
+  const raw = await readJson(path, "Codes file")
   const roles = values.rotate === "all" ? allRoles() : values.rotate.split(",").map((name) => roleFromName(name.trim()))
+  // Rotating also brings the file in line with lib/subteams.ts: subteams that
+  // were added get a new code, and subteams that were removed are dropped.
+  const { added, removed } = syncSubteamCodes(raw)
   for (const role of roles) {
-    if (role.kind === "subteam") codes.subteams[role.subteam] = generateCode()
-    else codes[role.kind] = generateCode()
+    const record = raw as { general?: unknown; leads?: unknown; subteams: Record<string, unknown> }
+    if (role.kind === "subteam") record.subteams[role.subteam] = generateCode()
+    else record[role.kind] = generateCode()
   }
+  const codes = parseHubCodes(raw, { allowCustom: values["allow-custom-codes"] })
   await writeFileAtomic(path, JSON.stringify(codes, null, 2) + "\n", 0o600)
-  console.log(`Rotated: ${roles.map(roleKey).join(", ")}. Run "build" next, then share the new codes privately.`)
+  const rotated = [...new Set([...roles.map(roleKey), ...added.map((id) => `subteam:${id}`)])]
+  console.log(`Rotated: ${rotated.join(", ")}. Run "build" next, then share the new codes privately.`)
+  if (removed.length) console.log(`Removed codes for subteams no longer in lib/subteams.ts: ${removed.join(", ")}`)
+}
+
+/** Adds codes for new subteam ids and drops ids that no longer exist. Mutates `raw`. */
+function syncSubteamCodes(raw: unknown): { added: SubteamId[]; removed: string[] } {
+  if (typeof raw !== "object" || raw === null) throw new Error("Codes file must be a JSON object.")
+  const record = raw as { subteams?: unknown }
+  if (typeof record.subteams !== "object" || record.subteams === null) record.subteams = {}
+  const subteams = record.subteams as Record<string, unknown>
+  const removed = Object.keys(subteams).filter((id) => !(subteamIds as readonly string[]).includes(id))
+  for (const id of removed) delete subteams[id]
+  const added = subteamIds.filter((id) => subteams[id] === undefined)
+  for (const id of added) subteams[id] = generateCode()
+  return { added, removed }
 }
 
 async function loadInputs() {
   const source = parseHubSource(await readJson(values.source!, "Resource source"))
-  const codes = parseHubCodes(await readJson(values.codes!, "Codes file"))
+  const codes = parseHubCodes(await readJson(values.codes!, "Codes file"), { allowCustom: values["allow-custom-codes"] })
   return { source, codes }
 }
 
@@ -121,7 +148,11 @@ function summarize(source: ReturnType<typeof parseHubSource>) {
   return `general=${source.general.length} leads=${source.leads.length} ${subteamCounts}`
 }
 
-/** Finds the salt a role used in the previous bundle, if its code still opens it. */
+/**
+ * Finds the salt a role used in the previous bundle, if its code still opens
+ * that role's payload. A payload that opens but belongs to another role (codes
+ * swapped by hand) or no longer validates gets a fresh salt instead.
+ */
 async function previousSalts(codes: HubCodes, iterations: number): Promise<Map<string, string>> {
   const salts = new Map<string, string>()
   if (values["fresh-salts"] || !existsSync(values.out!)) return salts
@@ -137,7 +168,8 @@ async function previousSalts(codes: HubCodes, iterations: number): Promise<Map<s
       const code = codeForRole(codes, role)
       for (const encrypted of previous.payloads) {
         const key = await deriveKey(code, fromBase64(encrypted.salt), iterations)
-        if (await decryptWithKey(key, encrypted)) {
+        const payload = await decryptWithKey(key, encrypted).catch(() => null)
+        if (payload && roleKey(payload.role) === roleKey(role)) {
           salts.set(roleKey(role), encrypted.salt)
           return
         }
