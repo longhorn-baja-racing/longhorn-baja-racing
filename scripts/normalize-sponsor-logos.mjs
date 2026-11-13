@@ -20,10 +20,12 @@ if (files.length === 0) {
 for (const file of files) {
   const out = join(dirname(file), basename(file, extname(file)) + ".webp")
   // Trim margins that match the corner color (transparent or a flat background).
+  // The input is read fully into memory here, so a .webp input can be
+  // overwritten in place below.
   const trimmed = await sharp(file).trim({ threshold: 12 }).toBuffer()
   const { width, height, size } = await sharp(trimmed)
     .resize({ width: 520, height: 160, fit: "inside", withoutEnlargement: true })
     .webp({ quality: 92, alphaQuality: 100, effort: 6 })
-    .toFile(out === file ? out + ".tmp.webp" : out)
+    .toFile(out)
   console.log(`${basename(out)}  width: ${width}, height: ${height}  (${(size / 1024).toFixed(1)} KB)`)
 }

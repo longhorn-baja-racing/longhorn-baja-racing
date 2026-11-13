@@ -21,12 +21,14 @@ const sponsorList = [
 
 // Gives logos of different shapes a similar visual weight: square marks render
 // 80px tall, wider wordmarks get longer but shorter, capped at 260px wide.
+// Logos are never drawn larger than their source file, which would blur them.
 function logoSize(width: number, height: number) {
   const ratio = width / height
   let displayHeight = 80 * Math.pow(ratio, -0.4)
   let displayWidth = displayHeight * ratio
-  if (displayWidth > 260) {
-    displayWidth = 260
+  const cap = Math.min(260, width)
+  if (displayWidth > cap) {
+    displayWidth = cap
     displayHeight = displayWidth / ratio
   }
   return { width: Math.round(displayWidth), height: Math.round(displayHeight) }
