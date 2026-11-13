@@ -163,6 +163,28 @@ test("homepage previews the next three events", async ({ page }) => {
   await expect(page).toHaveURL(/\/calendar\/$/)
 })
 
+test("calendar orders evening events before the next day's all-day events", async ({ page }) => {
+  // 7 PM CST on Nov 30 is already Dec 1 in UTC, while the all-day event is on Dec 1.
+  const events = [
+    { id: "allday@2099", title: "Inspection day", allDay: true, start: "2099-12-01", end: "2099-12-02" },
+    { id: "evening@2099", title: "Late design review", allDay: false, start: "2099-12-01T01:00:00.000Z", end: "2099-12-01T02:00:00.000Z" },
+  ]
+  await page.route("**/data/calendar.json", route => route.fulfill({ json: { ...calendarFixture, events } }))
+  await page.goto("/calendar/")
+  const main = page.getByRole("main")
+  await expect(main.getByRole("listitem")).toHaveCount(2)
+  await expect(main.getByRole("heading", { level: 2, name: /2099$/ })).toHaveText(["November 2099", "December 2099"])
+  await expect(main.getByRole("listitem").first()).toContainText("Late design review")
+})
+
+test("calendar points to Google when its data is out of date", async ({ page }) => {
+  await page.route("**/data/calendar.json", route => route.fulfill({ json: { ...calendarFixture, generatedAt: "2000-01-01T00:00:00.000Z" } }))
+  await page.goto("/calendar/")
+  const main = page.getByRole("main")
+  await expect(main.getByRole("listitem").filter({ hasText: "General meeting" })).toBeVisible()
+  await expect(main).toContainText("has not been updated recently")
+})
+
 const calendarStates: [string, (route: import("@playwright/test").Route) => Promise<void>, RegExp][] = [
   ["no upcoming events", route => route.fulfill({ json: { ...calendarFixture, events: [calendarFixture.events[0]] } }), /No upcoming events are scheduled/],
   ["feed unavailable at build time", route => route.fulfill({ json: { ...calendarFixture, status: "unavailable", events: [] } }), /could not be loaded/],

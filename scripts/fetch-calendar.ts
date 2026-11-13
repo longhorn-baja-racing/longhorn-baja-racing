@@ -6,11 +6,13 @@
 //
 // A network or parse failure writes { status: "unavailable" } and exits 0, so a
 // Google outage never breaks the build; the page then links to Google Calendar.
+// With CALENDAR_REQUIRED=true (set for the daily scheduled deploy) it exits 1
+// instead, so a failed fetch does not replace the live site's good data.
 
 import { mkdir, readFile, writeFile } from "node:fs/promises"
 import { dirname } from "node:path"
 import ICAL from "ical.js"
-import { CALENDAR_DATA_PATH, CALENDAR_ICS_URL, CALENDAR_TIME_ZONE, type CalendarEvent, type CalendarFeed } from "../lib/calendar.ts"
+import { CALENDAR_DATA_PATH, CALENDAR_ICS_URL, CALENDAR_TIME_ZONE, compareEvents, type CalendarEvent, type CalendarFeed } from "../lib/calendar.ts"
 
 const OUT = `public${CALENDAR_DATA_PATH}`
 const LOOKBACK_MS = 2 * 86_400_000
@@ -124,8 +126,7 @@ export function eventsFromIcs(ics: string, from: Date, to: Date): CalendarEvent[
     if (overlaps(exception.startDate, end)) results.push(toCalendarEvent(exception, exception.startDate, end))
   }
 
-  const sortKey = (event: CalendarEvent) => Date.parse(event.allDay ? `${event.start}T00:00:00Z` : event.start)
-  return results.sort((a, b) => sortKey(a) - sortKey(b)).slice(0, MAX_EVENTS)
+  return results.sort(compareEvents).slice(0, MAX_EVENTS)
 }
 
 async function readFeed(): Promise<string> {
@@ -144,8 +145,13 @@ async function main() {
     feed = { status: "ok", generatedAt: new Date(now).toISOString(), timeZone: CALENDAR_TIME_ZONE, events }
     console.log(`Calendar: wrote ${events.length} events to ${OUT}.`)
   } catch (error) {
+    const reason = error instanceof Error ? error.message : String(error)
+    if (process.env.CALENDAR_REQUIRED === "true") {
+      console.error(`Calendar: feed unavailable (${reason}). CALENDAR_REQUIRED is set, so the build stops and the deployed calendar stays as it is.`)
+      process.exit(1)
+    }
     feed = { status: "unavailable", generatedAt: new Date(now).toISOString(), timeZone: CALENDAR_TIME_ZONE, events: [] }
-    console.warn(`Calendar: feed unavailable (${error instanceof Error ? error.message : String(error)}). Wrote an empty feed to ${OUT}.`)
+    console.warn(`Calendar: feed unavailable (${reason}). Wrote an empty feed to ${OUT}.`)
   }
   await mkdir(dirname(OUT), { recursive: true })
   await writeFile(OUT, JSON.stringify(feed) + "\n")

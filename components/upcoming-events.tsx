@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import { addToGoogleCalendarUrl, describeEvent, loadCalendarFeed, upcomingEvents, type CalendarEvent } from "@/lib/calendar"
+import { addToGoogleCalendarUrl, describeEvent, isFeedStale, loadCalendarFeed, upcomingEvents, type CalendarEvent } from "@/lib/calendar"
 import { siteConfig } from "@/lib/site"
 
-type State = { kind: "loading" } | { kind: "error" } | { kind: "ready"; events: CalendarEvent[] }
+type State = { kind: "loading" } | { kind: "error" } | { kind: "ready"; events: CalendarEvent[]; stale: boolean }
 
 interface UpcomingEventsProps {
   /** Maximum number of events to show. */
@@ -25,7 +25,7 @@ export default function UpcomingEvents({ limit = 5, groupByMonth = false, showCa
       .then((feed) => {
         if (!active) return
         if (feed.status !== "ok") setState({ kind: "error" })
-        else setState({ kind: "ready", events: upcomingEvents(feed.events).slice(0, limit) })
+        else setState({ kind: "ready", events: upcomingEvents(feed.events).slice(0, limit), stale: isFeedStale(feed) })
       })
       .catch(() => active && setState({ kind: "error" }))
     return () => {
@@ -61,10 +61,16 @@ export default function UpcomingEvents({ limit = 5, groupByMonth = false, showCa
   if (state.events.length === 0) {
     return (
       <p role="status" className="event-card p-6 leading-7 text-white/70">
-        No upcoming events are scheduled right now. Check back soon, or {googleLink}.
+        {state.stale ? <>This list has not been updated recently. To see the latest events, {googleLink}.</> : <>No upcoming events are scheduled right now. Check back soon, or {googleLink}.</>}
       </p>
     )
   }
+
+  const staleNote = state.stale && (
+    <p className="mt-4 text-sm leading-6 text-white/65">
+      This list has not been updated recently and may be missing new events. To see the latest, {googleLink}.
+    </p>
+  )
 
   const groups: { month: string; events: CalendarEvent[] }[] = []
   for (const event of state.events) {
@@ -74,18 +80,26 @@ export default function UpcomingEvents({ limit = 5, groupByMonth = false, showCa
     else groups.push({ month, events: [event] })
   }
 
+  const list = (events: CalendarEvent[]) => (
+    <ol className="space-y-3">
+      {events.map((event) => (
+        <EventItem key={event.id} event={event} />
+      ))}
+    </ol>
+  )
+
   return (
     <div>
-      {groups.map((group) => (
-        <section key={group.month || "events"} aria-label={group.month || "Upcoming events"} className={groupByMonth ? "mb-10" : undefined}>
-          {group.month && <h2 className="mb-4 text-3xl text-white">{group.month}</h2>}
-          <ol className="space-y-3">
-            {group.events.map((event) => (
-              <EventItem key={event.id} event={event} />
-            ))}
-          </ol>
-        </section>
-      ))}
+      {groupByMonth
+        ? groups.map((group, index) => (
+            <section key={`${group.month}-${index}`} aria-label={group.month} className="mb-10">
+              <h2 className="mb-4 text-3xl text-white">{group.month}</h2>
+              {list(group.events)}
+            </section>
+          ))
+        : // The page section around this list already names it, so no extra region here.
+          list(state.events)}
+      {staleNote}
       {showCalendarLink && (
         <Link href="/calendar/" prefetch={false} className="mt-6 inline-block text-sm text-white/75 underline decoration-primary underline-offset-8 hover:text-white">
           View full calendar

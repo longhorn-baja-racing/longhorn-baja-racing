@@ -82,9 +82,30 @@ function teamDate(now: number): string {
   return new Intl.DateTimeFormat("en-CA", { timeZone: CALENDAR_TIME_ZONE, year: "numeric", month: "2-digit", day: "2-digit" }).format(now)
 }
 
-/** Sort key: all-day events sort at the start of their day (midnight UTC is close enough for ordering). */
-function startTime(event: CalendarEvent): number {
-  return event.allDay ? Date.parse(`${event.start}T00:00:00Z`) : Date.parse(event.start)
+/** The team-time date an event starts on, as YYYY-MM-DD. */
+function startDay(event: CalendarEvent): string {
+  return event.allDay ? event.start : teamDate(Date.parse(event.start))
+}
+
+/**
+ * Orders events by their start day in team time, all-day events first within
+ * a day, then by start time. Comparing all-day events by midnight UTC would
+ * put them before evening events of the previous day in Austin.
+ */
+export function compareEvents(a: CalendarEvent, b: CalendarEvent): number {
+  const day = startDay(a).localeCompare(startDay(b))
+  if (day !== 0) return day
+  if (a.allDay !== b.allDay) return a.allDay ? -1 : 1
+  const time = a.allDay ? 0 : Date.parse(a.start) - Date.parse(b.start)
+  return time || a.title.localeCompare(b.title)
+}
+
+/** Data older than this may be missing events added in Google since the last deploy. */
+export const STALE_AFTER_MS = 3 * 86_400_000
+
+export function isFeedStale(feed: CalendarFeed, now = Date.now()): boolean {
+  const generated = Date.parse(feed.generatedAt)
+  return Number.isNaN(generated) || now - generated > STALE_AFTER_MS
 }
 
 /** Events that have not ended yet, soonest first. All-day events last through their final day in team time. */
@@ -92,7 +113,7 @@ export function upcomingEvents(events: readonly CalendarEvent[], now = Date.now(
   const today = teamDate(now)
   return events
     .filter((event) => (event.allDay ? event.end > today : Date.parse(event.end) > now))
-    .sort((a, b) => startTime(a) - startTime(b))
+    .sort(compareEvents)
 }
 
 // All-day dates are calendar dates, so format them in UTC to avoid shifting a day.
@@ -144,7 +165,9 @@ export function describeEvent(event: CalendarEvent): EventDisplay {
   const end = new Date(event.end)
   const time = formatter({ hour: "numeric", minute: "2-digit" }, false)
   const zone = formatter({ timeZoneName: "short" }, false).formatToParts(start).find((part) => part.type === "timeZoneName")?.value ?? ""
-  const sameDay = shortDate.format(start) === shortDate.format(end)
+  // An event ending exactly at midnight still belongs to the day it started.
+  const lastMoment = new Date(Math.max(start.getTime(), end.getTime() - 1))
+  const sameDay = shortDate.format(start) === shortDate.format(lastMoment)
   return {
     month, day, weekday, monthKey,
     dateLabel: sameDay ? longDate.format(start) : `${shortDate.format(start)} - ${shortDate.format(end)}`,
