@@ -10,7 +10,8 @@
     "lint": "eslint . --max-warnings=0",
     "typecheck": "next typegen && tsc --noEmit",
     "test": "playwright test",
-    "test:export": "node scripts/check-export.mjs"
+    "test:export": "node scripts/check-export.mjs",
+    "test:calendar": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test scripts/fetch-calendar.test.ts"
   },
   "dependencies": {
     "@radix-ui/react-separator": "^1.1.7",

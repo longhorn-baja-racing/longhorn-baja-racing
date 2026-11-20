@@ -11,6 +11,7 @@
 
 import { mkdir, readFile, writeFile } from "node:fs/promises"
 import { dirname } from "node:path"
+import { pathToFileURL } from "node:url"
 import ICAL from "ical.js"
 import { CALENDAR_DATA_PATH, CALENDAR_ICS_URL, CALENDAR_TIME_ZONE, compareEvents, type CalendarEvent, type CalendarFeed } from "../lib/calendar.ts"
 
@@ -102,11 +103,17 @@ export function eventsFromIcs(ics: string, from: Date, to: Date): CalendarEvent[
   }
 
   const results: CalendarEvent[] = []
+  const seen = new Set<string>()
+  const add = (event: CalendarEvent) => {
+    if (seen.has(event.id)) return
+    seen.add(event.id)
+    results.push(event)
+  }
   for (const master of masters.values()) {
     if (isCancelled(master) || !master.startDate) continue
     if (!master.isRecurring()) {
       const end = master.endDate ?? master.startDate
-      if (overlaps(master.startDate, end)) results.push(toCalendarEvent(master, master.startDate, end))
+      if (overlaps(master.startDate, end)) add(toCalendarEvent(master, master.startDate, end))
       continue
     }
     const iterator = master.iterator()
@@ -115,15 +122,18 @@ export function eventsFromIcs(ics: string, from: Date, to: Date): CalendarEvent[
       const details = master.getOccurrenceDetails(next)
       if (details.endDate.compare(fromTime) <= 0 && !details.endDate.isDate) continue
       if (isCancelled(details.item)) continue
-      if (overlaps(details.startDate, details.endDate)) results.push(toCalendarEvent(details.item, details.startDate, details.endDate))
+      if (overlaps(details.startDate, details.endDate)) add(toCalendarEvent(details.item, details.startDate, details.endDate))
     }
   }
 
-  // Exceptions moved into the window from a master that does not exist in the feed.
+  // Exceptions moved into the window. The loop above stops at the window end, so
+  // it misses occurrences moved here from a later date, and it never sees
+  // exceptions whose master is missing from the feed. Ones it did add are skipped.
   for (const exception of exceptions) {
-    if (masters.has(exception.uid) || isCancelled(exception) || !exception.startDate) continue
+    const master = masters.get(exception.uid)
+    if ((master && isCancelled(master)) || isCancelled(exception) || !exception.startDate) continue
     const end = exception.endDate ?? exception.startDate
-    if (overlaps(exception.startDate, end)) results.push(toCalendarEvent(exception, exception.startDate, end))
+    if (overlaps(exception.startDate, end)) add(toCalendarEvent(exception, exception.startDate, end))
   }
 
   return results.sort(compareEvents).slice(0, MAX_EVENTS)
@@ -157,4 +167,4 @@ async function main() {
   await writeFile(OUT, JSON.stringify(feed) + "\n")
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) await main()
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) await main()
