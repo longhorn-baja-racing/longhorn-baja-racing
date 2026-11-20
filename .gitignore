@@ -46,3 +46,5 @@ next-env.d.ts
 # hub inputs: plaintext resource links and access codes (never commit)
 /hub/*
 !/hub/resources.example.json
+# generated at build time by scripts/fetch-calendar.ts
+/public/data/calendar.json

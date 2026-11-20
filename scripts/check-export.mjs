@@ -14,7 +14,7 @@ for (const route of routes) {
   titles.add(title)
   const canonical = "https://longhornbajaracing.com/" + (route ? route + "/" : "")
   assert.ok(html.includes('rel="canonical" href="' + canonical + '"'), route + ": canonical")
-  assert.equal((html.match(/<iframe[ >]/g) || []).length, route === "calendar" ? 1 : 0)
+  assert.equal((html.match(/<iframe[ >]/g) || []).length, 0, route + ": no iframes")
   for (const [, href] of html.matchAll(/(?:href|src)="(\/[^"]*)"/g)) {
     if (href.startsWith("//")) continue
     const pathname = decodeURIComponent(href.split(/[?#]/)[0])
@@ -23,12 +23,12 @@ for (const route of routes) {
     if (statSync(file).isDirectory()) assert.ok(existsSync(join(file, "index.html")), pathname)
   }
 }
-const calendar = readFileSync("out/calendar/index.html", "utf8")
-assert.match(calendar, /src=longhornbaja%40gmail.com/)
-assert.match(calendar, /ctz=America%2FChicago/)
-assert.match(calendar, /mode=AGENDA/)
-assert.match(calendar, /loading="lazy"/)
+const calendar = JSON.parse(readFileSync("out/data/calendar.json", "utf8"))
+assert.ok(calendar.status === "ok" || calendar.status === "unavailable", "calendar data status")
+assert.equal(calendar.timeZone, "America/Chicago")
+assert.ok(Array.isArray(calendar.events), "calendar events list")
+if (calendar.status === "unavailable") console.warn("Warning: calendar feed was unavailable at build time; the page shows its fallback.")
 assert.ok(statSync("public/baja-team-photo-mobile.webp").size < 150000)
 assert.ok(statSync("public/baja-team-photo.webp").size < 500000)
-console.log("Passed: 8 exported pages, headings, metadata, local links/assets, calendar, image budgets.")
+console.log("Passed: 8 exported pages, headings, metadata, local links/assets, calendar data, image budgets.")
 
