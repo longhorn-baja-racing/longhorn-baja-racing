@@ -1,13 +1,14 @@
 import type { Metadata } from "next"
+import { pageMetadata, shareImages } from "@/lib/metadata"
 import Section from "@/components/section"
 import { siteConfig } from "@/lib/site"
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Join & Contact",
   description: "Join Longhorn Baja Racing at UT Austin or get in touch about sponsorships and partnerships.",
-  alternates: { canonical: "/contact/" },
-  openGraph: { url: "/contact/" },
-}
+  path: "/contact/",
+  image: shareImages.team,
+})
 
 export default function ContactPage() {
   return (
