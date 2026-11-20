@@ -32,7 +32,10 @@ function openDatabase(): Promise<IDBDatabase> {
 }
 
 async function withStore<T>(mode: IDBTransactionMode, action: (store: IDBObjectStore) => IDBRequest<T>): Promise<T> {
-  const db = await openDatabase()
+  return inStore(await openDatabase(), mode, action)
+}
+
+async function inStore<T>(db: IDBDatabase, mode: IDBTransactionMode, action: (store: IDBObjectStore) => IDBRequest<T>): Promise<T> {
   try {
     return await new Promise<T>((resolve, reject) => {
       const transaction = db.transaction(STORE, mode)
@@ -73,8 +76,9 @@ export async function loadSession(now = Date.now()): Promise<StoredSession | nul
 
 /**
  * Log out / switch team: removes the saved key and the leads subteam choice.
- * Rejects when the saved key could not be deleted, because a later visit could
- * then still reopen the hub. Callers must not report the logout as complete.
+ * Rejects when a saved key may remain (the database opens but the delete
+ * fails), because a later visit could then still reopen the hub. Callers must
+ * not report the logout as complete in that case.
  */
 export async function clearSession(): Promise<void> {
   try {
@@ -82,7 +86,15 @@ export async function clearSession(): Promise<void> {
   } catch {
     // Storage can be unavailable (private mode); nothing to clear then.
   }
-  await withStore("readwrite", (store) => store.delete(RECORD_KEY))
+  let db: IDBDatabase
+  try {
+    db = await openDatabase()
+  } catch {
+    // No usable IndexedDB (storage blocked, some private modes): no key can
+    // have been saved, and a reload could not read one either.
+    return
+  }
+  await inStore(db, "readwrite", (store) => store.delete(RECORD_KEY))
 }
 
 export function loadLeadsSubteam(): string | null {

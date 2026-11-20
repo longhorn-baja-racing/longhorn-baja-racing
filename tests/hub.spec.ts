@@ -226,6 +226,23 @@ test("log out reports when the saved key cannot be deleted", async ({ hubPage: p
   await expect(page.getByRole("main")).not.toContainText("Team shared drive")
 })
 
+test("log out confirms normally when this browser has no usable IndexedDB", async ({ hubPage: page }) => {
+  // Blocked storage: nothing can be saved, so there is nothing left to delete.
+  await page.addInitScript(() => {
+    IDBFactory.prototype.open = function () {
+      throw new DOMException("IndexedDB blocked for test", "SecurityError")
+    }
+  })
+  const main = page.getByRole("main")
+
+  await page.goto("/hub/")
+  await unlock(page, codes.general)
+  await expect(page.getByRole("heading", { name: "Team resources", level: 2 })).toBeVisible({ timeout: 15_000 })
+  await page.getByRole("button", { name: "Log out" }).click()
+  await expect(main.getByRole("status")).toContainText("You are logged out. This device no longer has hub access.")
+  await expect(main.getByRole("alert")).toHaveCount(0)
+})
+
 test("not remembering the device locks again on reload",async ({ hubPage: page }) => {
   await page.goto("/hub/")
   await unlock(page, codes.general, false)
