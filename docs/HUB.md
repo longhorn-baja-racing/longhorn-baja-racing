@@ -213,7 +213,7 @@ Options:
 | Option | Commands | Meaning |
 | --- | --- | --- |
 | `--fresh-salts` | `build` | Re-salt every role: every member must enter their code again. |
-| `--iterations N` | `build` | PBKDF2 iterations (default 600000, allowed 100000 to 10000000). See "Change the iteration count". |
+| `--iterations N` | `build` | PBKDF2 iterations (allowed 100000 to 10000000). Without it, `build` keeps the existing bundle's count, or uses 600000 when there is no bundle. See "Change the iteration count". |
 | `--allow-custom-codes` | all | Accept hand-picked codes. Do not use for production. |
 | `--source PATH` | `check`, `build` | Resource file (default `hub/resources.local.json`). |
 | `--codes PATH` | all | Codes file (default `hub/codes.local.json`). |
@@ -358,11 +358,10 @@ phones (the browser tries the code against all 12 payloads in parallel; about
 0.7 s on a fast desktop at 600,000). Changing the count re-salts every role,
 so everyone has to log in again.
 
-`build` uses 600,000 unless you pass `--iterations` **every time**. If you
-build once with `--iterations 800000` and later run a plain `build`, the
-count silently goes back to 600,000 and everyone is logged out again. To
-change it permanently, change `DEFAULT_ITERATIONS` in `lib/hub/crypto.ts` in a
-PR and rebuild the bundle in the same PR.
+To change it, run `npm run hub -- build --iterations 800000` once and commit
+the rebuilt bundle. Later plain `build` runs keep the count stored in the
+existing bundle, so they do not log anyone out. `DEFAULT_ITERATIONS` in
+`lib/hub/crypto.ts` is only used when there is no existing bundle.
 
 ## Subteams
 

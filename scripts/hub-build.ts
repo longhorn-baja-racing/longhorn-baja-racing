@@ -42,7 +42,8 @@ const { positionals, values } = parseArgs({
     source: { type: "string", default: "hub/resources.local.json" },
     codes: { type: "string", default: "hub/codes.local.json" },
     out: { type: "string", default: "public/hub/bundle.json" },
-    iterations: { type: "string", default: String(DEFAULT_ITERATIONS) },
+    // No default: build keeps the existing bundle's count (see buildCommand).
+    iterations: { type: "string" },
     rotate: { type: "string" },
     "fresh-salts": { type: "boolean", default: false },
     "allow-custom-codes": { type: "boolean", default: false },
@@ -153,15 +154,9 @@ function summarize(source: ReturnType<typeof parseHubSource>) {
  * that role's payload. A payload that opens but belongs to another role (codes
  * swapped by hand) or no longer validates gets a fresh salt instead.
  */
-async function previousSalts(codes: HubCodes, iterations: number): Promise<Map<string, string>> {
+async function previousSalts(codes: HubCodes, iterations: number, previous: HubBundle | null): Promise<Map<string, string>> {
   const salts = new Map<string, string>()
-  if (values["fresh-salts"] || !existsSync(values.out!)) return salts
-  let previous: HubBundle
-  try {
-    previous = parseHubBundle(JSON.parse(await readFile(values.out!, "utf8")))
-  } catch {
-    return salts
-  }
+  if (values["fresh-salts"] || !previous) return salts
   if (previous.kdf.iterations !== iterations) return salts
   await Promise.all(
     allRoles().map(async (role) => {
@@ -179,11 +174,25 @@ async function previousSalts(codes: HubCodes, iterations: number): Promise<Map<s
   return salts
 }
 
+/** The bundle currently at --out, or null when it is missing or unreadable. */
+async function readPreviousBundle(): Promise<HubBundle | null> {
+  if (!existsSync(values.out!)) return null
+  try {
+    return parseHubBundle(JSON.parse(await readFile(values.out!, "utf8")))
+  } catch {
+    return null
+  }
+}
+
 async function buildCommand() {
-  const iterations = Number(values.iterations)
+  const previous = await readPreviousBundle()
+  // Without --iterations, keep the existing bundle's count. Falling back to the
+  // default instead would silently re-salt every role (logging everyone out)
+  // after a bundle was once built with a custom count.
+  const iterations = values.iterations === undefined ? (previous?.kdf.iterations ?? DEFAULT_ITERATIONS) : Number(values.iterations)
   if (!Number.isInteger(iterations)) throw new Error("--iterations must be an integer")
   const { source, codes } = await loadInputs()
-  const reused = await previousSalts(codes, iterations)
+  const reused = await previousSalts(codes, iterations, previous)
 
   const entries: BundleEntry[] = allRoles().map((role) => ({
     code: codeForRole(codes, role),
