@@ -63,25 +63,26 @@ export async function loadSession(now = Date.now()): Promise<StoredSession | nul
       typeof session.expiresAt === "number" &&
       session.expiresAt > now
     if (valid) return session
-    if (session !== undefined) await clearSession()
+    // Unusable either way, so a failed delete here changes nothing.
+    if (session !== undefined) await clearSession().catch(() => undefined)
     return null
   } catch {
     return null
   }
 }
 
-/** Log out / switch team: removes the saved key and the leads subteam choice. */
+/**
+ * Log out / switch team: removes the saved key and the leads subteam choice.
+ * Rejects when the saved key could not be deleted, because a later visit could
+ * then still reopen the hub. Callers must not report the logout as complete.
+ */
 export async function clearSession(): Promise<void> {
   try {
     localStorage.removeItem(LEADS_SUBTEAM_KEY)
   } catch {
     // Storage can be unavailable (private mode); nothing to clear then.
   }
-  try {
-    await withStore("readwrite", (store) => store.delete(RECORD_KEY))
-  } catch {
-    // Same as above.
-  }
+  await withStore("readwrite", (store) => store.delete(RECORD_KEY))
 }
 
 export function loadLeadsSubteam(): string | null {

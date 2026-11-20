@@ -186,7 +186,47 @@ test("log out and switch team clear the session", async ({ hubPage: page }) => {
   await expect(page.getByRole("main")).not.toContainText("Team shared drive")
 })
 
-test("not remembering the device locks again on reload", async ({ hubPage: page }) => {
+test("log out reports when the saved key cannot be deleted", async ({ hubPage: page }) => {
+  // Simulates storage that refuses to delete the saved key while the flag is set.
+  await page.addInitScript(() => {
+    const original = IDBObjectStore.prototype.delete
+    IDBObjectStore.prototype.delete = function (this: IDBObjectStore, query: IDBValidKey | IDBKeyRange) {
+      if ((window as unknown as { failHubDelete?: boolean }).failHubDelete) throw new DOMException("Delete blocked for test", "UnknownError")
+      return original.call(this, query)
+    }
+  })
+  const setFailure = (fail: boolean) => page.evaluate((value) => ((window as unknown as { failHubDelete?: boolean }).failHubDelete = value), fail)
+  const main = page.getByRole("main")
+
+  await page.goto("/hub/")
+  await unlock(page, codes.general)
+  await expect(page.getByRole("heading", { name: "Team resources", level: 2 })).toBeVisible({ timeout: 15_000 })
+
+  await setFailure(true)
+  await page.getByRole("button", { name: "Log out" }).click()
+  // The links are hidden at once, but the logout is not confirmed.
+  await expect(main.getByRole("alert")).toContainText("could not remove your saved hub access")
+  await expect(main.getByRole("alert")).toContainText("clear this site's data")
+  await expect(page.getByLabel("Access code")).toBeVisible()
+  await expect(main).not.toContainText("Team shared drive")
+  await expect(main).not.toContainText("no longer has hub access")
+
+  // A failed retry keeps the warning.
+  await main.getByRole("button", { name: "Try again" }).click()
+  await expect(main.getByRole("button", { name: "Try again" })).toBeEnabled()
+  await expect(main.getByRole("alert")).toContainText("could not remove your saved hub access")
+  await expect(main).not.toContainText("no longer has hub access")
+
+  await setFailure(false)
+  await main.getByRole("button", { name: "Try again" }).click()
+  await expect(main.getByRole("status")).toContainText("You are logged out. This device no longer has hub access.")
+  await expect(main.getByRole("alert")).toHaveCount(0)
+  await page.reload()
+  await expect(page.getByLabel("Access code")).toBeVisible()
+  await expect(page.getByRole("main")).not.toContainText("Team shared drive")
+})
+
+test("not remembering the device locks again on reload",async ({ hubPage: page }) => {
   await page.goto("/hub/")
   await unlock(page, codes.general, false)
   await expect(page.getByRole("heading", { name: "Team resources", level: 2 })).toBeVisible({ timeout: 15_000 })

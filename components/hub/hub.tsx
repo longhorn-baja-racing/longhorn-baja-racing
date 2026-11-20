@@ -11,11 +11,17 @@ type State =
   | { kind: "not-set-up" }
   | { kind: "error" }
   | { kind: "outdated" }
-  | { kind: "locked"; bundle: HubBundle; notice?: string }
+  | { kind: "locked"; bundle: HubBundle; notice?: string; forgetFailed?: ForgetFailure }
   | { kind: "unlocked"; bundle: HubBundle; payload: HubPayload; remembered: boolean; focus: boolean }
+
+/** The saved key could not be deleted. `notice` is shown once a retry succeeds. */
+type ForgetFailure = { notice?: string; attempts: number }
 
 const OUTDATED_MESSAGE =
   "Your code is correct, but the hub has not been updated for a recent subteam change yet. Ask a lead to rebuild the hub, then try again."
+
+const FORGET_FAILED_MESSAGE =
+  "You are logged out on this page, but this browser could not remove your saved hub access, so the hub may open again when you reload. Select Try again, or clear this site's data in your browser settings."
 
 const base = process.env.NEXT_PUBLIC_BASE_PATH || ""
 
@@ -39,7 +45,8 @@ export default function Hub() {
         const session = await loadSession()
         const payload = session ? await reopenBundle(bundle, session.key, session.salt) : null
         if (!active) return
-        if (session && !payload) await clearSession()
+        // A key that cannot open this bundle never reopens it, so a failed delete is harmless.
+        if (session && !payload) await clearSession().catch(() => undefined)
         setState(payload ? { kind: "unlocked", bundle, payload, remembered: true, focus: false } : { kind: "locked", bundle })
       } catch (error) {
         // An outdated bundle keeps the saved session, so it works again after the rebuild.
@@ -51,10 +58,30 @@ export default function Hub() {
     }
   }, [])
 
-  const lock = useCallback(async (notice?: string) => {
-    await clearSession()
-    setState((current) => (current.kind === "unlocked" ? { kind: "locked", bundle: current.bundle, notice } : current))
+  // Deletes the saved key. Only a successful delete may confirm the logout;
+  // otherwise a reload could reopen the hub, so the user is told how to fix it.
+  const forget = useCallback(async (notice?: string) => {
+    let removed = true
+    try {
+      await clearSession()
+    } catch {
+      removed = false
+    }
+    setState((current) => {
+      if (current.kind !== "locked") return current
+      if (removed) return { kind: "locked", bundle: current.bundle, notice }
+      return { kind: "locked", bundle: current.bundle, forgetFailed: { notice, attempts: (current.forgetFailed?.attempts ?? 0) + 1 } }
+    })
   }, [])
+
+  const lock = useCallback(
+    async (notice?: string) => {
+      // Hide the links right away, whether or not the saved key can be deleted.
+      setState((current) => (current.kind === "unlocked" ? { kind: "locked", bundle: current.bundle } : current))
+      await forget(notice)
+    },
+    [forget],
+  )
 
   if (state.kind === "checking") {
     return (
@@ -89,6 +116,8 @@ export default function Hub() {
       <AccessForm
         bundle={state.bundle}
         notice={state.notice}
+        forgetFailed={state.forgetFailed}
+        onRetryForget={() => forget(state.forgetFailed?.notice)}
         onUnlock={(payload, remembered) => setState({ kind: "unlocked", bundle: state.bundle, payload, remembered, focus: true })}
       />
     )
@@ -109,16 +138,21 @@ type Failure = "wrong-code" | "outdated"
 function AccessForm({
   bundle,
   notice,
+  forgetFailed,
+  onRetryForget,
   onUnlock,
 }: {
   bundle: HubBundle
   notice?: string
+  forgetFailed?: ForgetFailure
+  onRetryForget: () => Promise<void>
   onUnlock: (payload: HubPayload, remembered: boolean) => void
 }) {
   const [code, setCode] = useState("")
   const [visible, setVisible] = useState(false)
   const [remember, setRemember] = useState(true)
   const [busy, setBusy] = useState(false)
+  const [retrying, setRetrying] = useState(false)
   const [failure, setFailure] = useState<Failure | null>(null)
   // Filled in after mount, so screen readers announce it from the already
   // present live region instead of missing it while focus moves.
@@ -160,6 +194,16 @@ function AccessForm({
     onUnlock(result.payload, remember)
   }
 
+  async function retryForget() {
+    if (retrying) return
+    setRetrying(true)
+    try {
+      await onRetryForget()
+    } finally {
+      setRetrying(false)
+    }
+  }
+
   const failed = failure !== null
 
   return (
@@ -167,6 +211,22 @@ function AccessForm({
       <p role="status" className={announced ? "mb-5 border-l-2 border-primary pl-3 text-sm text-white/80" : "sr-only"}>
         {announced}
       </p>
+      {forgetFailed && (
+        <div className="mb-5 border-l-2 border-[#ffb37a] pl-3">
+          {/* Keyed by attempt so a repeated failure is announced again. */}
+          <p key={forgetFailed.attempts} role="alert" className="text-sm font-semibold leading-6 text-[#ffb37a]">
+            {FORGET_FAILED_MESSAGE}
+          </p>
+          <button
+            type="button"
+            onClick={retryForget}
+            disabled={retrying}
+            className="hub-action mt-3 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {retrying ? "Trying again..." : "Try again"}
+          </button>
+        </div>
+      )}
       <h2 className="text-4xl text-white">Unlock the hub</h2>
       <p id={ids.note} className="mt-3 text-sm leading-6 text-white/65">
         For Longhorn Baja members and leads. Enter the access code for your subteam, the general team, or leads. Ask your lead if you do not have it.
