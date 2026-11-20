@@ -5,7 +5,7 @@ Every pull request, main push, merge queue run, manual run, and weekly schedule 
 - A clean locked dependency install, ESLint with zero warnings, TypeScript, and hub encryption unit tests.
 - A high/critical production dependency audit and the production static build.
 - Export checks for all eight pages, titles, canonical URLs, local assets/links, calendar settings, and image size budgets.
-- Chromium, Firefox, WebKit, and phone browser tests: page rendering, image loading, mobile navigation, keyboard interactions, subteam cards, merch product links, legacy links, calendar configuration, application links, and serious/critical accessibility violations.
+- Chromium, Firefox, WebKit, and phone browser tests: page rendering, image loading, mobile navigation, keyboard interactions, subteam cards, merch product links, legacy links, calendar configuration, application links (open and closed states), and serious/critical accessibility violations.
 
 Run locally with Node 22:
 
@@ -24,3 +24,19 @@ npm test
 Browser tests serve the actual production export, with no reused development server. Failures and flaky retries fail CI; focused tests are forbidden. Traces, screenshots and reports are retained for failures. The Google Calendar and external sponsor-image service are stubbed: their availability and account permissions require a live check.
 
 The named `CI required` gate fails when any prerequisite fails, is cancelled, or is skipped. Main must be current before merging. Deployment is limited to main pushes/manual runs after this gate, using the exact tested artifact. PRs run without deployment permissions. Do not rename this gate without updating the GitHub branch rules.
+
+# Opening and closing applications
+
+The public application entry points (the home page "Join the Team" button and the Join / Contact page) all render through `components/apply-link.tsx`, which reads one switch in `lib/site.ts`:
+
+- To open a recruiting cycle, paste the new form URL into `applyUrl` and set `applications.open` to `true`.
+- To close it, set `applications.open` to `false`. Every apply link is replaced by `applications.closedMessage` as plain text, so the site never links to a closed form. Edit that message if the cycle needs different wording.
+
+The site is a static export, so the change goes live with the next deploy from main. To preview the closed state without editing `lib/site.ts`, set `NEXT_PUBLIC_APPLICATIONS_OPEN=false` for both the build and the browser tests:
+
+```sh
+NEXT_PUBLIC_APPLICATIONS_OPEN=false npm run build
+NEXT_PUBLIC_APPLICATIONS_OPEN=false npm test
+```
+
+CI builds the open state; `tests/applications.spec.ts` renders the home page hero and Join / Contact page with the closed switch and checks that each shows the message and no application link.
