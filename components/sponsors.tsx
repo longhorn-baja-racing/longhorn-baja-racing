@@ -5,9 +5,10 @@ import Image from "next/image"
 const sponsorList = [
   { name: "Renesas", logo: "renesas.webp", width: 520, height: 83, tier: "title", url: "https://www.renesas.com/en" },
   { name: "Rally Ready", logo: "rallyready.webp", width: 160, height: 160, tier: "gold", url: "https://rallyready.com" },
+  // First bronze sponsor so it sits in the top row of the 3-column grid (#29).
+  { name: "United Mechanical", logo: "united_mechanical.webp", width: 190, height: 74, tier: "bronze" },
   { name: "Walker Department of Mechanical Engineering", logo: "walker_department.svg", width: 405, height: 110, tier: "bronze", url: "https://www.me.utexas.edu" },
   { name: "SCCA", logo: "scca.webp", width: 160, height: 160, tier: "bronze", url: "https://lonestarscca.org" },
-  { name: "United Mechanical", logo: "united_mechanical.webp", width: 190, height: 74, tier: "bronze" },
   { name: "Oshcut", logo: "oshcut.webp", width: 193, height: 40, tier: "bronze", url: "https://www.oshcut.com" },
   { name: "Carlstar", logo: "carlstar.webp", width: 520, height: 53, tier: "bronze", url: "https://www.carlstar.com" },
   { name: "Makistry", logo: "makistry_logo.webp", width: 90, height: 88, tier: "general", url: "https://makistry.com" },
