@@ -1,5 +1,6 @@
 import type React from "react"
 import type { Metadata } from "next"
+import { serializeJsonLd } from "@/lib/json-ld"
 import { siteConfig } from "@/lib/site"
 import Navbar from "@/components/navbar"
 import Footer from "@/components/footer"
@@ -129,7 +130,7 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify(organizationJsonLd).replace(/</g, "\\u003c"),
+            __html: serializeJsonLd(organizationJsonLd),
           }}
         />
         <Navbar />

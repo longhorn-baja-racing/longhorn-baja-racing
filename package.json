@@ -13,7 +13,7 @@
     "test:export": "node scripts/check-export.mjs",
     "test:hub": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test \"lib/**/*.test.ts\"",
     "hub": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/hub-build.ts",
-    "test:calendar": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test scripts/fetch-calendar.test.ts"
+    "test:calendar": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test scripts/fetch-calendar.test.ts lib/calendar-jsonld.test.ts"
   },
   "dependencies": {
     "@radix-ui/react-separator": "^1.2.0",
