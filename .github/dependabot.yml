@@ -5,6 +5,12 @@ updates:
     schedule:
       interval: weekly
     groups:
+      # next, eslint-config-next, and @next/eslint-plugin-next must stay on the
+      # same version, so every update to them (major included) is one PR.
+      # Dependabot puts a dependency in the first group it matches, so this
+      # group comes before the catch-all below.
+      nextjs:
+        patterns: ["next", "eslint-config-next", "@next/*"]
       # Minor and patch updates arrive as one PR. Major updates are left
       # ungrouped so each one gets its own PR and a breaking change in one
       # package does not block every other update.
