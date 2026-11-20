@@ -1,0 +1,38 @@
+{
+  "general": [
+    {
+      "id": "team-drive",
+      "label": "Team shared drive",
+      "description": "Main team folder: meeting notes, onboarding, and shop documents.",
+      "category": "Drive",
+      "url": "https://example.com/replace-with-team-drive",
+      "order": 1
+    },
+    {
+      "id": "team-bom",
+      "label": "Vehicle BOM",
+      "category": "BOM",
+      "url": "https://example.com/replace-with-bom-sheet",
+      "order": 2
+    }
+  ],
+  "leads": [
+    {
+      "id": "applicant-responses",
+      "label": "Applicant responses",
+      "description": "Response sheet for the current recruiting cycle.",
+      "category": "Recruiting",
+      "url": "https://example.com/replace-with-response-sheet"
+    }
+  ],
+  "subteams": {
+    "powertrain": [
+      {
+        "id": "powertrain-drive",
+        "label": "Powertrain folder",
+        "category": "Drive",
+        "url": "https://example.com/replace-with-powertrain-folder"
+      }
+    ]
+  }
+}
