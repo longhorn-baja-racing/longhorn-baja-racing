@@ -1,22 +1,38 @@
 import Section from "@/components/section"
 import Image from "next/image"
 
+// width/height: intrinsic logo size after trimming (see scripts/normalize-sponsor-logos.mjs).
 const sponsorList = [
-  { name: "Renesas", logo: "renesas.avif", tier: "title", url: "https://www.renesas.com/en" },
-  { name: "Rally Ready", logo: "rallyready.jpg", tier: "gold", url: "https://rallyready.com" },
-  { name: "Walker Department of Mechancial Engineering", logo: "walker_department.svg", tier: "bronze", url: "https://www.me.utexas.edu" },
-  { name: "SCCA", logo: "scca.avif", tier: "bronze", url: "https://lonestarscca.org" },
-  { name: "United Mechanical", logo: "united_mechanical.avif", tier: "bronze" },
-  { name: "Oshcut", logo: "oshcut.png", tier: "bronze", url: "https://www.oshcut.com" },
-  { name: "Carlstar", logo: "carlstar.png", tier: "bronze", url: "https://www.carlstar.com" },
-  { name: "Makistry", logo: "makistry_logo.avif", tier: "general", url: "https://makistry.com" },
-  { name: "Solidworks", logo: "solidworks.avif", tier: "general", url: "https://my.solidworks.com" },
-  { name: "Ansys", logo: "ansys.avif", tier: "general", url: "https://www.ansys.com" },
-  { name: "Umatek", logo: "umatek.avif", tier: "general", url: "https://www.umatek.com" },
-  { name: "AFCO Racing", logo: "afco.png", tier: "general", url: "https://afcoracing.com" },
-  { name: "Longhorn Sim Racing", logo: "https://www.longhornsimracing.org/brand/logos/white_logo2.png", tier: "partner org", url: "https://www.longhornsimracing.org" },
-  { name: "LCC", logo: "lcc.avif", tier: "partner org", url: "https://texaslcc.com" }
+  { name: "Renesas", logo: "renesas.webp", width: 520, height: 83, tier: "title", url: "https://www.renesas.com/en" },
+  { name: "Rally Ready", logo: "rallyready.webp", width: 160, height: 160, tier: "gold", url: "https://rallyready.com" },
+  { name: "Walker Department of Mechanical Engineering", logo: "walker_department.svg", width: 405, height: 110, tier: "bronze", url: "https://www.me.utexas.edu" },
+  { name: "SCCA", logo: "scca.webp", width: 160, height: 160, tier: "bronze", url: "https://lonestarscca.org" },
+  { name: "United Mechanical", logo: "united_mechanical.webp", width: 190, height: 74, tier: "bronze" },
+  { name: "Oshcut", logo: "oshcut.webp", width: 193, height: 40, tier: "bronze", url: "https://www.oshcut.com" },
+  { name: "Carlstar", logo: "carlstar.webp", width: 520, height: 53, tier: "bronze", url: "https://www.carlstar.com" },
+  { name: "Makistry", logo: "makistry_logo.webp", width: 90, height: 88, tier: "general", url: "https://makistry.com" },
+  { name: "Solidworks", logo: "solidworks.webp", width: 153, height: 160, tier: "general", url: "https://my.solidworks.com" },
+  { name: "Ansys", logo: "ansys.webp", width: 160, height: 160, tier: "general", url: "https://www.ansys.com" },
+  { name: "Umatek", logo: "umatek.webp", width: 169, height: 112, tier: "general", url: "https://www.umatek.com" },
+  { name: "AFCO Racing", logo: "afco.webp", width: 520, height: 142, tier: "general", url: "https://afcoracing.com" },
+  { name: "Longhorn Sim Racing", logo: "https://www.longhornsimracing.org/brand/logos/white_logo2.png", width: 972, height: 326, tier: "partner org", url: "https://www.longhornsimracing.org" },
+  { name: "LCC", logo: "lcc.webp", width: 160, height: 160, tier: "partner org", url: "https://texaslcc.com" }
 ];
+
+// Gives logos of different shapes a similar visual weight: square marks render
+// 80px tall, wider wordmarks get longer but shorter, capped at 260px wide.
+// Logos are never drawn larger than their source file, which would blur them.
+function logoSize(width: number, height: number) {
+  const ratio = width / height
+  let displayHeight = 80 * Math.pow(ratio, -0.4)
+  let displayWidth = displayHeight * ratio
+  const cap = Math.min(260, width)
+  if (displayWidth > cap) {
+    displayWidth = cap
+    displayHeight = displayWidth / ratio
+  }
+  return { width: Math.round(displayWidth), height: Math.round(displayHeight) }
+}
 
 const base = process.env.NEXT_PUBLIC_BASE_PATH || '';
 
@@ -70,9 +86,8 @@ export default function Sponsors() {
                     <Image
                         src={logoSrc}
                         alt={sponsor.name}
-                        width={200}
-                        height={120}
-                        className={`max-h-20 w-full object-contain transition duration-300 group-hover:scale-105 ${sponsor.name === "Longhorn Sim Racing" ? "invert" : ""}`}
+                        {...logoSize(sponsor.width, sponsor.height)}
+                        className={`max-w-full object-contain transition duration-300 group-hover:scale-105 ${sponsor.name === "Longhorn Sim Racing" ? "invert" : ""}`}
                     />
                   </div>
                   <div className="flex w-full items-center justify-between pt-4">
