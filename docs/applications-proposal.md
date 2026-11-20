@@ -99,7 +99,8 @@ any non-final status -> withdrawn               applicant
 - Final decisions are not visible to the applicant until an officer releases
   decisions for the cycle. This avoids partial or accidental early reveals.
 - Each change writes a history row: old status, new status, who, when, and an
-  optional internal note.
+  optional internal note. History rows are visible to reviewers and officers
+  only (see "What applicants can read").
 
 ### Who can see and do what
 
@@ -111,6 +112,51 @@ any non-final status -> withdrawn               applicant
 
 - Reviewer notes are never shown to applicants.
 - Access is granted per account and removed at the end of a lead's term.
+
+### What applicants can read
+
+The tables above hold fields an applicant must never see: an officer's
+decision before release, internal notes, and the history of who changed what.
+Row-level security filters rows, not columns, so a policy like "applicants can
+read their own application" would expose those fields through the API.
+Instead:
+
+- **No direct table access for applicants.** Applicants get no `select`,
+  `insert`, `update`, or `delete` policy on `applications`, `status_history`,
+  or any notes table. Those policies exist only for reviewers and officers.
+- **One read function.** Applicants read through a single database function,
+  `my_application()`, which returns only their own application (matched on
+  `auth.uid()`) and only these fields: cycle, subteam choices, answers,
+  `submitted_at`, and `applicant_status`. It never returns notes, history,
+  reviewer identities, or the internal `status`.
+- **Released status only.** `applicant_status` equals the internal status,
+  except that `accepted`, `waitlisted`, and `rejected` are shown as the last
+  non-final status (for example `interview`) until an officer releases
+  decisions for the cycle.
+- **Writes through functions too.** Saving a draft, submitting, and
+  withdrawing are functions (`save_draft`, `submit_application`,
+  `withdraw_application`) that check ownership, the deadline, and the allowed
+  transition. Withdrawing returns the same response whether or not an
+  unreleased decision exists, so the response cannot reveal one.
+- These functions run with elevated rights (`security definer`), so each one
+  sets a fixed `search_path`, filters on `auth.uid()` itself, and has
+  `execute` revoked from signed-out users. No views are used for applicant
+  data, because views skip row-level security unless created with
+  `security_invoker`.
+
+Required tests (run in CI against a local database, #45 and #52), signed in as
+an applicant whose application has an unreleased `rejected` decision and an
+internal note:
+
+- Querying `applications`, `status_history`, and the notes table directly
+  through the API returns no rows or a permission error.
+- `my_application()` returns `interview`, not `rejected`, and its result has
+  no note or history fields.
+- After an officer releases decisions, `my_application()` returns `rejected`.
+- A second applicant cannot read the first applicant's application by any
+  route.
+- `withdraw_application()` returns the same response with and without the
+  hidden decision.
 - **DECIDE:** which positions are officers, and whether reviewers can see
   applicants who ranked their subteam second or third (recommended: yes).
 - Export: off in v1. **DECIDE:** if needed, officers only, CSV, without notes.
