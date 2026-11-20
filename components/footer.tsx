@@ -29,6 +29,7 @@ export default function Footer() {
             <Link href="/calendar/" prefetch={false} className="hover:text-white">Team calendar</Link>
             <Link href="/sponsors/" prefetch={false} className="hover:text-white">Our sponsors</Link>
             <Link href="/contact/" prefetch={false} className="hover:text-white">Join / Contact</Link>
+            <Link href="/hub/" prefetch={false} className="hover:text-white">Team hub</Link>
           </div>
           <div className="flex flex-wrap gap-5 md:justify-end">
             {socialLinks.map((link) => (
