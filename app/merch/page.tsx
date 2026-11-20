@@ -1,12 +1,13 @@
 import type { Metadata } from "next"
+import { pageMetadata, shareImages } from "@/lib/metadata"
 import Merch from "@/components/merch"
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Merch",
   description: "Preview upcoming Longhorn Baja Racing team gear.",
-  alternates: { canonical: "/merch/" },
-  openGraph: { url: "/merch/" },
-}
+  path: "/merch/",
+  image: shareImages.merch,
+})
 
 export default function Page() {
   return <Merch />

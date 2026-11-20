@@ -1,5 +1,14 @@
+import type { Metadata } from "next"
 import Link from "next/link"
 import Hero from "@/components/hero"
+import { pageMetadata, shareImages } from "@/lib/metadata"
+import { siteConfig } from "@/lib/site"
+
+export const metadata: Metadata = pageMetadata({
+  description: siteConfig.description,
+  path: "/",
+  image: shareImages.team,
+})
 
 const destinations = [
   { number: "01", title: "The engineering", text: "Ten disciplines working together to take one vehicle from concept to competition.", href: "/subteams/", link: "Explore our subteams" },

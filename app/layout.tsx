@@ -1,6 +1,7 @@
 import type React from "react"
 import type { Metadata } from "next"
 import { siteConfig } from "@/lib/site"
+import { pageMetadata, titleTemplate } from "@/lib/metadata"
 import Navbar from "@/components/navbar"
 import Footer from "@/components/footer"
 
@@ -24,43 +25,19 @@ const mono = IBM_Plex_Mono({
 const display = Bebas_Neue({ subsets: ["latin"], weight: "400", variable: "--font-bebas", display: "swap" })
 
 export const metadata: Metadata = {
+  // Defaults for the home page and any route without its own metadata.
+  ...pageMetadata({ description: siteConfig.description, path: "/" }),
   metadataBase: new URL(siteConfig.url),
   title: {
     default: siteConfig.title,
-    template: `%s | ${siteConfig.name}`,
+    template: titleTemplate,
   },
-  description: siteConfig.description,
   applicationName: siteConfig.name,
   authors: [{ name: siteConfig.name, url: siteConfig.url }],
   creator: siteConfig.name,
   publisher: siteConfig.name,
   keywords: [...siteConfig.keywords],
   category: "Engineering",
-  alternates: {
-    canonical: "/",
-  },
-  openGraph: {
-    type: "website",
-    locale: "en_US",
-    url: "/",
-    siteName: siteConfig.name,
-    title: siteConfig.title,
-    description: siteConfig.description,
-    images: [
-      {
-        url: siteConfig.socialImage,
-        width: 6060,
-        height: 4040,
-        alt: "Longhorn Baja Racing team at The University of Texas at Austin",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: siteConfig.title,
-    description: siteConfig.description,
-    images: [siteConfig.socialImage],
-  },
   robots: {
     index: true,
     follow: true,

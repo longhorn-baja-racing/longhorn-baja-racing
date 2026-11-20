@@ -1,13 +1,14 @@
 import type { Metadata } from "next"
+import { pageMetadata, shareImages } from "@/lib/metadata"
 import Section from "@/components/section"
 import { siteConfig } from "@/lib/site"
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Calendar",
   description: "Upcoming Longhorn Baja Racing meetings, shop sessions, and team events.",
-  alternates: { canonical: "/calendar/" },
-  openGraph: { url: "/calendar/" },
-}
+  path: "/calendar/",
+  image: shareImages.calendar,
+})
 
 export default function CalendarPage() {
   return (
