@@ -41,6 +41,14 @@ const lead_list = [
     title: "Abigail Mears",
     description: "Vice Captain and Logistics Lead",
     details: "",
+    image: `${base}/members/abigailmears.avif`,
+  },
+  {
+    id: "John Moreno",
+    title: "John Moreno",
+    description: "Ergonomics Co-Lead",
+    details: "",
+    image: `${base}/members/johnmoreno.avif`,
   },
   {
     id: "Pradyota Phaneesh",
