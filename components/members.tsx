@@ -37,6 +37,12 @@ const lead_list = [
     image: `${base}/members/petervlahakis.jpg`,
   },
   {
+    id: "Abigail Mears",
+    title: "Abigail Mears",
+    description: "Vice Captain and Logistics Lead",
+    details: "",
+  },
+  {
     id: "Pradyota Phaneesh",
     title: "Pradyota Phaneesh",
     description: "Chassis Lead",
@@ -107,12 +113,6 @@ const lead_list = [
     description: "Public Relations Lead",
     details: "",
     image: `${base}/members/shreyalokhande.jpg`,
-  },
-  {
-    id: "Abigail Mears",
-    title: "Abigail Mears",
-    description: "Vice Captain and Logistics Lead",
-    details: "",
   },
 ]
 
@@ -1338,11 +1338,16 @@ export default function Members() {
             The students responsible for guiding design, fabrication, operations, and competition.
           </p>
         </div>
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {lead_list.map((lead) => (
-              <MemberCard key={lead.id} {...lead} />
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-5">
+          {lead_list.slice(0, 5).map((lead) => (
+            <MemberCard key={lead.id} {...lead} />
           ))}
-      </div>
+        </div>
+        <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {lead_list.slice(5).map((lead) => (
+            <MemberCard key={lead.id} {...lead} />
+          ))}
+        </div>
         {showMembersWithoutImages && (
           <>
             <div className="text-center max-w-3xl mx-auto mb-10 mt-10">
