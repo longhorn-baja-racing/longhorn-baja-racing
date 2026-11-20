@@ -2,7 +2,7 @@
 
 Every pull request, main push, merge queue run, manual run, and daily schedule runs:
 
-- A clean locked dependency install, ESLint with zero warnings, and TypeScript.
+- A clean locked dependency install, ESLint with zero warnings, TypeScript, and hub encryption unit tests.
 - Offline tests for the calendar feed script: recurring events, moved occurrences, and the command-line entry point.
 - A high/critical production dependency audit and the production static build.
 - Export checks for all eight pages, titles, canonical URLs, local assets/links, calendar data, and image size budgets.
@@ -14,6 +14,7 @@ Run locally with Node 22:
 npm ci
 npm run lint
 npm run typecheck
+npm run test:hub
 npm run test:calendar
 npm audit --omit=dev --audit-level=high
 npm run build

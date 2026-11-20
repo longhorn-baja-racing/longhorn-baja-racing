@@ -43,5 +43,8 @@ next-env.d.ts
 /playwright-report/
 /test-results/
 
+# hub inputs: plaintext resource links and access codes (never commit)
+/hub/*
+!/hub/resources.example.json
 # generated at build time by scripts/fetch-calendar.ts
 /public/data/calendar.json
