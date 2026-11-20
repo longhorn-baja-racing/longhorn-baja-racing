@@ -1,5 +1,5 @@
 import assert from "node:assert/strict"
-import { existsSync, readFileSync, statSync } from "node:fs"
+import { existsSync, readFileSync, readdirSync, statSync } from "node:fs"
 import { join } from "node:path"
 
 // Run after npm run build; checks the actual GitHub Pages export.
@@ -22,7 +22,15 @@ for (const route of routes) {
     assert.ok(existsSync(file), route + ": missing asset or link " + pathname)
     if (statSync(file).isDirectory()) assert.ok(existsSync(join(file, "index.html")), pathname)
   }
+  // The client router prefetches page data from this flat file name; see
+  // scripts/flatten-segment-files.mjs.
+  const segmentFile = "__next." + (route ? route + "." : "") + "__PAGE__.txt"
+  assert.ok(existsSync(join("out", route, segmentFile)), route + ": missing " + segmentFile)
 }
+const nestedSegments = readdirSync("out", { withFileTypes: true, recursive: true })
+  .filter(entry => entry.isDirectory() && entry.name.startsWith("__next."))
+  .map(entry => join(entry.parentPath, entry.name))
+assert.deepEqual(nestedSegments, [], "RSC segment files must be flat, not nested in __next.* directories")
 const calendar = readFileSync("out/calendar/index.html", "utf8")
 assert.match(calendar, /src=longhornbaja%40gmail.com/)
 assert.match(calendar, /ctz=America%2FChicago/)
@@ -30,5 +38,5 @@ assert.match(calendar, /mode=AGENDA/)
 assert.match(calendar, /loading="lazy"/)
 assert.ok(statSync("public/baja-team-photo-mobile.webp").size < 150000)
 assert.ok(statSync("public/baja-team-photo.webp").size < 500000)
-console.log("Passed: 8 exported pages, headings, metadata, local links/assets, calendar, image budgets.")
+console.log("Passed: 8 exported pages, headings, metadata, local links/assets, RSC segment files, calendar, image budgets.")
 

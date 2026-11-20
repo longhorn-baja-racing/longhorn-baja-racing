@@ -121,7 +121,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-      <html lang="en">
+      <html lang="en" data-scroll-behavior="smooth">
         {/* Browser extensions such as Grammarly add body attributes before hydration.
             Limit suppression to this element; descendants still report mismatches. */}
         <body suppressHydrationWarning className={`${montserrat.variable} ${mono.variable} ${display.variable} ${autumn.variable} font-sans antialiased`}>
