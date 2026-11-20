@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import ApplyLink from "@/components/apply-link"
 import Section from "@/components/section"
 import { siteConfig } from "@/lib/site"
 
@@ -18,7 +19,7 @@ export default function ContactPage() {
           <p className="eyebrow">For students</p>
           <h2 className="mt-5 text-4xl">Join the team</h2>
           <p className="my-6 leading-7 text-white/65">Interested in designing, building, testing, or supporting the vehicle? Tell us about yourself through the team application.</p>
-          <a href={siteConfig.applyUrl} target="_blank" rel="noopener noreferrer" className="action-link">Apply to Longhorn Baja ↗</a>
+          <ApplyLink className="action-link" closedClassName="border-l-2 border-primary pl-4 text-sm font-semibold leading-6 text-white/80">{"Apply to Longhorn Baja \u2197"}</ApplyLink>
         </article>
         <article className="industrial-card border border-white/15 p-7 md:p-10">
           <p className="eyebrow">Get in touch</p>

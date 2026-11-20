@@ -1,4 +1,5 @@
 import Image from "next/image"
+import ApplyLink from "@/components/apply-link"
 import { Button } from "@/components/ui/button"
 import { siteConfig } from "@/lib/site"
 
@@ -36,15 +37,13 @@ export default function Hero() {
           </p>
 
           <div className="flex flex-wrap gap-4">
-            <Button asChild className="h-12 rounded-none bg-primary px-8 text-xs font-semibold uppercase tracking-[0.14em] text-white hover:bg-primary/80">
-            <a
-              href={siteConfig.applyUrl}
-              target="_blank"
-              rel="noopener noreferrer"
+            <ApplyLink
+              button
+              className="h-12 rounded-none bg-primary px-8 text-xs font-semibold uppercase tracking-[0.14em] text-white hover:bg-primary/80"
+              closedClassName="flex min-h-12 max-w-sm items-center border-l-2 border-primary pl-4 text-sm leading-6 text-white/80"
             >
-                Join the Team
-            </a>
-            </Button>
+              Join the Team
+            </ApplyLink>
 
             <Button asChild className="h-12 rounded-none border border-white/40 bg-black/25 px-8 text-xs font-semibold uppercase tracking-[0.14em] text-white hover:border-primary hover:bg-black/60">
             <a

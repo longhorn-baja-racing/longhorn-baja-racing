@@ -1,5 +1,7 @@
 import { test as base, expect } from "@playwright/test"
 import AxeBuilder from "@axe-core/playwright"
+import { applicationsOpen } from "@/components/apply-link"
+import { siteConfig } from "@/lib/site"
 
 // External services are outside this repo's control. Keep CI deterministic while
 // checking the real embed URL and local UI, assets, and JavaScript below.
@@ -129,8 +131,17 @@ for (const [hash, path] of Object.entries({ about: "about", team: "subteams", me
 }
 
 test("application and sponsorship links stay usable", async ({ page }) => {
-  await page.goto("/contact/")
-  await expect(page.getByRole("link", { name: "Apply to Longhorn Baja ↗" })).toHaveAttribute("href", /^https:\/\/docs.google.com\/forms\//)
+  // lib/site.ts opens or closes applications; check whichever state was built.
+  for (const [path, label] of [["/", "Join the Team"], ["/contact/", "Apply to Longhorn Baja \u2197"]]) {
+    await page.goto(path)
+    const link = page.getByRole("link", { name: label, exact: true })
+    if (applicationsOpen()) {
+      await expect(link).toHaveAttribute("href", siteConfig.applyUrl)
+    } else {
+      await expect(page.getByText(siteConfig.applications.closedMessage, { exact: true })).toBeVisible()
+      await expect(link).toHaveCount(0)
+    }
+  }
   await expect(page.getByRole("main").getByRole("link", { name: "longhornbaja@gmail.com", exact: true })).toHaveAttribute("href", "mailto:longhornbaja@gmail.com")
   await expect(page.getByRole("link", { name: "View sponsorship information ↗" })).toHaveAttribute("href", "https://drive.google.com/file/d/1RUknYrIfWhk4B-6uqn1mqxKWQ1dn5JYZ/view?usp=sharing")
 })
