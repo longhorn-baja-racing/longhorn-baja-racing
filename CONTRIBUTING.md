@@ -4,8 +4,8 @@ Every pull request, main push, merge queue run, manual run, and weekly schedule 
 
 - A clean locked dependency install, ESLint with zero warnings, TypeScript, and hub encryption unit tests.
 - A high/critical production dependency audit and the production static build.
-- Export checks for all eight pages, titles, canonical URLs, local assets/links, calendar settings, and image size budgets.
-- Chromium, Firefox, WebKit, and phone browser tests: page rendering, image loading, mobile navigation, keyboard interactions, subteam cards, merch product links, legacy links, calendar configuration, application links, and serious/critical accessibility violations.
+- Export checks for the three pages and five forwarding pages, home sections, titles, canonical URLs, local assets/links, sitemap, calendar settings, lazy-loaded 3D, and image size budgets.
+- Chromium, Firefox, WebKit, and phone browser tests: page rendering, image loading, one-page navigation, the 3D subteam walkthrough, merch product links, forwarding of old page links, calendar configuration, application links, seasonal decorations, and serious/critical accessibility violations.
 
 Run locally with Node 22:
 

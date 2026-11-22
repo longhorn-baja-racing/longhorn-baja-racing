@@ -9,6 +9,8 @@ export const siteConfig = {
   applyUrl: "https://docs.google.com/forms/d/e/1FAIpQLSdrG7jBfGopgbjPINuEyZia1LtU8JFHEpY_tmed9kqVui2SqQ/viewform?usp=preview",
   sponsorUrl: "https://drive.google.com/file/d/1RUknYrIfWhk4B-6uqn1mqxKWQ1dn5JYZ/view?usp=sharing",
   calendarUrl: "https://calendar.google.com/calendar/u/0?cid=bG9uZ2hvcm5iYWphQGdtYWlsLmNvbQ",
+  calendarEmbedUrl:
+    "https://calendar.google.com/calendar/embed?src=longhornbaja%40gmail.com&ctz=America%2FChicago&mode=AGENDA&showTitle=0&showPrint=0&showCalendars=0&showTz=1",
   location: "Austin, Texas",
   university: "The University of Texas at Austin",
   logo: "/favicon.png",
@@ -29,3 +31,19 @@ export const siteConfig = {
     "University of Texas engineering",
   ],
 } as const
+
+/** Sections of the one-page home, in scroll order. Ids double as URL hashes. */
+export const sections = [
+  { id: "about", label: "About" },
+  { id: "subteams", label: "Subteams" },
+  { id: "members", label: "Team" },
+  { id: "sponsors", label: "Sponsors" },
+  { id: "merch", label: "Merch" },
+  { id: "calendar", label: "Calendar" },
+  { id: "contact", label: "Join" },
+] as const
+
+export type SectionId = (typeof sections)[number]["id"]
+
+/** Prefix a public/ path with the GitHub Pages base path. */
+export const asset = (path: string) => `${process.env.NEXT_PUBLIC_BASE_PATH || ""}${path}`

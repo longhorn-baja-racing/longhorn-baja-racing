@@ -1,27 +1,15 @@
 import type React from "react"
 import type { Metadata } from "next"
 import { siteConfig } from "@/lib/site"
-import Navbar from "@/components/navbar"
-import Footer from "@/components/footer"
+import Nav from "@/components/site/nav"
+import Footer from "@/components/site/footer"
 
 import "./globals.css"
-import { Bebas_Neue, Bitter, Montserrat, IBM_Plex_Mono } from "next/font/google"
+import { Archivo, IBM_Plex_Mono } from "next/font/google"
 
-const autumn = Bitter({ subsets: ["latin"], variable: "--font-autumn", display: "swap" })
-
-// Fonts
-const montserrat = Montserrat({
-  subsets: ["latin"],
-  variable: "--font-montserrat",
-  display: "swap",
-})
-const mono = IBM_Plex_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500"],
-  variable: "--font-plex-mono",
-  display: "swap",
-})
-const display = Bebas_Neue({ subsets: ["latin"], weight: "400", variable: "--font-bebas", display: "swap" })
+// Archivo's width axis gives the expanded, motorsport-style display type.
+const sans = Archivo({ subsets: ["latin"], axes: ["wdth"], variable: "--font-archivo", display: "swap" })
+const mono = IBM_Plex_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-plex-mono", display: "swap" })
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -73,13 +61,13 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-  icon: {
-    url: "/favicon.png",
-    type: "image/png",
-    sizes: "512x512",
+    icon: {
+      url: "/favicon.png",
+      type: "image/png",
+      sizes: "512x512",
+    },
+    apple: "/apple-icon.png",
   },
-  apple: "/apple-icon.png",
-},
   manifest: "/manifest.json",
 }
 
@@ -121,10 +109,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-      <html lang="en">
-        {/* Browser extensions such as Grammarly add body attributes before hydration.
-            Limit suppression to this element; descendants still report mismatches. */}
-        <body suppressHydrationWarning className={`${montserrat.variable} ${mono.variable} ${display.variable} ${autumn.variable} font-sans antialiased`}>
+    <html lang="en" className={`${sans.variable} ${mono.variable}`}>
+      {/* Browser extensions such as Grammarly add body attributes before hydration.
+          Limit suppression to this element; descendants still report mismatches. */}
+      <body suppressHydrationWarning>
         <a href="#main-content" className="skip-link">Skip to content</a>
         <script
           type="application/ld+json"
@@ -132,10 +120,10 @@ export default function RootLayout({
             __html: JSON.stringify(organizationJsonLd).replace(/</g, "\\u003c"),
           }}
         />
-        <Navbar />
-        <main id="main-content" tabIndex={-1} className="min-h-[65vh] outline-none">{children}</main>
+        <Nav />
+        <main id="main-content" tabIndex={-1}>{children}</main>
         <Footer />
-        </body>
-      </html>
+      </body>
+    </html>
   )
 }

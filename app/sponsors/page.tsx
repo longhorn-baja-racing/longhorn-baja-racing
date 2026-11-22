@@ -1,13 +1,7 @@
-import type { Metadata } from "next"
-import Sponsors from "@/components/sponsors"
+import Moved, { movedMetadata } from "@/components/site/moved"
 
-export const metadata: Metadata = {
-  title: "Sponsors",
-  description: "Meet the partners supporting Longhorn Baja Racing.",
-  alternates: { canonical: "/sponsors/" },
-  openGraph: { url: "/sponsors/" },
-}
+export const metadata = movedMetadata("Sponsors")
 
 export default function Page() {
-  return <Sponsors />
+  return <Moved section="sponsors" label="Sponsors" />
 }

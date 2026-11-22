@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
-import Section from "@/components/section"
+import PageShell from "@/components/site/page-shell"
 import { siteConfig } from "@/lib/site"
+import Arrow from "@/components/site/arrow"
 
 export const metadata: Metadata = {
   title: "Calendar",
@@ -11,21 +12,25 @@ export const metadata: Metadata = {
 
 export default function CalendarPage() {
   return (
-    <Section title="Team calendar" label="WHAT’S NEXT">
-      <div className="mb-8 flex flex-col justify-between gap-6 md:flex-row md:items-center">
-        <p className="max-w-xl leading-7 text-white/70">Keep up with team meetings, shop sessions, and upcoming events. All times are shown in Austin time.</p>
-        <a href={siteConfig.calendarUrl} target="_blank" rel="noopener noreferrer" className="action-link shrink-0">Open / add in Google Calendar ↗</a>
-      </div>
-      <div className="calendar-frame">
+    <PageShell
+      index="06"
+      label="What's next"
+      title="Team calendar"
+      lede="Keep up with team meetings, shop sessions, and upcoming events. All times are shown in Austin time."
+      action={<a href={siteConfig.calendarUrl} target="_blank" rel="noopener noreferrer" className="button button--primary">Open / add in Google Calendar <Arrow /></a>}
+    >
+      <div className="calendar-panel calendar-panel--page">
         <iframe
           title="Longhorn Baja Racing team events"
-          src="https://calendar.google.com/calendar/embed?src=longhornbaja%40gmail.com&ctz=America%2FChicago&mode=AGENDA&showTitle=0&showPrint=0&showCalendars=0&showTz=1"
+          src={siteConfig.calendarEmbedUrl}
           loading="lazy"
           referrerPolicy="strict-origin-when-cross-origin"
-          className="h-[620px] w-full border-0 md:h-[720px]"
+          className="calendar-frame"
         />
       </div>
-      <p className="mt-5 text-sm leading-7 text-white/60">If the calendar doesn’t appear, <a href={siteConfig.calendarUrl} target="_blank" rel="noopener noreferrer" className="underline underline-offset-4 hover:text-white">open it directly in Google Calendar</a>. Event visibility follows the team calendar’s sharing settings.</p>
-    </Section>
+      <p className="page-note">
+        If the calendar doesn&apos;t appear, <a href={siteConfig.calendarUrl} target="_blank" rel="noopener noreferrer">open it directly in Google Calendar</a>. Event visibility follows the team calendar&apos;s sharing settings.
+      </p>
+    </PageShell>
   )
 }

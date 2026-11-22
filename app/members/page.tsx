@@ -1,13 +1,7 @@
-import type { Metadata } from "next"
-import Members from "@/components/members"
+import Moved, { movedMetadata } from "@/components/site/moved"
 
-export const metadata: Metadata = {
-  title: "Members",
-  description: "Meet the students and team leads behind Longhorn Baja Racing.",
-  alternates: { canonical: "/members/" },
-  openGraph: { url: "/members/" },
-}
+export const metadata = movedMetadata("Members")
 
 export default function Page() {
-  return <Members />
+  return <Moved section="members" label="Members" />
 }

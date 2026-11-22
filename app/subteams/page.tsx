@@ -1,13 +1,7 @@
-import type { Metadata } from "next"
-import Subteams from "@/components/subteams"
+import Moved, { movedMetadata } from "@/components/site/moved"
 
-export const metadata: Metadata = {
-  title: "Subteams",
-  description: "Explore the ten Longhorn Baja Racing engineering and operations subteams.",
-  alternates: { canonical: "/subteams/" },
-  openGraph: { url: "/subteams/" },
-}
+export const metadata = movedMetadata("Subteams")
 
 export default function Page() {
-  return <Subteams />
+  return <Moved section="subteams" label="Subteams" />
 }
