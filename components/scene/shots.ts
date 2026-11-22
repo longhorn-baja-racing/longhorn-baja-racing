@@ -24,7 +24,7 @@ export type Shot = {
   label?: string
 }
 
-const corners: GroupKey[] = ["fl", "fr", "rl", "rr"]
+const corners: GroupKey[] = ["fl", "fr", "rl", "rr", "steer"]
 const all = null
 
 export const shots: Record<string, Shot> = {
@@ -33,8 +33,8 @@ export const shots: Record<string, Shot> = {
   powertrain: { cam: [-2.3, 1.45, -2.55], target: [-0.55, 0.62, 0], explode: 0.45, focus: ["powertrain"], xray: 0, drive: 0, layout: "side", label: "Engine / CVT / gearbox" },
   dynamics: { cam: [2.55, 0.75, 2.75], target: [0.35, 0.38, 0.1], explode: 0.45, focus: corners, xray: 0, drive: 0, layout: "side", label: "Suspension / steering / brakes" },
   chassis: { cam: [2.9, 2.75, -2.7], target: [0, 0.78, 0], explode: 0.3, focus: ["chassis", "skid"], xray: 0, drive: 0, layout: "side", label: "Frame" },
-  ergonomics: { cam: [1.75, 2.5, 1.65], target: [0.1, 0.75, 0], explode: 0.45, focus: ["ergonomics"], xray: 0, drive: 0, layout: "side", label: "Seat / controls / firewall" },
-  electronics: { cam: [1.7, 2.05, -1.95], target: [0.2, 1.05, -0.05], explode: 0.45, focus: ["electronics"], xray: 0, drive: 0, layout: "side", label: "Dash / data logger / harness" },
+  ergonomics: { cam: [2.15, 2.45, 2.05], target: [0.1, 0.7, 0], explode: 0.45, focus: ["ergonomics"], xray: 0, drive: 0, layout: "side", label: "Seat / controls / firewall" },
+  electronics: { cam: [1.95, 1.9, -2.15], target: [0.15, 0.85, -0.05], explode: 0.45, focus: ["electronics"], xray: 0, drive: 0, layout: "side", label: "Dash / data logger / harness" },
   software: { cam: [-3.0, 2.1, 3.05], target: [0, 0.7, 0], explode: 0.2, focus: all, xray: 1, drive: 0, layout: "side" },
   "public-relations": { cam: [3.3, 0.62, 2.15], target: [0.1, 0.55, 0], explode: 0, focus: ["bodyL", "bodyR"], xray: 0, drive: 0.55, layout: "side", label: "Team livery" },
   business: { cam: [0.6, 5.1, 0.9], target: [0, 0.4, 0], explode: 0.15, focus: all, xray: 0.55, drive: 0, layout: "side" },

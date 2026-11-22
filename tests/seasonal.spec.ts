@@ -1,14 +1,14 @@
 import { expect, test } from "./fixtures"
 
 const strips = [
-  ["autumn", "Shake the autumn vine to release leaves", "Fall leaves"],
-  ["winter", "Jingle the lights to let it snow", "Winter lights"],
-  ["bluebonnets", "Shake the bluebonnets loose", "Bluebonnet season"],
+  ["autumn", "autumn", "Shake the autumn vine to release leaves", "Fall leaves"],
+  ["winter", "winter", "Shake the snow loose", "December snow"],
+  ["christmas", "christmas", "Jingle the lights to let it snow", "Merry Christmas"],
 ] as const
 
-for (const [id, label, name] of strips) {
-  test(id + " decoration hangs from the header and releases a burst", async ({ page }) => {
-    await page.goto("/?season=" + id)
+for (const [preview, id, label, name] of strips) {
+  test(preview + " decoration hangs from the header and releases a burst", async ({ page }) => {
+    await page.goto("/?season=" + preview)
     const strip = page.getByRole("button", { name: label })
     const header = page.locator("header.site-header")
     await expect(strip).toBeVisible()
@@ -29,31 +29,32 @@ for (const [id, label, name] of strips) {
   })
 }
 
-test("fireflies have no header strip but still glow", async ({ page }) => {
-  await page.goto("/?season=fireflies")
-  await expect(page.locator("html")).toHaveAttribute("data-season", "fireflies")
-  await expect(page.locator(".season-strip")).toHaveCount(0)
-  await expect(page.locator("canvas.season-particles")).toHaveCount(1)
-  await expect(page.locator("[data-season-note]")).toContainText("Summer fireflies")
+test("Christmas week adds baubles and a hat; plain December does not", async ({ page }) => {
+  await page.goto("/?season=christmas")
+  await expect(page.locator(".season-bauble")).toHaveCount(4)
+  await expect(page.locator(".season-hat")).toHaveCount(1)
+  await page.goto("/?season=winter")
+  await expect(page.locator(".season-drift")).toHaveCount(1)
+  await expect(page.locator(".season-bauble, .season-hat, .season-bulb")).toHaveCount(0)
 })
 
 test("decorations switch on and off with the date", async ({ page }) => {
-  await page.clock.setFixedTime(new Date(2026, 10, 15, 12))
-  await page.goto("/")
-  await expect(page.getByRole("button", { name: "Shake the autumn vine to release leaves" })).toBeVisible()
-  await expect(page.locator("[data-season-note]")).toContainText("Fall leaves until November 30")
-
-  await page.clock.setFixedTime(new Date(2027, 1, 15, 12))
-  await page.goto("/")
-  await expect(page.locator(".stage")).toBeAttached()
-  await expect(page.locator(".season-strip")).toHaveCount(0)
-  await expect(page.locator("canvas.season-particles")).toHaveCount(0)
-  await expect(page.locator("[data-season-note]")).toHaveCount(0)
-
-  await page.clock.setFixedTime(new Date(2026, 11, 28, 12))
-  await page.goto("/")
-  await expect(page.getByRole("button", { name: "Jingle the lights to let it snow" })).toBeVisible()
-  await expect(page.locator("[data-season-note]")).toContainText("Winter lights until January 6")
+  const cases: [Date, string | null, string | null][] = [
+    [new Date(2026, 9, 15, 12), "Shake the autumn vine to release leaves", "Fall leaves until October 31"],
+    [new Date(2026, 10, 15, 12), null, null],
+    [new Date(2026, 11, 5, 12), "Shake the snow loose", "December snow until December 31"],
+    [new Date(2026, 11, 22, 12), "Jingle the lights to let it snow", "Merry Christmas"],
+    [new Date(2027, 1, 15, 12), null, null],
+  ]
+  for (const [date, label, note] of cases) {
+    await page.clock.setFixedTime(date)
+    await page.goto("/")
+    await expect(page.locator(".stage")).toBeAttached()
+    if (label) await expect(page.getByRole("button", { name: label })).toBeVisible()
+    else await expect(page.locator(".season-strip, canvas.season-particles")).toHaveCount(0)
+    if (note) await expect(page.locator("[data-season-note]")).toHaveText(note)
+    else await expect(page.locator("[data-season-note]")).toHaveCount(0)
+  }
 })
 
 test("reduced motion keeps decorations still", async ({ page }) => {

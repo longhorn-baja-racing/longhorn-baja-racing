@@ -1,51 +1,38 @@
 import * as THREE from "three"
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js"
+import { buildSpec, groupKeys, type GroupKey, type MatKey, type Shape, type V } from "./car-spec"
 
 /*
-  Procedural Baja car, split into subsystem groups so the page can explode it and
-  spotlight one subteam at a time. Geometry is merged per group and material, so
-  the whole car is a few dozen draw calls. Swap in a GLB of the real assembly
-  later by keeping the same group keys.
+  Turns the checked geometry in car-spec.ts into meshes. Geometry is merged per
+  group and material (and per spinning wheel), so the whole car is a few dozen
+  draw calls. The spec, not this file, decides where every part goes.
 */
 
-export type V = [number, number, number]
-
-export const groupKeys = ["chassis", "skid", "bodyL", "bodyR", "powertrain", "ergonomics", "electronics", "fl", "fr", "rl", "rr"] as const
-export type GroupKey = (typeof groupKeys)[number]
-
-/** Where each group travels in the exploded view, and the point a callout points at. */
-export const groupSpec: Record<GroupKey, { explode: V; anchor: V }> = {
-  chassis: { explode: [0, 0.15, 0], anchor: [-0.3, 1.38, 0.3] },
-  skid: { explode: [0, -0.55, 0], anchor: [0.4, 0.24, 0.2] },
-  bodyL: { explode: [0, 0.05, 0.85], anchor: [0.25, 0.45, 0.4] },
-  bodyR: { explode: [0, 0.05, -0.85], anchor: [0.25, 0.45, -0.4] },
-  powertrain: { explode: [-1.15, 0.45, 0], anchor: [-0.62, 0.5, -0.26] },
-  ergonomics: { explode: [0.1, 1.1, 0], anchor: [-0.05, 0.62, 0.15] },
-  electronics: { explode: [0.6, 1.6, 0], anchor: [0.5, 0.92, 0.08] },
-  fl: { explode: [0.55, 0, 0.9], anchor: [0.72, 0.29, 0.78] },
-  fr: { explode: [0.55, 0, -0.9], anchor: [0.72, 0.29, -0.78] },
-  rl: { explode: [-0.55, 0, 0.9], anchor: [-0.72, 0.29, 0.76] },
-  rr: { explode: [-0.55, 0, -0.9], anchor: [-0.72, 0.29, -0.76] },
-}
-
-const wheelCenters: Record<"fl" | "fr" | "rl" | "rr", V> = { fl: [0.72, 0.29, 0.68], fr: [0.72, 0.29, -0.68], rl: [-0.72, 0.29, 0.66], rr: [-0.72, 0.29, -0.66] }
-
-type MatKey = "frame" | "steel" | "dark" | "spring" | "engine" | "seat" | "glow" | "glass" | "panel" | "tank" | "board" | "harness"
+export { groupKeys, groupSpec, type GroupKey, type V } from "./car-spec"
 
 function baseMaterial(key: MatKey, panelMap: THREE.Texture | null): THREE.MeshStandardMaterial {
+  const m = (p: THREE.MeshStandardMaterialParameters) => new THREE.MeshStandardMaterial(p)
   switch (key) {
-    case "frame": return new THREE.MeshStandardMaterial({ color: 0xe4e0d8, metalness: 0.35, roughness: 0.38 })
-    case "steel": return new THREE.MeshStandardMaterial({ color: 0xa9afb5, metalness: 0.9, roughness: 0.28 })
-    case "dark": return new THREE.MeshStandardMaterial({ color: 0x1b1b1c, roughness: 0.92 })
-    case "spring": return new THREE.MeshStandardMaterial({ color: 0xff6a13, metalness: 0.45, roughness: 0.35 })
-    case "engine": return new THREE.MeshStandardMaterial({ color: 0x34383d, metalness: 0.65, roughness: 0.45 })
-    case "seat": return new THREE.MeshStandardMaterial({ color: 0x141414, roughness: 0.75 })
-    case "glow": return new THREE.MeshStandardMaterial({ color: 0x111111, emissive: 0xff8a2a, emissiveIntensity: 1.6 })
-    case "glass": return new THREE.MeshStandardMaterial({ color: 0x9aa4ad, metalness: 0.2, roughness: 0.5, transparent: true, opacity: 0.3, side: THREE.DoubleSide, depthWrite: false })
-    case "panel": return new THREE.MeshStandardMaterial({ color: 0xffffff, map: panelMap, metalness: 0.15, roughness: 0.45, side: THREE.DoubleSide })
-    case "tank": return new THREE.MeshStandardMaterial({ color: 0xbf5700, roughness: 0.4, metalness: 0.2 })
-    case "board": return new THREE.MeshStandardMaterial({ color: 0x0f2c22, emissive: 0x22c55e, emissiveIntensity: 0.35 })
-    case "harness": return new THREE.MeshStandardMaterial({ color: 0xff8a2a, emissive: 0xff6a13, emissiveIntensity: 0.6 })
+    case "frame": return m({ color: 0xe6e2da, metalness: 0.35, roughness: 0.36 })
+    case "steel": return m({ color: 0xa9afb5, metalness: 0.9, roughness: 0.28 })
+    case "alu": return m({ color: 0xc9cdd2, metalness: 0.8, roughness: 0.34 })
+    case "dark": return m({ color: 0x1b1b1c, roughness: 0.85 })
+    case "rubber": return m({ color: 0x151515, roughness: 0.95 })
+    case "spring": return m({ color: 0xff6a13, metalness: 0.45, roughness: 0.35 })
+    case "shock": return m({ color: 0x2b2d30, metalness: 0.7, roughness: 0.3 })
+    case "engine": return m({ color: 0x34383d, metalness: 0.6, roughness: 0.45 })
+    case "seat": return m({ color: 0x151515, roughness: 0.7 })
+    case "glow": return m({ color: 0x111111, emissive: 0xff8a2a, emissiveIntensity: 1.6 })
+    case "panel": return m({ color: 0xffffff, map: panelMap, metalness: 0.15, roughness: 0.45 })
+    case "tank": return m({ color: 0xbf5700, metalness: 0.2, roughness: 0.4 })
+    case "board": return m({ color: 0x0f2c22, emissive: 0x22c55e, emissiveIntensity: 0.35 })
+    case "harness": return m({ color: 0xff8a2a, emissive: 0xff6a13, emissiveIntensity: 0.45 })
+    case "red": return m({ color: 0xc8261e, metalness: 0.3, roughness: 0.4 })
+    case "rotor": return m({ color: 0x8d9196, metalness: 0.9, roughness: 0.22 })
+    case "cvt": return m({ color: 0x26292d, metalness: 0.55, roughness: 0.4 })
+    case "light": return m({ color: 0x330000, emissive: 0xff2a1a, emissiveIntensity: 1.4 })
+    case "skid": return m({ color: 0x8f959b, metalness: 0.75, roughness: 0.42, side: THREE.DoubleSide })
+    case "gold": return m({ color: 0xc9a227, metalness: 0.8, roughness: 0.3 })
   }
 }
 
@@ -62,116 +49,25 @@ function panelTexture() {
   g.fillRect(0, 0, 512, 256)
   g.fillStyle = "#151311"
   g.beginPath()
-  g.moveTo(0, 176); g.lineTo(512, 120); g.lineTo(512, 150); g.lineTo(0, 206)
+  g.moveTo(0, 196); g.lineTo(512, 150); g.lineTo(512, 178); g.lineTo(0, 224)
   g.fill()
   g.fillStyle = "#fff4e6"
   g.font = "800 64px system-ui, sans-serif"
   g.textBaseline = "middle"
-  g.fillText("LBR", 40, 82)
+  g.fillText("LBR", 48, 92)
   g.font = "600 20px system-ui, sans-serif"
-  g.fillText("LONGHORN BAJA RACING", 44, 126)
+  g.fillText("LONGHORN BAJA RACING", 52, 136)
   const tex = new THREE.CanvasTexture(c)
   tex.colorSpace = THREE.SRGBColorSpace
   tex.anisotropy = 4
   return tex
 }
 
-/** Frame tubes as [start, end, radius], ordered bottom-up like a frame being jigged. */
-export function frameMembers(): [V, V, number][] {
-  const mirror = (p: V): V => [p[0], p[1], -p[2]]
-  const N = {
-    rearLow: [-0.85, 0.32, 0.3] as V,
-    midLow: [-0.2, 0.25, 0.36] as V,
-    frontLow: [0.75, 0.3, 0.22] as V,
-    nose: [1.0, 0.48, 0.15] as V,
-    hoopShoulder: [-0.24, 0.95, 0.38] as V,
-    hoopTop: [-0.32, 1.38, 0.3] as V,
-    roofFront: [0.28, 1.3, 0.27] as V,
-    frontBrace: [0.68, 0.85, 0.22] as V,
-    sideRear: [-0.21, 0.62, 0.38] as V,
-    sideFront: [0.62, 0.62, 0.25] as V,
-    rearUp: [-0.85, 0.78, 0.28] as V,
-  }
-  const side: [V, V][] = [
-    [N.rearLow, N.midLow], [N.midLow, N.frontLow], [N.frontLow, N.nose],
-    [N.midLow, N.sideRear], [N.sideRear, N.hoopShoulder], [N.hoopShoulder, N.hoopTop],
-    [N.hoopTop, N.roofFront], [N.roofFront, N.frontBrace], [N.frontBrace, N.frontLow],
-    [N.sideRear, N.sideFront], [N.sideFront, N.frontLow], [N.frontBrace, N.nose],
-    [N.hoopShoulder, N.rearUp], [N.rearUp, N.rearLow], [N.sideRear, N.rearUp],
-    [N.roofFront, N.sideFront], [N.midLow, N.sideFront],
-  ]
-  const out: [V, V, number][] = []
-  for (const [a, b] of side) {
-    out.push([a, b, 0.017])
-    out.push([mirror(a), mirror(b), 0.017])
-  }
-  for (const p of [N.rearLow, N.midLow, N.frontLow, N.nose, N.hoopShoulder, N.hoopTop, N.roofFront, N.frontBrace, N.rearUp, N.sideFront]) {
-    out.push([p, mirror(p), 0.017])
-  }
-  out.push([N.hoopTop, mirror(N.hoopShoulder), 0.013])
-  out.push([N.rearUp, mirror(N.rearLow), 0.013])
-  return out.sort((m1, m2) => (m1[0][1] + m1[1][1]) - (m2[0][1] + m2[1][1]))
-}
-
 const UP = new THREE.Vector3(0, 1, 0)
-const dummy = new THREE.Object3D()
+const v3 = (p: V) => new THREE.Vector3(p[0], p[1], p[2])
 
-function placed(geo: THREE.BufferGeometry, pos: V, rot: V = [0, 0, 0], quat?: THREE.Quaternion) {
-  dummy.position.set(...pos)
-  if (quat) dummy.quaternion.copy(quat)
-  else dummy.rotation.set(...rot)
-  dummy.scale.set(1, 1, 1)
-  dummy.updateMatrix()
-  return geo.applyMatrix4(dummy.matrix)
-}
-
-function tubeGeo(a: V, b: V, r: number, radial = 10) {
-  const va = new THREE.Vector3(...a), vb = new THREE.Vector3(...b)
-  const d = vb.clone().sub(va)
-  const geo = new THREE.CylinderGeometry(r, r, d.length(), radial, 1, false)
-  const q = new THREE.Quaternion().setFromUnitVectors(UP, d.normalize())
-  return placed(geo, va.add(vb).multiplyScalar(0.5).toArray() as V, undefined, q)
-}
-
-function coilGeo(a: V, b: V) {
-  const va = new THREE.Vector3(...a), vb = new THREE.Vector3(...b)
-  const d = vb.clone().sub(va), len = d.length()
-  const pts: THREE.Vector3[] = []
-  for (let i = 0; i <= 108; i++) {
-    const t = i / 108, ang = t * Math.PI * 2 * 9
-    pts.push(new THREE.Vector3(Math.cos(ang) * 0.036, len * (0.14 + t * 0.62), Math.sin(ang) * 0.036))
-  }
-  const geo = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 216, 0.0075, 6)
-  return placed(geo, va.toArray() as V, undefined, new THREE.Quaternion().setFromUnitVectors(UP, d.normalize()))
-}
-
-/** Flat quad through four points (counter-clockwise), with 0..1 UVs; flipU mirrors the texture. */
-function quadGeo(p: V[], flipU = false) {
-  const geo = new THREE.BufferGeometry()
-  geo.setAttribute("position", new THREE.Float32BufferAttribute(p.flat(), 3))
-  const u = flipU ? [1, 0, 0, 1] : [0, 1, 1, 0]
-  geo.setAttribute("uv", new THREE.Float32BufferAttribute([u[0], 0, u[1], 0, u[2], 1, u[3], 1], 2))
-  geo.setIndex([0, 1, 2, 0, 2, 3])
-  geo.computeVertexNormals()
-  return geo
-}
-
-function wheelGeometries() {
-  const tire: THREE.BufferGeometry[] = [new THREE.TorusGeometry(0.21, 0.088, 12, 40)]
-  for (let i = 0; i < 28; i++) {
-    const a = (i / 28) * Math.PI * 2
-    tire.push(placed(new THREE.BoxGeometry(0.05, 0.032, 0.05), [Math.cos(a) * 0.29, Math.sin(a) * 0.29, i % 2 ? 0.045 : -0.045], [0, 0, a]))
-  }
-  const rim: THREE.BufferGeometry[] = [placed(new THREE.CylinderGeometry(0.15, 0.15, 0.13, 28), [0, 0, 0], [Math.PI / 2, 0, 0])]
-  for (let k = 0; k < 5; k++) {
-    const a = (k * Math.PI * 2) / 5
-    rim.push(placed(new THREE.CylinderGeometry(0.014, 0.014, 0.15, 8), [Math.cos(a) * 0.065, Math.sin(a) * 0.065, 0], [Math.PI / 2, 0, 0]))
-  }
-  return { tire: mergeGeometries(tire.map(stripToCommon)), rim: mergeGeometries(rim.map(stripToCommon)) }
-}
-
-/** mergeGeometries needs identical attribute sets; keep position, normal, uv. */
-function stripToCommon(geo: THREE.BufferGeometry) {
+/** Keep only position, normal, and uv, non-indexed, so geometries can merge. */
+function common(geo: THREE.BufferGeometry) {
   for (const name of Object.keys(geo.attributes)) if (!["position", "normal", "uv"].includes(name)) geo.deleteAttribute(name)
   if (!geo.attributes.uv) geo.setAttribute("uv", new THREE.Float32BufferAttribute(new Float32Array(geo.attributes.position.count * 2), 2))
   if (!geo.index) return geo
@@ -180,10 +76,157 @@ function stripToCommon(geo: THREE.BufferGeometry) {
   return flat
 }
 
+function alongAxis(geo: THREE.BufferGeometry, a: V, b: V) {
+  const va = v3(a), vb = v3(b)
+  const dir = vb.clone().sub(va)
+  const m = new THREE.Matrix4().compose(va.add(vb).multiplyScalar(0.5), new THREE.Quaternion().setFromUnitVectors(UP, dir.normalize()), new THREE.Vector3(1, 1, 1))
+  return geo.applyMatrix4(m)
+}
+
+const radial = (r: number) => (r < 0.016 ? 10 : r < 0.05 ? 20 : 36)
+
+function shapeGeometry(s: Shape): THREE.BufferGeometry {
+  switch (s.kind) {
+    case "cyl": {
+      const L = Math.hypot(s.b[0] - s.a[0], s.b[1] - s.a[1], s.b[2] - s.a[2])
+      return alongAxis(new THREE.CylinderGeometry(s.r, s.r, L, radial(s.r)), s.a, s.b)
+    }
+    case "box": {
+      const geo = new THREE.BoxGeometry(...s.size)
+      const m = new THREE.Matrix4().compose(v3(s.c), new THREE.Quaternion().setFromEuler(new THREE.Euler(...(s.rot ?? [0, 0, 0]))), new THREE.Vector3(1, 1, 1))
+      return geo.applyMatrix4(m)
+    }
+    case "sphere": return new THREE.SphereGeometry(s.r, 12, 8).translate(...s.c)
+    case "torus": {
+      const geo = new THREE.TorusGeometry(s.R, s.r, 10, 48)
+      geo.applyQuaternion(new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 0, 1), v3(s.axis).normalize()))
+      return geo.translate(...s.c)
+    }
+    case "spring": {
+      const a = v3(s.a), b = v3(s.b), L = a.distanceTo(b)
+      const pts: THREE.Vector3[] = []
+      const n = s.turns * 14
+      for (let i = 0; i <= n; i++) {
+        const t = i / n, ang = t * Math.PI * 2 * s.turns
+        pts.push(new THREE.Vector3(Math.cos(ang) * s.r, t * L - L / 2, Math.sin(ang) * s.r))
+      }
+      return alongAxis(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), n * 2, s.wire, 6), s.a, s.b)
+    }
+    case "panel": {
+      // Fan of triangles with UVs from the panel's own axes, so the livery reads correctly on each side.
+      // Wind the triangles so the face points `outward`, and push that face half the sheet thickness out.
+      let pts = s.points
+      const rawN = v3(pts[1]).sub(v3(pts[0])).cross(v3(pts[pts.length - 1]).sub(v3(pts[0]))).normalize()
+      if (s.outward && rawN.dot(v3(s.outward)) < 0) pts = [pts[0], ...pts.slice(1).reverse()]
+      if (s.outward) {
+        const n = rawN.dot(v3(s.outward)) < 0 ? rawN.clone().negate() : rawN
+        pts = pts.map((p) => [p[0] + n.x * s.t / 2, p[1] + n.y * s.t / 2, p[2] + n.z * s.t / 2] as V)
+      }
+      // Texture runs along the car (u toward the front) and up (v), whatever the point order.
+      const p0 = v3(pts[0])
+      const nrm = v3(pts[1]).sub(p0).cross(v3(pts[pts.length - 1]).sub(p0)).normalize()
+      const uAxis = new THREE.Vector3(1, 0, 0).addScaledVector(nrm, -nrm.x).normalize()
+      const vAxis = nrm.clone().cross(uAxis).normalize()
+      if (vAxis.y < 0) vAxis.negate()
+      const proj = pts.map((p) => { const d = v3(p).sub(p0); return [d.dot(uAxis), d.dot(vAxis)] })
+      const [minU, maxU] = [Math.min(...proj.map((q) => q[0])), Math.max(...proj.map((q) => q[0]))]
+      const [minV, maxV] = [Math.min(...proj.map((q) => q[1])), Math.max(...proj.map((q) => q[1]))]
+      const pos: number[] = [], uv: number[] = []
+      for (let i = 1; i < pts.length - 1; i++) {
+        for (const k of [0, i, i + 1]) {
+          pos.push(...pts[k])
+          let u = (proj[k][0] - minU) / (maxU - minU || 1)
+          if (s.map === "livery-flip") u = 1 - u
+          uv.push(u, (proj[k][1] - minV) / (maxV - minV || 1))
+        }
+      }
+      const geo = new THREE.BufferGeometry()
+      geo.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3))
+      geo.setAttribute("uv", new THREE.Float32BufferAttribute(uv, 2))
+      geo.computeVertexNormals()
+      return geo
+    }
+    case "stadium": {
+      const [ax, ay] = s.a, [bx, by] = s.b
+      const th = Math.atan2(by - ay, bx - ax)
+      const shape = new THREE.Shape()
+      shape.absarc(bx, by, s.r, th - Math.PI / 2, th + Math.PI / 2, false)
+      shape.absarc(ax, ay, s.r, th + Math.PI / 2, th + (3 * Math.PI) / 2, false)
+      shape.closePath()
+      return new THREE.ExtrudeGeometry(shape, { depth: s.z1 - s.z0, bevelEnabled: false, curveSegments: 24 }).translate(0, 0, s.z0)
+    }
+    case "tire": {
+      // Squared-off 23 x 7 style carcass, lathed, with staggered tread and shoulder knobs.
+      const { rIn, rOut, half } = s
+      const round = 0.035
+      const prof: THREE.Vector2[] = []
+      const arc = (cx: number, cy: number, a0: number, a1: number) => {
+        for (let i = 0; i <= 6; i++) { const a = a0 + ((a1 - a0) * i) / 6; prof.push(new THREE.Vector2(cx + Math.cos(a) * round, cy + Math.sin(a) * round)) }
+      }
+      prof.push(new THREE.Vector2(rIn, -half + 0.01))
+      arc(rOut - round, -half + round, -Math.PI / 2, 0)
+      arc(rOut - round, half - round, 0, Math.PI / 2)
+      prof.push(new THREE.Vector2(rIn, half - 0.01))
+      const parts: THREE.BufferGeometry[] = [common(new THREE.LatheGeometry(prof, 56).rotateX(Math.PI / 2))]
+      const knobs = 30
+      for (let i = 0; i < knobs; i++) {
+        const t = (i / knobs) * Math.PI * 2
+        for (const side of [-1, 1]) {
+          const stagger = i % 2 ? 0.022 : 0.052
+          const place = (geo: THREE.BufferGeometry, r: number, z: number) => {
+            const m = new THREE.Matrix4().compose(
+              new THREE.Vector3(Math.cos(t) * r, Math.sin(t) * r, z),
+              new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 0, 1), t + Math.PI / 2),
+              new THREE.Vector3(1, 1, 1),
+            )
+            parts.push(common(geo.applyMatrix4(m)))
+          }
+          place(new THREE.BoxGeometry(0.046, 0.012, 0.042), rOut + 0.005, stagger * side)
+          if (i % 2 === 0) place(new THREE.BoxGeometry(0.04, 0.03, 0.012), rOut - 0.03, (half - 0.004) * side)
+        }
+      }
+      const geo = mergeGeometries(parts)
+      parts.forEach((g) => g.dispose())
+      geo.applyQuaternion(new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 0, 1), v3(s.axis).normalize()))
+      return geo.translate(...s.c)
+    }
+    case "rim": {
+      // Barrel with bead lips and a drop center, plus a six-spoke face set back from the outer lip.
+      const { r, half, face } = s
+      const t = 0.005
+      const outer: [number, number][] = [[r + 0.006, -half], [r, -half + 0.012], [r - 0.014, -0.025], [r - 0.014, 0.025], [r, half - 0.012], [r + 0.006, half]]
+      const prof = [...outer.map(([x, y]) => new THREE.Vector2(x, y)), ...outer.slice().reverse().map(([x, y]) => new THREE.Vector2(x - t, y))]
+      prof.push(prof[0].clone())
+      const parts: THREE.BufferGeometry[] = [common(new THREE.LatheGeometry(prof, 48).rotateX(Math.PI / 2))]
+      const disc = new THREE.Shape()
+      disc.absarc(0, 0, r - 0.016, 0, Math.PI * 2, false)
+      for (let k = 0; k < 6; k++) {
+        const a0 = (k / 6) * Math.PI * 2 + 0.2, a1 = a0 + Math.PI / 3 - 0.4
+        const hole = new THREE.Path()
+        hole.absarc(0, 0, r - 0.034, a0, a1, false)
+        hole.absarc(0, 0, 0.055, a1, a0, true)
+        hole.closePath()
+        disc.holes.push(hole)
+      }
+      const faceZ = face * (half - 0.03)
+      parts.push(common(new THREE.ExtrudeGeometry(disc, { depth: 0.008, bevelEnabled: false, curveSegments: 20 }).translate(0, 0, faceZ - 0.004)))
+      parts.push(common(new THREE.CylinderGeometry(0.034, 0.034, 0.03, 24).rotateX(Math.PI / 2).translate(0, 0, faceZ + face * 0.012)))
+      for (let k = 0; k < 4; k++) {
+        const a = (k / 4) * Math.PI * 2 + Math.PI / 4
+        parts.push(common(new THREE.CylinderGeometry(0.007, 0.007, 0.018, 8).rotateX(Math.PI / 2).translate(Math.cos(a) * 0.046, Math.sin(a) * 0.046, faceZ + face * 0.008)))
+      }
+      const geo = mergeGeometries(parts)
+      parts.forEach((g) => g.dispose())
+      geo.applyQuaternion(new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 0, 1), v3(s.axis).normalize()))
+      return geo.translate(...s.c)
+    }
+  }
+}
+
 export type CarGroup = {
   key: GroupKey
   object: THREE.Group
-  materials: { mat: THREE.MeshStandardMaterial; color: THREE.Color; emissive: number; env: number }[]
+  materials: { mat: THREE.MeshStandardMaterial; color: THREE.Color; emissive: number }[]
   edges: THREE.LineBasicMaterial
   wheel?: THREE.Group
 }
@@ -196,123 +239,83 @@ export type Car = {
   dispose: () => void
 }
 
+/** Kinds that would turn into a mess of lines in the x-ray view. */
+const noEdges = new Set<Shape["kind"]>(["spring", "tire", "rim", "sphere", "torus"])
+
 export function buildCar(edgeColor: THREE.ColorRepresentation = 0xff8a2a): Car {
-  const buckets: Record<GroupKey, Partial<Record<MatKey, THREE.BufferGeometry[]>>> = Object.fromEntries(groupKeys.map((k) => [k, {}])) as never
-  const lines: Record<GroupKey, number[]> = Object.fromEntries(groupKeys.map((k) => [k, []])) as never
-  const add = (group: GroupKey, mat: MatKey, geo: THREE.BufferGeometry) => {
-    ;(buckets[group][mat] ??= []).push(stripToCommon(geo))
-  }
-  const line = (group: GroupKey, a: V, b: V) => lines[group].push(...a, ...b)
-
-  // Chassis: tubes plus a stick-model outline for the x-ray view.
-  for (const [a, b, r] of frameMembers()) {
-    add("chassis", "frame", tubeGeo(a, b, r))
-    line("chassis", a, b)
-  }
-  add("skid", "steel", placed(new THREE.BoxGeometry(1.75, 0.012, 0.62), [0.05, 0.235, 0]))
-
-  // Body panels on each side of the cockpit.
-  const panel = (s: 1 | -1): V[] => [[-0.2, 0.27, 0.375 * s], [0.74, 0.32, 0.235 * s], [0.62, 0.6, 0.265 * s], [-0.21, 0.6, 0.395 * s]]
-  const left = panel(1), right = panel(-1)
-  add("bodyL", "panel", quadGeo(left))
-  add("bodyR", "panel", quadGeo([right[1], right[0], right[3], right[2]], false))
-
-  // Suspension corners. Wheels are separate so they can spin.
-  for (const [key, s] of [["fl", 1], ["fr", -1]] as const) {
-    const z = (v: number) => v * s
-    for (const dx of [-0.13, 0.13]) {
-      add(key, "steel", tubeGeo([0.72 + dx, 0.55, z(0.2)], [0.72, 0.43, z(0.55)], 0.012))
-      add(key, "steel", tubeGeo([0.72 + dx, 0.3, z(0.2)], [0.72, 0.18, z(0.56)], 0.012))
-    }
-    add(key, "steel", tubeGeo([0.72, 0.16, z(0.56)], [0.72, 0.45, z(0.56)], 0.02))
-    add(key, "steel", tubeGeo([0.7, 0.22, z(0.45)], [0.55, 0.86, z(0.25)], 0.012))
-    add(key, "spring", coilGeo([0.7, 0.22, z(0.45)], [0.55, 0.86, z(0.25)]))
-  }
-  for (const [key, s] of [["rl", 1], ["rr", -1]] as const) {
-    const z = (v: number) => v * s
-    add(key, "steel", tubeGeo([-0.2, 0.33, z(0.36)], [-0.72, 0.29, z(0.54)], 0.018))
-    add(key, "steel", tubeGeo([-0.3, 0.45, z(0.36)], [-0.72, 0.4, z(0.54)], 0.012))
-    add(key, "steel", tubeGeo([-0.72, 0.29, z(0.1)], [-0.72, 0.29, z(0.54)], 0.014))
-    add(key, "steel", tubeGeo([-0.64, 0.35, z(0.5)], [-0.36, 1.0, z(0.34)], 0.012))
-    add(key, "spring", coilGeo([-0.64, 0.35, z(0.5)], [-0.36, 1.0, z(0.34)]))
-  }
-
-  // Powertrain: engine block, finned head, CVT cover, gearbox, fuel tank.
-  add("powertrain", "engine", placed(new THREE.BoxGeometry(0.32, 0.3, 0.28), [-0.58, 0.6, 0.02]))
-  add("powertrain", "engine", placed(new THREE.CylinderGeometry(0.09, 0.11, 0.2, 18), [-0.55, 0.85, 0.02], [0, 0, 0.35]))
-  for (let i = 0; i < 7; i++) add("powertrain", "steel", placed(new THREE.CylinderGeometry(0.13, 0.13, 0.008, 20), [-0.53 - i * 0.008, 0.8 + i * 0.022, 0.02], [0, 0, 0.35]))
-  add("powertrain", "glass", placed(new THREE.CylinderGeometry(0.17, 0.17, 0.08, 36), [-0.62, 0.5, -0.24], [Math.PI / 2, 0, 0]))
-  add("powertrain", "steel", placed(new THREE.CylinderGeometry(0.11, 0.11, 0.03, 28), [-0.62, 0.5, -0.24], [Math.PI / 2, 0, 0]))
-  add("powertrain", "steel", placed(new THREE.BoxGeometry(0.2, 0.18, 0.22), [-0.75, 0.36, 0.0]))
-  add("powertrain", "tank", placed(new THREE.CylinderGeometry(0.08, 0.08, 0.22, 20), [-0.36, 0.97, 0.15]))
-
-  // Ergonomics: seat, firewall, steering wheel and column, pedals.
-  add("ergonomics", "seat", placed(new THREE.BoxGeometry(0.42, 0.06, 0.36), [0.02, 0.33, 0]))
-  add("ergonomics", "seat", placed(new THREE.BoxGeometry(0.06, 0.5, 0.36), [-0.14, 0.58, 0], [0, 0, -0.25]))
-  add("ergonomics", "glass", placed(new THREE.PlaneGeometry(0.72, 0.95), [-0.25, 0.75, 0], [0, Math.PI / 2, 0]))
-  add("ergonomics", "dark", placed(new THREE.TorusGeometry(0.13, 0.016, 10, 36), [0.4, 0.82, 0], [0.35, Math.PI / 2, 0]))
-  add("ergonomics", "steel", tubeGeo([0.4, 0.82, 0], [0.72, 0.55, 0], 0.012))
-  for (const z of [-0.07, 0.07]) add("ergonomics", "steel", placed(new THREE.BoxGeometry(0.03, 0.12, 0.06), [0.82, 0.42, z]))
-
-  // Electronics: dash display, data logger, harness.
-  add("electronics", "glow", placed(new THREE.BoxGeometry(0.03, 0.08, 0.16), [0.5, 0.92, 0]))
-  add("electronics", "board", placed(new THREE.BoxGeometry(0.14, 0.05, 0.1), [-0.15, 1.05, -0.2]))
-  add("electronics", "harness", new THREE.TubeGeometry(new THREE.CatmullRomCurve3([
-    new THREE.Vector3(0.5, 0.92, 0), new THREE.Vector3(0.3, 1.0, -0.2), new THREE.Vector3(-0.15, 1.05, -0.2), new THREE.Vector3(-0.5, 0.75, -0.1),
-  ]), 40, 0.008, 6))
-
+  const spec = buildSpec()
   const panelMap = panelTexture()
+  const disposables: { dispose: () => void }[] = [panelMap]
   const root = new THREE.Group()
   const groups = {} as Record<GroupKey, CarGroup>
-  const wheelGeo = wheelGeometries()
-  const disposables: { dispose: () => void }[] = [panelMap, wheelGeo.tire, wheelGeo.rim]
 
   for (const key of groupKeys) {
     const object = new THREE.Group()
     const edges = new THREE.LineBasicMaterial({ color: edgeColor, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending })
     const group: CarGroup = { key, object, materials: [], edges }
     const mats = new Map<MatKey, THREE.MeshStandardMaterial>()
-    const matFor = (m: MatKey) => {
-      let mat = mats.get(m)
+    const matFor = (k: MatKey) => {
+      let mat = mats.get(k)
       if (!mat) {
-        mat = baseMaterial(m, panelMap)
-        mats.set(m, mat)
-        group.materials.push({ mat, color: mat.color.clone(), emissive: mat.emissiveIntensity, env: 1 })
+        mat = baseMaterial(k, panelMap)
+        mats.set(k, mat)
+        group.materials.push({ mat, color: mat.color.clone(), emissive: mat.emissiveIntensity })
         disposables.push(mat)
       }
       return mat
     }
-    for (const [m, geos] of Object.entries(buckets[key]) as [MatKey, THREE.BufferGeometry[]][]) {
-      const merged = mergeGeometries(geos)
-      geos.forEach((g) => g.dispose())
-      const mesh = new THREE.Mesh(merged, matFor(m))
-      object.add(mesh)
-      disposables.push(merged)
-      if (key !== "chassis" && m !== "glass") {
-        const e = new THREE.EdgesGeometry(merged, 28)
-        object.add(new THREE.LineSegments(e, edges))
-        disposables.push(e)
+
+    // Bucket shapes by spinning pivot and material; outline-worthy shapes also feed the x-ray edges.
+    type Bucket = { solid: THREE.BufferGeometry[]; outline: THREE.BufferGeometry[] }
+    const buckets = new Map<string, Map<MatKey, Bucket>>()
+    const pivots = new Map<string, V>()
+    const sticks: number[] = []
+    for (const part of spec.filter((p) => p.group === key)) {
+      const pivotKey = part.spin ? part.spin.join(",") : ""
+      if (part.spin) pivots.set(pivotKey, part.spin)
+      if (!buckets.has(pivotKey)) buckets.set(pivotKey, new Map())
+      const byMat = buckets.get(pivotKey)!
+      for (const shape of part.shapes) {
+        const mat = (shape.kind === "panel" && shape.mat) || part.mat
+        if (!byMat.has(mat)) byMat.set(mat, { solid: [], outline: [] })
+        const bucket = byMat.get(mat)!
+        let geo = shapeGeometry(shape)
+        if (part.spin) geo = geo.translate(-part.spin[0], -part.spin[1], -part.spin[2])
+        geo = common(geo)
+        bucket.solid.push(geo)
+        if (part.member && shape.kind === "cyl") sticks.push(...shape.a, ...shape.b)
+        else if (!part.member && !noEdges.has(shape.kind)) bucket.outline.push(geo)
       }
     }
-    if (lines[key].length) {
+
+    for (const [pivotKey, byMat] of buckets) {
+      let parent: THREE.Object3D = object
+      if (pivotKey) {
+        const wheel = new THREE.Group()
+        wheel.position.set(...pivots.get(pivotKey)!)
+        object.add(wheel)
+        group.wheel = wheel
+        parent = wheel
+      }
+      for (const [mat, bucket] of byMat) {
+        const merged = mergeGeometries(bucket.solid)
+        const outline = bucket.outline.length ? mergeGeometries(bucket.outline) : null
+        bucket.solid.forEach((g) => g.dispose())
+        parent.add(new THREE.Mesh(merged, matFor(mat)))
+        disposables.push(merged)
+        if (outline) {
+          const e = new THREE.EdgesGeometry(outline, 28)
+          outline.dispose()
+          parent.add(new THREE.LineSegments(e, edges))
+          disposables.push(e)
+        }
+      }
+    }
+    if (sticks.length) {
       const g = new THREE.BufferGeometry()
-      g.setAttribute("position", new THREE.Float32BufferAttribute(lines[key], 3))
+      g.setAttribute("position", new THREE.Float32BufferAttribute(sticks, 3))
       object.add(new THREE.LineSegments(g, edges))
       disposables.push(g)
-    }
-    if (key === "fl" || key === "fr" || key === "rl" || key === "rr") {
-      const wheel = new THREE.Group()
-      const tire = new THREE.Mesh(wheelGeo.tire, matFor("dark"))
-      const rim = new THREE.Mesh(wheelGeo.rim, matFor("steel"))
-      wheel.add(tire, rim)
-      const rimEdges = new THREE.EdgesGeometry(wheelGeo.rim, 28)
-      wheel.add(new THREE.LineSegments(rimEdges, edges))
-      const ring = new THREE.EdgesGeometry(new THREE.TorusGeometry(0.3, 0.001, 3, 48), 1)
-      wheel.add(new THREE.LineSegments(ring, edges))
-      disposables.push(rimEdges, ring)
-      wheel.position.set(...wheelCenters[key])
-      object.add(wheel)
-      group.wheel = wheel
     }
     disposables.push(edges)
     root.add(object)

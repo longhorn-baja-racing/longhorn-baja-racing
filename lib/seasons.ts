@@ -1,52 +1,60 @@
-// Seasonal decorations are a small treat, not a theme: each one switches on by
-// itself for a short window every year and must never run longer than a month.
-// Dates are inclusive and use the visitor's local calendar. A window may wrap
-// into the next year (winter does). `npm run test:hub` checks every window.
+// Seasonal decorations are a small treat, not a theme. Each one switches on by
+// itself for one window a year and never runs longer than a month; every
+// other day the site is plain. Dates are inclusive and use the visitor's local
+// calendar. `npm run test:hub` checks every window.
 
 export const MAX_SEASON_DAYS = 31
 
-export const seasonIds = ["bluebonnets", "fireflies", "autumn", "winter"] as const
+export const seasonIds = ["autumn", "winter"] as const
 export type SeasonId = (typeof seasonIds)[number]
+
+type MonthDay = readonly [number, number]
 
 export type Season = {
   id: SeasonId
   /** Short name shown in the footer while the season is active. */
   name: string
-  /** [month 1-12, day] */
-  start: readonly [number, number]
-  end: readonly [number, number]
+  start: MonthDay
+  end: MonthDay
+  /** A shorter window inside the season with extra touches (Christmas week). */
+  highlight?: { name: string; start: MonthDay; end: MonthDay }
 }
 
 export const seasons: readonly Season[] = [
-  { id: "bluebonnets", name: "Bluebonnet season", start: [3, 22], end: [4, 18] },
-  { id: "fireflies", name: "Summer fireflies", start: [6, 1], end: [6, 30] },
-  { id: "autumn", name: "Fall leaves", start: [11, 1], end: [11, 30] },
-  { id: "winter", name: "Winter lights", start: [12, 12], end: [1, 6] },
+  { id: "autumn", name: "Fall leaves", start: [10, 1], end: [10, 31] },
+  {
+    id: "winter",
+    name: "December snow",
+    start: [12, 1],
+    end: [12, 31],
+    highlight: { name: "Merry Christmas", start: [12, 18], end: [12, 25] },
+  },
 ]
 
 const DAY = 24 * 60 * 60 * 1000
-const utc = (year: number, [month, day]: readonly [number, number]) => Date.UTC(year, month - 1, day)
-const wraps = (season: Season) => utc(2001, season.end) < utc(2001, season.start)
+const utc = (year: number, [month, day]: MonthDay) => Date.UTC(year, month - 1, day)
 
-/** Length of the window in days (inclusive) when it starts in `year`. */
-export function seasonDays(season: Season, year: number) {
-  const end = utc(wraps(season) ? year + 1 : year, season.end)
-  return Math.round((end - utc(year, season.start)) / DAY) + 1
+/** Length of a window in days (inclusive). Windows never cross a new year. */
+export function windowDays(window: { start: MonthDay; end: MonthDay }, year: number) {
+  return Math.round((utc(year, window.end) - utc(year, window.start)) / DAY) + 1
 }
 
-/** The active season on `date`, if any, with the local date it ends on. */
-export function activeSeason(date: Date): { season: Season; ends: Date } | null {
+const inWindow = (date: Date, window: { start: MonthDay; end: MonthDay }) => {
   const year = date.getFullYear()
   const today = Date.UTC(year, date.getMonth(), date.getDate())
+  return today >= utc(year, window.start) && today <= utc(year, window.end)
+}
+
+export type ActiveSeason = { season: Season; ends: Date | null; highlight: boolean }
+
+/** The active season on `date`, if any, with the date it ends and whether its highlight is on. */
+export function activeSeason(date: Date): ActiveSeason | null {
   for (const season of seasons) {
-    const candidates = wraps(season) ? [year - 1, year] : [year]
-    for (const startYear of candidates) {
-      const start = utc(startYear, season.start)
-      const endYear = wraps(season) ? startYear + 1 : startYear
-      const end = utc(endYear, season.end)
-      if (today >= start && today <= end) {
-        return { season, ends: new Date(endYear, season.end[0] - 1, season.end[1]) }
-      }
+    if (!inWindow(date, season)) continue
+    return {
+      season,
+      ends: new Date(date.getFullYear(), season.end[0] - 1, season.end[1]),
+      highlight: !!season.highlight && inWindow(date, season.highlight),
     }
   }
   return null

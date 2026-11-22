@@ -10,7 +10,7 @@
     "typecheck": "next typegen && tsc --noEmit",
     "test": "playwright test",
     "test:export": "node scripts/check-export.mjs",
-    "test:hub": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test \"lib/**/*.test.ts\"",
+    "test:hub": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test \"lib/**/*.test.ts\" \"components/**/*.test.ts\"",
     "hub": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/hub-build.ts"
   },
   "dependencies": {

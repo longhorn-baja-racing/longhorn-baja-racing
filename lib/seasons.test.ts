@@ -1,48 +1,43 @@
 // Run with: npm run test:hub
 import { test } from "node:test"
 import assert from "node:assert/strict"
-import { MAX_SEASON_DAYS, activeSeason, seasonDays, seasons } from "./seasons.ts"
+import { MAX_SEASON_DAYS, activeSeason, seasons, windowDays } from "./seasons.ts"
 
 test("every seasonal window lasts a month at most, in leap and common years", () => {
   for (const season of seasons) {
-    for (const year of [2026, 2027, 2028, 2029]) {
-      const days = seasonDays(season, year)
-      assert.ok(days >= 1, season.id + " has a valid range")
-      assert.ok(days <= MAX_SEASON_DAYS, season.id + " runs " + days + " days in " + year)
+    for (const year of [2026, 2027, 2028]) {
+      const days = windowDays(season, year)
+      assert.ok(days >= 1 && days <= MAX_SEASON_DAYS, season.id + " runs " + days + " days")
+      if (season.highlight) {
+        assert.ok(windowDays(season.highlight, year) <= 8, season.id + " highlight is about a week")
+        assert.ok(windowDays({ start: season.start, end: season.highlight.start }, year) >= 1, "highlight starts inside the season")
+        assert.ok(windowDays({ start: season.highlight.end, end: season.end }, year) >= 1, "highlight ends inside the season")
+      }
     }
   }
 })
 
-test("seasonal windows never overlap", () => {
-  const owner = new Map<string, string>()
-  for (let day = 0; day < 366 * 2; day++) {
-    const date = new Date(2027, 0, 1 + day)
-    const hits = seasons.filter((season) => activeSeason(date)?.season.id === season.id)
-    assert.ok(hits.length <= 1)
-    if (hits[0]) owner.set(date.toDateString(), hits[0].id)
-  }
-  assert.ok(owner.size > 0)
-})
-
-test("seasons switch on and off by themselves", () => {
-  assert.equal(activeSeason(new Date(2026, 10, 1))?.season.id, "autumn")
-  assert.equal(activeSeason(new Date(2026, 10, 30))?.season.id, "autumn")
-  assert.equal(activeSeason(new Date(2026, 11, 1)), null)
-  assert.equal(activeSeason(new Date(2026, 11, 25))?.season.id, "winter")
-  assert.equal(activeSeason(new Date(2027, 0, 6))?.season.id, "winter")
-  assert.equal(activeSeason(new Date(2027, 0, 7)), null)
-  assert.equal(activeSeason(new Date(2027, 1, 14)), null)
-  assert.equal(activeSeason(new Date(2027, 3, 1))?.season.id, "bluebonnets")
-  assert.equal(activeSeason(new Date(2027, 5, 15))?.season.id, "fireflies")
-  assert.equal(activeSeason(new Date(2027, 8, 15)), null)
+test("fall leaves in October, snow in December, Christmas the week before Christmas", () => {
+  assert.equal(activeSeason(new Date(2026, 8, 30)), null)
+  assert.equal(activeSeason(new Date(2026, 9, 1))?.season.id, "autumn")
+  assert.equal(activeSeason(new Date(2026, 9, 31))?.season.id, "autumn")
+  assert.equal(activeSeason(new Date(2026, 10, 1)), null)
+  assert.equal(activeSeason(new Date(2026, 10, 30)), null)
+  assert.equal(activeSeason(new Date(2026, 11, 1))?.season.id, "winter")
+  assert.equal(activeSeason(new Date(2026, 11, 17))?.highlight, false)
+  assert.equal(activeSeason(new Date(2026, 11, 18))?.highlight, true)
+  assert.equal(activeSeason(new Date(2026, 11, 25))?.highlight, true)
+  assert.equal(activeSeason(new Date(2026, 11, 26))?.highlight, false)
+  assert.equal(activeSeason(new Date(2026, 11, 31))?.season.id, "winter")
+  assert.equal(activeSeason(new Date(2027, 0, 1)), null)
   const winter = activeSeason(new Date(2026, 11, 20))!
-  assert.equal(winter.ends.getFullYear(), 2027)
-  assert.equal(winter.ends.getMonth(), 0)
-  assert.equal(winter.ends.getDate(), 6)
+  assert.equal(winter.ends?.getMonth(), 11)
+  assert.equal(winter.ends?.getDate(), 31)
 })
 
-test("most of the year has no decorations", () => {
-  let decorated = 0
-  for (let day = 0; day < 365; day++) if (activeSeason(new Date(2027, 0, 1 + day))) decorated++
-  assert.ok(decorated < 365 / 3, decorated + " decorated days")
+test("every other month is plain", () => {
+  for (let month = 0; month < 12; month++) {
+    const decorated = activeSeason(new Date(2027, month, 15)) !== null
+    assert.equal(decorated, month === 9 || month === 11, "month " + (month + 1))
+  }
 })

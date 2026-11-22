@@ -437,11 +437,6 @@ a.sponsor:hover .sponsor-logo { transform: translateY(-3px); box-shadow: 0 0 0 2
 .footer-base { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem; margin-top: 3.5rem; padding-block: 1.5rem; border-top: 1px solid var(--line); font-size: 0.84rem; color: var(--text-3); }
 .footer-base p { margin: 0; }
 .footer-wordmark { margin: 0 0 -0.14em; text-align: center; white-space: nowrap; font-size: 8.7vw; font-weight: 800; font-variation-settings: "wdth" 125; line-height: 0.8; letter-spacing: -0.05em; text-transform: uppercase; color: transparent; -webkit-text-stroke: 1px rgb(255 236 214 / 0.12); user-select: none; }
-.season-note { display: inline-flex; align-items: center; gap: 0.55rem; }
-.season-note-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--season-dot, var(--orange-hi)); box-shadow: 0 0 10px var(--season-dot, var(--orange-hi)); }
-[data-season-note="winter"] { --season-dot: #dfe9ff; }
-[data-season-note="bluebonnets"] { --season-dot: #5c7cfa; }
-[data-season-note="fireflies"] { --season-dot: #e9ff7a; }
 
 /* ---------------------------------------------------------- scroll reveals */
 @supports (animation-timeline: view()) {
@@ -454,30 +449,41 @@ a.sponsor:hover .sponsor-logo { transform: translateY(-3px); box-shadow: 0 0 0 2
 @keyframes word-in { from { opacity: 0.2; } to { opacity: 1; } }
 
 /* ------------------------------------------------------ seasonal treats */
+/* October: fall leaves. December: snow, plus Christmas touches Dec 18-25. */
 .season-strip { position: absolute; left: 0; right: 0; top: calc(100% - 6px); z-index: 1; height: 44px; padding: 0; border: 0; background: transparent; cursor: pointer; touch-action: manipulation; }
 .season-strip:focus-visible { outline: 2px solid var(--orange-text); outline-offset: -4px; }
 .season-vine { position: absolute; inset: 0 -24px; background-image: var(--garland-image); background-repeat: repeat-x; background-size: 650px 48px; background-position: center top; filter: drop-shadow(0 3px 3px rgb(22 9 0 / 0.7)); animation: season-wind 3.8s ease-in-out infinite alternate; will-change: transform; }
-.season-vine--spring { background-image: var(--bluebonnet-image); background-size: 240px 44px; filter: drop-shadow(0 2px 2px rgb(0 0 0 / 0.5)); }
 .site-header[data-scrolled] .season-vine { background-size: 470px 35px; }
-.site-header[data-scrolled] .season-vine--spring { background-size: 190px 35px; }
 .season-strip:hover .season-vine { filter: brightness(1.15) drop-shadow(0 2px 4px rgb(229 161 59 / 0.35)); }
 @keyframes season-wind { 0% { transform: translate3d(-8px, -3px, 0) rotate(-0.5deg); } 50% { transform: translate3d(2px, 2px, 0) rotate(0.2deg); } 100% { transform: translate3d(9px, 4px, 0) rotate(0.5deg); } }
+.season-strip--winter { height: 26px; top: calc(100% - 2px); }
+.season-drift { position: absolute; inset: 0 0 auto; height: 22px; background-image: var(--drift-image); background-repeat: repeat-x; background-size: 320px 22px; filter: drop-shadow(0 2px 3px rgb(0 0 0 / 0.35)); }
+.season-strip--winter:hover .season-drift { filter: brightness(1.05) drop-shadow(0 2px 6px rgb(223 233 255 / 0.45)); }
 .season-lights { position: absolute; inset: 0 0 auto; height: 30px; background-image: var(--wire-image); background-repeat: repeat-x; background-size: calc(100% / 7) 22px; }
 .season-bulb { position: absolute; width: 7px; height: 11px; margin-left: -3.5px; border-radius: 50% 50% 45% 45%; background: var(--bulb); box-shadow: 0 0 10px 2px var(--bulb); animation: twinkle 2.4s ease-in-out infinite alternate; }
 .season-bulb::before { content: ""; position: absolute; left: 1.5px; top: -3px; width: 4px; height: 4px; border-radius: 1px; background: #2a2622; }
 @keyframes twinkle { from { opacity: 0.45; box-shadow: 0 0 4px 0 var(--bulb); } to { opacity: 1; box-shadow: 0 0 12px 3px var(--bulb); } }
+.season-bauble { position: absolute; top: 14px; width: 1px; height: var(--drop); background: rgb(255 255 255 / 0.35); transform-origin: top center; animation: bauble-sway 4.5s ease-in-out infinite alternate; }
+.season-bauble::after { content: ""; position: absolute; left: -7px; bottom: -14px; width: 15px; height: 15px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, rgb(255 255 255 / 0.75), var(--bauble) 38%, rgb(0 0 0 / 0.55)); box-shadow: 0 2px 6px rgb(0 0 0 / 0.5); }
+.season-bauble::before { content: ""; position: absolute; left: -2.5px; bottom: -2px; width: 6px; height: 4px; border-radius: 1px; background: #c9a227; }
+@keyframes bauble-sway { from { transform: rotate(-4deg); } to { transform: rotate(4deg); } }
+.season-hat { position: absolute; z-index: 3; top: 6px; left: calc((100% - min(100% - 2 * var(--gutter), 1480px)) / 2 - 7px); width: 30px; height: 23px; transform: rotate(-14deg); pointer-events: none; filter: drop-shadow(0 1px 2px rgb(0 0 0 / 0.5)); }
 .season-particles { position: fixed; inset: 0; z-index: 45; width: 100vw; height: 100vh; pointer-events: none; }
 @media (max-width: 639px) {
   .season-strip { height: 32px; }
   .season-vine { background-size: 340px 32px; }
-  .season-vine--spring { background-size: 180px 33px; }
+  .season-bauble:nth-child(4n + 1) { display: none; }
 }
-html.menu-open .season-strip { visibility: hidden; }
+html.menu-open .season-strip, html.menu-open .season-hat { visibility: hidden; }
+.season-note { display: inline-flex; align-items: center; gap: 0.55rem; }
+.season-note-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--season-dot, var(--orange-hi)); box-shadow: 0 0 10px var(--season-dot, var(--orange-hi)); }
+[data-season-note="winter"] { --season-dot: #dfe9ff; }
+[data-season-note="christmas"] { --season-dot: #ff3b30; }
 
 /* --------------------------------------------------------- reduced motion */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0s !important; animation-iteration-count: 1 !important; transition-duration: 0s !important; scroll-behavior: auto !important; }
-  .season-vine, .season-bulb, .live-dot, .scroll-cue svg { animation: none !important; }
+  .season-vine, .season-bulb, .season-bauble, .live-dot, .scroll-cue svg { animation: none !important; }
 }
 @media (max-width: 639px) {
   .stage-callout-line, .stage-callout[data-flip] .stage-callout-line { width: 30px; transform: rotate(-90deg); }

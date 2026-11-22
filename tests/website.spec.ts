@@ -189,7 +189,8 @@ test("old #team links land on the subteams", async ({ page }) => {
 
 test("application and sponsorship links stay usable", async ({ page }) => {
   await page.goto("/" + off)
-  await expect(page.getByRole("link", { name: "Apply to Longhorn Baja" })).toHaveAttribute("href", /^https:\/\/docs.google.com\/forms\//)
+  for (const name of ["Apply to Longhorn Baja", "Join the Team"]) await expect(page.getByRole("link", { name })).toHaveAttribute("href", "https://join.longhornbajaracing.com")
+  await expect(page.locator(".nav-cta")).toHaveAttribute("href", "https://join.longhornbajaracing.com")
   await expect(page.getByRole("main").getByRole("link", { name: "longhornbaja@gmail.com", exact: true })).toHaveAttribute("href", "mailto:longhornbaja@gmail.com")
   await expect(page.getByRole("link", { name: "View sponsorship information" })).toHaveAttribute("href", "https://drive.google.com/file/d/1RUknYrIfWhk4B-6uqn1mqxKWQ1dn5JYZ/view?usp=sharing")
   await expect(page.getByRole("link", { name: "Become a Sponsor" }).first()).toHaveAttribute("href", "https://drive.google.com/file/d/1RUknYrIfWhk4B-6uqn1mqxKWQ1dn5JYZ/view?usp=sharing")

@@ -20,7 +20,8 @@ machines without a GPU. Add `?3d=force` to the URL to run it anyway.
 
 ### Seasonal decorations
 
-`lib/seasons.ts` lists short seasonal treats (bluebonnets, fireflies, fall leaves, winter
-lights). Each switches on and off by itself on its dates, and `npm run test:hub` fails if
-any window runs longer than 31 days. Preview one with `?season=autumn` (or `winter`,
-`bluebonnets`, `fireflies`); `?season=off` hides them.
+`lib/seasons.ts` lists the seasonal treats: falling leaves and a garland in October, snow in
+December, and Christmas lights, baubles, and a Santa hat on the logo from December 18 to 25.
+Every other month the site is plain. Each switches on and off by itself, and
+`npm run test:hub` fails if any window runs longer than 31 days. Preview with
+`?season=autumn`, `winter`, or `christmas`; `?season=off` hides them.

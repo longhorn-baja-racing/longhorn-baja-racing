@@ -6,7 +6,7 @@ export const siteConfig = {
     "The official website of Longhorn Baja Racing, The University of Texas at Austin student team that designs, builds, tests, and races an off-road vehicle for Baja SAE competition.",
   url: "https://longhornbajaracing.com",
   email: "longhornbaja@gmail.com",
-  applyUrl: "https://docs.google.com/forms/d/e/1FAIpQLSdrG7jBfGopgbjPINuEyZia1LtU8JFHEpY_tmed9kqVui2SqQ/viewform?usp=preview",
+  applyUrl: "https://join.longhornbajaracing.com",
   sponsorUrl: "https://drive.google.com/file/d/1RUknYrIfWhk4B-6uqn1mqxKWQ1dn5JYZ/view?usp=sharing",
   calendarUrl: "https://calendar.google.com/calendar/u/0?cid=bG9uZ2hvcm5iYWphQGdtYWlsLmNvbQ",
   calendarEmbedUrl:
